@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" role="img" aria-labelledby="title desc">
+  <title id="title">Jat Injast</title>
+  <desc id="desc">One-line Jat Injast wordmark with a J and I house monogram.</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M29 65 65 33l36 32" stroke="#006f8c" stroke-width="8"/>
+    <path d="M40 62v38h50V62" stroke="#006f8c" stroke-width="7"/>
+    <path d="M55 61v22c0 11-7 17-17 13" stroke="#18a1c4" stroke-width="8"/>
+    <path d="M75 60v37" stroke="#18a1c4" stroke-width="8"/>
+  </g>
+  <circle cx="75" cy="48" r="4.5" fill="#18a1c4"/>
+  <text
+    x="126"
+    y="76"
+    fill="#006f8c"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="48"
+    font-weight="800"
+    letter-spacing="-1.2"
+  >Jat Injast</text>
+</svg>

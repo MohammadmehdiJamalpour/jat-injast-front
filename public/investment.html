@@ -1,0 +1,684 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ارائه سرمایه‌گذاری: پلتفرم جات اینجاست</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Vazirmatn", sans-serif;
+        scroll-behavior: smooth;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        height: 350px;
+      }
+      .nav-link.active {
+        color: #e07a5f;
+        font-weight: bold;
+      }
+      .loader {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #e07a5f;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .section-title::after {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 4px;
+        background-color: #e07a5f;
+        margin: 1rem auto 0;
+        border-radius: 2px;
+      }
+    </style>
+  </head>
+  <body class="bg-[#FDFBF6] text-[#3C3633]">
+    <!-- Header -->
+    <header
+      class="bg-[#FDFBF6]/90 backdrop-blur-sm sticky top-0 z-50 shadow-sm"
+    >
+      <nav
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-2xl font-extrabold text-[#E07A5F]">جات اینجاست</h1>
+        <div class="hidden md:flex space-x-6 space-x-reverse text-lg">
+          <a
+            href="#opportunity"
+            class="nav-link hover:text-[#E07A5F] transition-colors"
+            >فرصت</a
+          >
+          <a
+            href="#strategy"
+            class="nav-link hover:text-[#E07A5F] transition-colors"
+            >استراتژی</a
+          >
+          <a
+            href="#team"
+            class="nav-link hover:text-[#E07A5F] transition-colors"
+            >تیم ما</a
+          >
+          <a
+            href="#financials"
+            class="nav-link hover:text-[#E07A5F] transition-colors"
+            >مالی</a
+          >
+          <a href="#ask" class="nav-link hover:text-[#E07A5F] transition-colors"
+            >درخواست</a
+          >
+        </div>
+      </nav>
+    </header>
+
+    <main class="container mx-auto px-6">
+      <!-- Opportunity Section -->
+      <section id="opportunity" class="pt-16 my-8">
+        <h2 class="text-4xl font-extrabold text-center mb-4 section-title">
+          فرصت استثنایی در بازار اقامت ایران
+        </h2>
+        <p class="text-center text-lg max-w-3xl mx-auto mb-12">
+          بازار اقامت غیرهتلی ایران با حجم عظیم و نرخ نفوذ آنلاین پایین، یک فرصت
+          بی‌نظیر برای رشد فراهم کرده است. شرایط فعلی بازار و تضعیف رقبا،
+          پنجره‌ای استراتژیک برای ورود یک بازیگر چابک مانند "جات اینجاست" ایجاد
+          کرده است.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 text-center">
+          <div
+            class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-[#81B29A]"
+          >
+            <h3 class="text-xl font-bold mb-2">حجم کل بازار (TAM)</h3>
+            <p class="text-4xl font-extrabold text-[#81B29A]">۳۰+ همت</p>
+            <p class="text-gray-500">تخمین سال ۱۴۰۴</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-[#E07A5F]"
+          >
+            <h3 class="text-xl font-bold mb-2">شکاف دیجیتال</h3>
+            <p class="text-4xl font-extrabold text-[#E07A5F]">۲۰٪ &gt;</p>
+            <p class="text-gray-500">نرخ نفوذ آنلاین در بازار</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-[#81B29A]"
+          >
+            <h3 class="text-xl font-bold mb-2">پتانسیل بازار آفلاین</h3>
+            <p class="text-4xl font-extrabold text-[#81B29A]">۸۰٪+</p>
+            <p class="text-gray-500">بازار دست‌نخورده سنتی</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-2xl font-bold text-center mb-4">
+              سهم بازار تخمینی رقبا (غیرهتلی)
+            </h3>
+            <div class="chart-container">
+              <canvas id="competitorChart"></canvas>
+            </div>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-2xl font-bold text-center mb-4">
+              رشد بازار و نفوذ آنلاین
+            </h3>
+            <div class="chart-container">
+              <canvas id="marketGrowthChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="my-16 border-gray-200" />
+
+      <!-- Strategy Section -->
+      <section id="strategy" class="pt-16 my-8">
+        <h2 class="text-4xl font-extrabold text-center mb-4 section-title">
+          استراتژی تمایز و رشد
+        </h2>
+        <p class="text-center text-lg max-w-3xl mx-auto mb-12">
+          استراتژی ما بر ارائه ارزش پیشنهادی دوگانه برای میزبان و مسافر، ورود
+          فازبندی شده به بازار و یک ساختار سازمانی چابک برای اجرای این چشم‌انداز
+          متمرکز است.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+          <div class="bg-white p-8 rounded-xl shadow-lg text-center">
+            <h3 class="text-2xl font-bold mb-4">ارزش پیشنهادی به میزبانان</h3>
+            <p class="text-6xl mb-4">🤝</p>
+            <h4 class="text-xl font-bold text-[#81B29A]">
+              ثبت‌نام و توانمندسازی آسان
+            </h4>
+            <p class="mt-2">
+              ما موانع ورود میزبانان به دنیای آنلاین را با ارائه خدمات ثبت‌نام
+              آسان، عکاسی حرفه‌ای و تولید محتوا از بین می‌بریم و خود را به عنوان
+              یک شریک توانمندساز معرفی می‌کنیم.
+            </p>
+          </div>
+          <div class="bg-white p-8 rounded-xl shadow-lg text-center">
+            <h3 class="text-2xl font-bold mb-4">ارزش پیشنهادی به مسافران</h3>
+            <p class="text-6xl mb-4">💡</p>
+            <h4 class="text-xl font-bold text-[#E07A5F]">رزرو جامع و منعطف</h4>
+            <p class="mt-2">
+              با پوشش جامع انواع اقامتگاه‌ها (ویلا، هتل، بومگردی) و معماری فنی
+              پویا، تجربه‌ای یکپارچه، بهینه و کاملا شخصی‌سازی شده برای مسافران
+              فراهم می‌کنیم.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-xl shadow-lg">
+          <h3 class="text-2xl font-bold text-center mb-6">
+            نقشه راه ورود به بازار (Go-to-Market)
+          </h3>
+          <div class="relative flex items-center justify-between w-full">
+            <div
+              class="absolute w-full h-1 bg-[#81B29A]/50 top-1/2 -translate-y-1/2"
+            ></div>
+            <div class="z-10 text-center">
+              <div
+                class="bg-[#81B29A] w-24 h-24 rounded-full flex flex-col items-center justify-center text-white mx-auto shadow-md"
+              >
+                <span class="font-bold">فاز ۱</span>
+                <span class="text-xs">(۱۸ ماه)</span>
+              </div>
+              <p class="mt-2 font-bold w-32">تمرکز بر غیرهتلی</p>
+              <p class="text-sm text-gray-600">
+                فعال‌سازی پایگاه داده و جذب میزبان باکیفیت
+              </p>
+            </div>
+            <div class="z-10 text-center">
+              <div
+                class="bg-[#E07A5F] w-24 h-24 rounded-full flex flex-col items-center justify-center text-white mx-auto shadow-md"
+              >
+                <span class="font-bold">استراتژی</span>
+                <span class="text-xs">(فصلی)</span>
+              </div>
+              <p class="mt-2 font-bold w-32">کمپین‌های هدفمند</p>
+              <p class="text-sm text-gray-600">
+                بازاریابی بر اساس فصول و جغرافیای سفر
+              </p>
+            </div>
+            <div class="z-10 text-center">
+              <div
+                class="bg-[#81B29A] w-24 h-24 rounded-full flex flex-col items-center justify-center text-white mx-auto shadow-md"
+              >
+                <span class="font-bold">فاز ۲</span>
+                <span class="text-xs">(پس از ۱۸ ماه)</span>
+              </div>
+              <p class="mt-2 font-bold w-32">ورود به بازار هتل</p>
+              <p class="text-sm text-gray-600">
+                تمرکز بر هتل‌های کوچک و بوتیک‌هتل‌ها
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="my-16 border-gray-200" />
+
+      <!-- Team Section -->
+      <section id="team" class="pt-16 my-8">
+        <h2 class="text-4xl font-extrabold text-center mb-4 section-title">
+          تیم ما: پیشران نوآوری
+        </h2>
+        <p
+          class="text-center max-w-3xl mx-auto text-lg text-gray-600 leading-relaxed mb-12"
+        >
+          موفقیت جات اینجاست بر شالوده تیمی جوان، متخصص و پرانرژی بنا شده است.
+          ما ترکیبی از مهندسان خلاق، استراتژیست‌های کسب‌وکار و طراحان محصول
+          هستیم که با اشتیاق به نوآوری و درک عمیق از بازار، ایده‌های جسورانه را
+          به راه‌حل‌های فناورانه و کارآمد تبدیل می‌کنیم.
+        </p>
+        <div class="grid md:grid-cols-3 gap-10 text-center">
+          <div class="bg-white p-8 rounded-xl shadow-md">
+            <h3 class="text-xl font-bold mb-2">تخصص فنی</h3>
+            <p class="text-gray-600">
+              توسعه زیرساخت‌های مقیاس‌پذیر و امن با به‌روزترین فناوری‌ها.
+            </p>
+          </div>
+          <div class="bg-white p-8 rounded-xl shadow-md">
+            <h3 class="text-xl font-bold mb-2">بینش استراتژیک</h3>
+            <p class="text-gray-600">
+              تحلیل دقیق بازار و تدوین استراتژی‌های رشد برای خلق مزیت رقابتی.
+            </p>
+          </div>
+          <div class="bg-white p-8 rounded-xl shadow-md">
+            <h3 class="text-xl font-bold mb-2">خلاقیت در محصول</h3>
+            <p class="text-gray-600">
+              طراحی تجربه‌های کاربری منحصربه‌فرد و حل خلاقانه مسائل.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <hr class="my-16 border-gray-200" />
+
+      <!-- Gemini Analysis Section -->
+
+      <hr class="my-16 border-gray-200" />
+
+      <!-- Financials Section -->
+      <section id="financials" class="pt-16 my-8">
+        <h2 class="text-4xl font-extrabold text-center mb-4 section-title">
+          پیش‌بینی‌های مالی و مدل رشد
+        </h2>
+        <p class="text-center text-lg max-w-3xl mx-auto mb-12">
+          مدل مالی ما بر اساس مفروضات واقع‌بینانه از نرخ جذب میزبان، معیارهای
+          تراکنش و هزینه‌های عملیاتی بنا شده و مسیر "جات اینجاست" به سمت سودآوری
+          را ترسیم می‌کند.
+        </p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-2xl font-bold text-center mb-4">
+              پیش‌بینی رشد GMV و درآمد خالص (۳ سال)
+            </h3>
+            <div class="chart-container">
+              <canvas id="financialProjectionsChart"></canvas>
+            </div>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-2xl font-bold text-center mb-4">
+              مدل جذب میزبان فعال (۳ سال)
+            </h3>
+            <div class="chart-container">
+              <canvas id="hostAcquisitionChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="my-16 border-gray-200" />
+
+      <!-- Ask Section -->
+      <section id="ask" class="pt-16 my-8">
+        <h2 class="text-4xl font-extrabold text-center mb-4 section-title">
+          درخواست سرمایه و نقشه راه
+        </h2>
+        <p class="text-center text-lg max-w-3xl mx-auto mb-12">
+          برای تحقق این چشم‌انداز، به دنبال جذب سرمایه برای اجرای نقشه راه رشد،
+          توسعه محصول و نفوذ تهاجمی در بازار هستیم.
+        </p>
+
+        <div class="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="text-center md:text-right">
+              <h3 class="text-2xl font-bold mb-2">درخواست سرمایه (Seed)</h3>
+              <p class="text-5xl font-extrabold text-[#E07A5F] mb-4">
+                ۱۰ میلیارد تومان
+              </p>
+              <p class="text-gray-600 mb-6">
+                این سرمایه، سوخت لازم برای ۱۸ ماه فعالیت متمرکز بر کسب سهم بازار
+                و ساختن یک تیم در کلاس جهانی را فراهم خواهد کرد.
+              </p>
+              <h4 class="text-xl font-bold mb-4">تخصیص بودجه</h4>
+              <ul class="space-y-2">
+                <li class="flex items-center">
+                  <span class="w-4 h-4 rounded-full bg-[#E07A5F] ml-3"></span
+                  >بازرگانی: ۴۵٪
+                </li>
+                <li class="flex items-center">
+                  <span class="w-4 h-4 rounded-full bg-[#3C3633] ml-3"></span
+                  >محصول و فناوری: ۴۰٪
+                </li>
+                <li class="flex items-center">
+                  <span class="w-4 h-4 rounded-full bg-[#81B29A] ml-3"></span
+                  >عملیات و پشتیبانی: ۱۵٪
+                </li>
+              </ul>
+            </div>
+            <div class="chart-container h-64 md:h-80">
+              <canvas id="budgetAllocationChart"></canvas>
+            </div>
+          </div>
+          <hr class="my-8 border-gray-200" />
+          <div>
+            <h3 class="text-2xl font-bold text-center mb-6">
+              اهداف کلیدی در پایان ۱۸ ماه
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-3xl mb-2">🏡</p>
+                <p class="font-bold">۲,۵۰۰</p>
+                <p class="text-sm text-gray-600">میزبان فعال</p>
+              </div>
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-3xl mb-2">📈</p>
+                <p class="font-bold">۵,۰۰۰</p>
+                <p class="text-sm text-gray-600">رزرو موفق در ماه</p>
+              </div>
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-3xl mb-2">💰</p>
+                <p class="font-bold">۱۷+ میلیارد</p>
+                <p class="text-sm text-gray-600">GMV ماهانه (تومان)</p>
+              </div>
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-3xl mb-2">🏆</p>
+                <p class="font-bold">۳ برند برتر</p>
+                <p class="text-sm text-gray-600">در بازار آنلاین</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="conclusion" class="bg-[#3C3633] text-white mt-12">
+      <div class="container mx-auto px-6 py-12 text-center">
+        <h2 class="text-3xl font-bold mb-4">
+          چرا سرمایه‌گذاری در جات اینجاست؟
+        </h2>
+        <p class="text-lg text-gray-300 max-w-3xl mx-auto mb-6">
+          سرمایه‌گذاری در جات اینجاست، سرمایه‌گذاری بر روی یک تیم باتجربه، یک
+          فناوری برتر و یک چشم‌انداز روشن برای راهبری نسل بعدی پلتفرم‌های
+          گردشگری در ایران است.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chartFont = {
+          family: "Vazirmatn",
+          size: 12,
+        };
+        Chart.defaults.font.family = "Vazirmatn";
+
+        // Competitor Chart
+        new Chart(document.getElementById("competitorChart"), {
+          type: "bar",
+          data: {
+            labels: ["جاباما", "اتاقک", "جاجیگا", "شب", "دیگران"],
+            datasets: [
+              {
+                label: "سهم بازار تخمینی",
+                data: [37.5, 22.5, 12.5, 7.5, 20],
+                backgroundColor: [
+                  "#81B29A",
+                  "#a1c4b4",
+                  "#c1d3ce",
+                  "#e1e3e8",
+                  "#f0f0f0",
+                ],
+                borderColor: "#ffffff",
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw}٪` } },
+            },
+            scales: {
+              x: {
+                ticks: { callback: (v) => v + "٪", font: chartFont },
+                grid: { display: false },
+              },
+              y: { ticks: { font: chartFont }, grid: { display: true } },
+            },
+          },
+        });
+
+        // Market Growth Chart
+        new Chart(document.getElementById("marketGrowthChart"), {
+          type: "line",
+          data: {
+            labels: ["۱۴۰۰", "۱۴۰۲", "۱۴۰۴ (تخمین)"],
+            datasets: [
+              {
+                label: "حجم بازار (همت)",
+                data: [15, 24, 30],
+                borderColor: "#E07A5F",
+                backgroundColor: "#E07A5F20",
+                fill: true,
+                tension: 0.4,
+                yAxisID: "y",
+              },
+              {
+                label: "نرخ نفوذ آنلاین (٪)",
+                data: [9, 17, 22],
+                borderColor: "#81B29A",
+                backgroundColor: "#81B29A20",
+                fill: true,
+                tension: 0.4,
+                yAxisID: "y1",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: "index", intersect: false },
+            plugins: {
+              legend: { position: "bottom", labels: { font: chartFont } },
+            },
+            scales: {
+              x: { ticks: { font: chartFont }, grid: { display: false } },
+              y: {
+                type: "linear",
+                display: true,
+                position: "right",
+                title: { display: true, text: "حجم بازار", font: chartFont },
+                ticks: { font: chartFont },
+              },
+              y1: {
+                type: "linear",
+                display: true,
+                position: "left",
+                title: { display: true, text: "نفوذ آنلاین", font: chartFont },
+                ticks: { font: chartFont },
+                grid: { drawOnChartArea: false },
+              },
+            },
+          },
+        });
+
+        // Financial Projections Chart
+        new Chart(document.getElementById("financialProjectionsChart"), {
+          type: "bar",
+          data: {
+            labels: ["سال اول", "سال دوم", "سال سوم"],
+            datasets: [
+              {
+                label: "GMV (میلیارد تومان)",
+                data: [45, 180, 550],
+                backgroundColor: "#81B29A",
+                type: "bar",
+                order: 2,
+              },
+              {
+                label: "درآمد خالص (میلیارد تومان)",
+                data: [7, 27, 80],
+                borderColor: "#E07A5F",
+                backgroundColor: "#E07A5F",
+                type: "line",
+                tension: 0.4,
+                order: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: "bottom", labels: { font: chartFont } },
+            },
+            scales: {
+              x: { ticks: { font: chartFont }, grid: { display: false } },
+              y: {
+                title: {
+                  display: true,
+                  text: "میلیارد تومان",
+                  font: chartFont,
+                },
+                ticks: { font: chartFont },
+              },
+            },
+          },
+        });
+
+        // Host Acquisition Chart
+        new Chart(document.getElementById("hostAcquisitionChart"), {
+          type: "line",
+          data: {
+            labels: ["شروع", "سال اول", "سال دوم", "سال سوم"],
+            datasets: [
+              {
+                label: "تعداد میزبان فعال",
+                data: [0, 1350, 3150, 4050],
+                borderColor: "#E07A5F",
+                backgroundColor: "#E07A5F20",
+                fill: true,
+                tension: 0.1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { ticks: { font: chartFont }, grid: { display: false } },
+              y: {
+                title: { display: true, text: "تعداد میزبان", font: chartFont },
+                ticks: { font: chartFont },
+              },
+            },
+          },
+        });
+
+        // Budget Allocation Chart
+        new Chart(document.getElementById("budgetAllocationChart"), {
+          type: "doughnut",
+          data: {
+            labels: ["بازرگانی", "محصول و فناوری", "عملیات"],
+            datasets: [
+              {
+                data: [45, 40, 15],
+                backgroundColor: ["#E07A5F", "#3C3633", "#81B29A"],
+                hoverOffset: 4,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw}٪` } },
+            },
+          },
+        });
+
+        // Scroll-spy Logic
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(".nav-link");
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                navLinks.forEach((link) => {
+                  link.classList.toggle(
+                    "active",
+                    link.getAttribute("href").substring(1) === entry.target.id,
+                  );
+                });
+              }
+            });
+          },
+          { rootMargin: "-50% 0px -50% 0px" },
+        );
+        sections.forEach((section) => observer.observe(section));
+
+        // Gemini API Integration
+        const generateSwotBtn = document.getElementById("generateSwot");
+        const generateRiskBtn = document.getElementById("generateRisk");
+        const swotResultDiv = document.getElementById("swotResult");
+        const riskResultDiv = document.getElementById("riskResult");
+
+        const callGeminiAPI = async (prompt) => {
+          const apiKey = ""; // API key is handled by the environment
+          const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+          const payload = {
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+          };
+
+          try {
+            const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            if (!response.ok)
+              throw new Error(`HTTP error! status: ${response.status}`);
+            const result = await response.json();
+            if (
+              result.candidates &&
+              result.candidates[0]?.content?.parts[0]?.text
+            ) {
+              return result.candidates[0].content.parts[0].text;
+            }
+            console.error("Unexpected API response structure:", result);
+            return "پاسخ غیرمنتظره از سرویس دریافت شد.";
+          } catch (error) {
+            console.error("Error calling Gemini API:", error);
+            return "خطا در برقراری ارتباط با سرویس هوش مصنوعی.";
+          }
+        };
+
+        const formatResponseToHtml = (text) => {
+          return text
+            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+            .replace(/\* (.*?)(?:\n|$)/g, '<li class="mb-2">$1</li>')
+            .replace(
+              /(<strong>.*?<\/strong>)/g,
+              '</ul><h4 class="font-bold text-lg mt-4 mb-2">$1</h4><ul class="list-disc list-inside space-y-1">',
+            )
+            .replace(/^<\/ul>/, "");
+        };
+
+        const handleApiButtonClick = async (button, resultDiv, prompt) => {
+          resultDiv.innerHTML = '<div class="loader"></div>';
+          button.disabled = true;
+          const resultText = await callGeminiAPI(prompt);
+          resultDiv.innerHTML = formatResponseToHtml(resultText);
+          button.disabled = false;
+        };
+
+        generateSwotBtn.addEventListener("click", () => {
+          const prompt = `شما یک مشاور ارشد کسب‌وکار هستید. برای استارتاپ 'جات اینجاست' که در بازار رزرو آنلاین اقامتگاه ایران فعالیت می‌کند، یک تحلیل SWOT (نقاط قوت، ضعف، فرصت‌ها، تهدیدها) به زبان فارسی و در قالب لیست با عنوان‌بندی مشخص ارائه دهید. اطلاعات کلیدی: ارزش پیشنهادی برای میزبان: ثبت‌نام آسان و تولید محتوای حرفه‌ای. ارزش پیشنهادی برای مسافر: پوشش جامع (ویلا، هتل، بومگردی) و رزرو منعطف. استراتژی ورود به بازار: فصلی و جغرافیایی. پایگاه داده اولیه: ۹۰۰۰ میزبان بالقوه. رقبای اصلی: جاباما، اتاقک.`;
+          handleApiButtonClick(generateSwotBtn, swotResultDiv, prompt);
+        });
+
+        generateRiskBtn.addEventListener("click", () => {
+          const prompt = `شما یک تحلیلگر ریسک سرمایه‌گذاری خطرپذیر هستید. برای استارتاپ 'جات اینجاست' که به دنبال جذب سرمایه ۱۰ میلیارد تومانی است، ۳ ریسک اصلی کسب‌وکار را شناسایی کرده و برای هر کدام یک استراتژی کاهش ریسک مختصر به زبان فارسی و در قالب لیست با عنوان‌بندی مشخص ارائه دهید. زمینه: بازار اقامت ایران، رقابت با بازیگران بزرگ، مدل عملیاتی متکی بر جذب میزبان.`;
+          handleApiButtonClick(generateRiskBtn, riskResultDiv, prompt);
+        });
+      });
+    </script>
+  </body>
+</html>

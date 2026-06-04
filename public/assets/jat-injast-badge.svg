@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">Jat Injast house logo</title>
+  <desc id="desc">A compact J and I monogram shaped like a house.</desc>
+  <defs>
+    <linearGradient id="badge-bg" x1="28" x2="132" y1="18" y2="142" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0098bd"/>
+      <stop offset="1" stop-color="#006f8c"/>
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" rx="38" fill="url(#badge-bg)"/>
+  <path
+    d="M34 79 80 38l46 41"
+    fill="none"
+    stroke="#ffffff"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="11"
+  />
+  <path
+    d="M48 76v48h64V76"
+    fill="none"
+    stroke="#ffffff"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="10"
+  />
+  <path
+    d="M67 74v29c0 14-9 22-22 16"
+    fill="none"
+    stroke="#b8f3ff"
+    stroke-linecap="round"
+    stroke-width="11"
+  />
+  <path
+    d="M94 73v47"
+    fill="none"
+    stroke="#b8f3ff"
+    stroke-linecap="round"
+    stroke-width="11"
+  />
+  <circle cx="94" cy="58" r="5.5" fill="#b8f3ff"/>
+</svg>
