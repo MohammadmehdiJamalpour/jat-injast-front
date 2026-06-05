@@ -1,4 +1,3 @@
-// src/components/CondensedPagination.jsx
 
 import React from "react";
 

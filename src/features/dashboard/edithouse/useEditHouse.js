@@ -1,5 +1,3 @@
-﻿// src/hooks/useEditHouse.js
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { editHouse } from "../../../services/houseService";
 import { reportClientError } from "../../../utils/reportClientError";

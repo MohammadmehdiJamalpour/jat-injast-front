@@ -1,5 +1,3 @@
-// =============================
-// =============================
 import React, { useState, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { toast } from "react-hot-toast";
@@ -8,14 +6,13 @@ import { updateReserveStatus } from "../../../services/reserveService";
 export default function UpdateOptionsButtons({
   options = [],
   reserveUuid,
-  payLink,                 // <── NEW (string or null)
+  payLink,
   onUpdateSuccess,
 }) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  /* ───────────────────────────── internal helpers ───────────────────────────── */
   const openConfirmModal = (option) => {
     setSelectedOption(option);
     setIsConfirmOpen(true);
@@ -43,7 +40,6 @@ export default function UpdateOptionsButtons({
     }
   };
 
-  /* ───────────────────────────── UI ───────────────────────────── */
   return (
     <>
       <div className="flex flex-wrap gap-2 mb-4">
@@ -58,7 +54,6 @@ export default function UpdateOptionsButtons({
           </button>
         ))}
 
-        {/* ─── NEW: Final-payment button appears when payLink is provided ─── */}
         {payLink && (
           <a
             href={payLink}
@@ -71,7 +66,6 @@ export default function UpdateOptionsButtons({
         )}
       </div>
 
-      {/* ───────────────────────── Confirmation Modal ───────────────────────── */}
       <Transition appear show={isConfirmOpen} as={Fragment}>
         <Dialog as="div" dir="rtl" className="relative z-10 text-right" onClose={closeConfirmModal}>
           <Transition.Child

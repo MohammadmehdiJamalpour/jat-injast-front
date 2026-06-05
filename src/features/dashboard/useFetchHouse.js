@@ -1,4 +1,3 @@
-// src/hooks/useFetchHouse.js
 import { useQuery } from "@tanstack/react-query";
 import { getHouse } from "../../services/houseService";
 

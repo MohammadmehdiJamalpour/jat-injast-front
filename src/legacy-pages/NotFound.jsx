@@ -1,4 +1,3 @@
-// src/pages/NotFound.jsx
 
 import React from "react";
 import { Link } from "@/lib/router-compat";

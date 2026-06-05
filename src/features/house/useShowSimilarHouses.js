@@ -1,4 +1,3 @@
-// src/hooks/useShowSimilarHouses.js
 
 import { useQuery } from "@tanstack/react-query";
 import { getSimilarHouses } from "../../services/houseService";

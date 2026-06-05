@@ -1,4 +1,3 @@
-// src/components/HeroOnlyOnHome.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "@/lib/router-compat";
 import CitySearchInput from '../../ui/CitySearchInput';       // adjust if needed

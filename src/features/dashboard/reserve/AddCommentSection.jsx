@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { sendComment } from "../../../services/commentService";
 
-import RatingStars from './../../../ui/RatingStarts';
+import RatingStars from './../../../ui/RatingStars';
 
 export default function AddCommentSection({ reserveUuid, onCommentSent }) {
   const [commentText, setCommentText] = useState("");

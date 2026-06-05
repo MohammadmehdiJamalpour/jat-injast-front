@@ -1,4 +1,3 @@
-// src/features/dashboard/reservations/ReserveDetailsPanel.jsx
 import React from "react";
 import toPersianNumber from "../../../utils/toPersianNumber";
 

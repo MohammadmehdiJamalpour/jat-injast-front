@@ -77,7 +77,7 @@ function SearchHouseCard({ house }) {
     setStartX(null);
   };
 
-  /* ---------------------- NEW: hover state for this slider ------------------- */
+
   const [isSliderHovered, setIsSliderHovered] = useState(false);
 
   /* --------------------------- compute transform ---------------------------- */
@@ -206,7 +206,7 @@ function SearchHouseCard({ house }) {
           </p>
         </div>
 
-        {/* NEW – navigation button */}
+        {}
         <div className="w-1/2 h-20 flex items-center justify-center ">
           <a
             href={`/house/${house.uuid || house.id}`}

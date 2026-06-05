@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "./../../../ui/Modal";
 import { classNames } from "./../../../utils/classNames";
-// NEW IMPORT
+
 import BeatLoader from "react-spinners/BeatLoader";
 import toPersianNumber from "../../../utils/toPersianNumber";
 import { persianToEnglishDigits } from "../../../utils/numberHelpers";

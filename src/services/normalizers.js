@@ -3,6 +3,14 @@ import { fa } from "../i18n/fa";
 const asObject = (value) => (value && typeof value === "object" ? value : {});
 const asArray = (value) => (Array.isArray(value) ? value : []);
 const firstDefined = (...values) => values.find((value) => value !== undefined && value !== null);
+const asBoolean = (value) => {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "number") return value === 1;
+  if (typeof value === "string") {
+    return ["1", "true", "yes"].includes(value.trim().toLowerCase());
+  }
+  return false;
+};
 
 const normalizeLabel = (value, fallback = "") => {
   if (!value) return fallback;
@@ -37,7 +45,7 @@ export function normalizeHouseSummary(input = {}) {
     main_image: house.main_image || house.mainImage || firstImage || null,
     status: normalizeLabel(house.status, house.status || ""),
     structure: normalizeLabel(firstDefined(house.structure, house.type, house.house_type)),
-    is_favorite: Boolean(firstDefined(house.is_favorite, house.isFavorite, house.favorite, false)),
+    is_favorite: asBoolean(firstDefined(house.is_favorite, house.isFavorite, house.favorite, false)),
   };
 }
 
@@ -130,8 +138,8 @@ export function normalizeCalendarMonth(input = {}) {
         day: Number(firstDefined(item.day_number, item.number, item.day, 0)) || 0,
         price: Number(firstDefined(item.price, item.amount, 0)) || 0,
         status: normalizeLabel(item.status, ""),
-        is_locked: Boolean(firstDefined(item.is_locked, item.locked, item.disabled, false)),
-        is_reserved: Boolean(firstDefined(item.is_reserved, item.reserved, false)),
+        is_locked: asBoolean(firstDefined(item.is_locked, item.locked, item.disabled, false)),
+        is_reserved: asBoolean(firstDefined(item.is_reserved, item.reserved, false)),
         raw: item,
       };
     }),

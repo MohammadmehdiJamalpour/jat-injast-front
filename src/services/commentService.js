@@ -1,4 +1,3 @@
-// src/services/commentService.js
 import http from "./httpService";
 
 /**

@@ -25,7 +25,7 @@ import HouseSanitaries from "./houseComponents/HouseSanitaries";
 import HouseTopLocation from "./houseComponents/HouseTopLocation";
 import Separator from "../../ui/Separator";
 import RevealSection from "../../ui/RevealSection";
-import { useHouseCalendarData } from "../calendar/useHouseCalenderData";
+import { useHouseCalendarData } from "../calendar/useHouseCalendarData";
 import HouseCalendar from "./houseComponents/HouseCalendar";
 import { useAllRoomsCalendarData } from "../calendar/useAllRoomsCalendarData";
 import HouseSimilarHouses from "./houseComponents/HouseSimilarHouses";

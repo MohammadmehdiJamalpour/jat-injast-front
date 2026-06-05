@@ -1,4 +1,3 @@
-// src/features/dashboard/DashboardSidebar.jsx
 
 import { useState } from "react";
 import { Tab } from "@headlessui/react";

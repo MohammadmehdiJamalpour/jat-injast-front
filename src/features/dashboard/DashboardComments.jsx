@@ -1,4 +1,3 @@
-// src/features/dashboard/DashboardComments.jsx
 
 import React, { useState, useEffect } from "react";
 import { getComments, replyToComment } from "../../services/commentService";
@@ -36,7 +35,7 @@ function DashboardComments() {
       let newComments = [];
       let pagination = { last_page: 1 };
 
-      // Adjust this logic based on your actual API response shape
+
       if (response.data && Array.isArray(response.data.data)) {
         newComments = response.data.data;
         pagination = response.data.pagination || { last_page: 1 };

@@ -22,7 +22,7 @@ const allowedConsoleFiles = new Set([
 const bannedPatterns = [
   {
     name: "mojibake marker",
-    pattern: /[ØÙÛ�]/,
+    pattern: /[\u00C2-\u00C3\u00D8-\u00DB\uFFFD]|â/,
   },
   {
     name: "console.log",
@@ -44,6 +44,19 @@ const bannedPatterns = [
   {
     name: "generated file marker",
     pattern: /\bFULL FILE\b/i,
+  },
+  {
+    name: "generated edit marker",
+    pattern: /\b(?:NEW|UPDATED|Additional function)\b/,
+  },
+  {
+    name: "source path header",
+    pattern: /^\/\/\s*src\//,
+  },
+  {
+    name: "legacy typo marker",
+    pattern:
+      /\b(?:veondorCalendar|useHouseCalenderData|RatingStarts|TermsContainer\.jsx\.jsx)\b/,
   },
 ];
 

@@ -1,4 +1,3 @@
-// src/hooks/useWallet.js
 
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {

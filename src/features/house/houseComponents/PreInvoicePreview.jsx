@@ -1,4 +1,3 @@
-// src/features/house/houseComponents/PreInvoicePreview.jsx
 import React from "react";
 import PreInvoiceSkeleton from "./PreInvoiceSkeleton";
 import toPersianNumber from "../../../utils/toPersianNumber";

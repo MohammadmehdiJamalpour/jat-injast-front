@@ -76,13 +76,6 @@ function EconomicHouseList() {
           {houses.map((house) => (
             <SwiperSlide
               key={house.id}
-              /* 
-                Adjust the responsive width for each slide:
-                - 60% width on smallest screens
-                - 50% width on screens ≥ 640px (sm)
-                - 33% width on screens ≥ 768px (md)
-                - 20% width on screens ≥ 1024px (lg)
-              */
               className="!w-3/5 sm:!w-1/2 md:!w-1/3 lg:!w-1/5"
             >
               <div className="relative flex flex-col items-center justify-center rounded-3xl shadow overflow-hidden">

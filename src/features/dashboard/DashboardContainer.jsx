@@ -1,4 +1,3 @@
-// src/features/dashboard/DashboardContainer.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "@/lib/router-compat";
 import DashboardSidebar from "./DashboardSidebar";

@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useVendorHouseCalendarData } from "./useVendorHouseCalendarData";
 import { useVendorRoomCalendarData } from "./useVendorRoomCalendarData";
-import OperationButtons from "../dashboard/veondorCalendar/OperationButtons";
-import DateRangeSelector from "../dashboard/veondorCalendar/DateRangeSelector";
-import DayDetailModal from "../dashboard/veondorCalendar/DayDetailModal";
-import OperationModal from "../dashboard/veondorCalendar/OperationModal";
+import OperationButtons from "../dashboard/vendorCalendar/OperationButtons";
+import DateRangeSelector from "../dashboard/vendorCalendar/DateRangeSelector";
+import DayDetailModal from "../dashboard/vendorCalendar/DayDetailModal";
+import OperationModal from "../dashboard/vendorCalendar/OperationModal";
 import useFetchHouse from "../house/useShowHouse";
 import Modal from "../../ui/Modal";
 import VendorCalendarContainer from "./VendorCalendarContainer";
-import CalendarLegend from "../dashboard/veondorCalendar/CalendarLegend";
+import CalendarLegend from "../dashboard/vendorCalendar/CalendarLegend";
 import { useVendorCalendarOperations } from "./useVendorCalendarOperations";
 
 export default function VendorCalendar({

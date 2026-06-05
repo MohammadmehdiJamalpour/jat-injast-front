@@ -12,7 +12,7 @@ function FormSelect({
   onChange,
   options,
   errorMessages,
-  compact = false,           // NEW
+  compact = false,
 }) {
   const selectedOption =
     options.find((option) => option.value === value) || null;

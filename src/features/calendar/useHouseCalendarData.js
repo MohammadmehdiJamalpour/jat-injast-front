@@ -1,4 +1,3 @@
-// src/features/calendar/useHouseCalendarData.js
 
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { useMemo, useState } from "react";

@@ -1,4 +1,3 @@
-// src/services/walletService.js
 
 import http from "./httpService";
 import { reportClientError } from "../utils/reportClientError";

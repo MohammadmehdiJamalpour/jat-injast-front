@@ -1,4 +1,3 @@
-// src/ui/NumberField.jsx
 
 import React from "react";
 

@@ -1,9 +1,10 @@
-const PERSIAN_DIGITS = ["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"];
+const PERSIAN_DIGITS = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+const PERSIAN_DIGIT_PATTERN = /[۰-۹]/g;
 
-/** Latin → Persian */
 export const toPersian = (value = "") =>
-  value.toString().replace(/\d/g, d => PERSIAN_DIGITS[d]);
+  value.toString().replace(/\d/g, (digit) => PERSIAN_DIGITS[Number(digit)]);
 
-/** Persian → Latin */
 export const toLatin = (value = "") =>
-  value.toString().replace(/[۰-۹]/g, d => PERSIAN_DIGITS.indexOf(d));
+  value
+    .toString()
+    .replace(PERSIAN_DIGIT_PATTERN, (digit) => PERSIAN_DIGITS.indexOf(digit));

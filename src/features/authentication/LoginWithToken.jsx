@@ -1,8 +1,7 @@
-// src/features/authentication/LoginWithToken.jsx
 import React, { useEffect } from "react";
 import { useSearchParams, useNavigate } from "@/lib/router-compat";
 import { deleteAuthTokenCookie, setAuthTokenInCookie } from "../../services/httpService"; 
-// ^ Adjust if you keep these helpers in a different file
+
 import { useUserContext } from "../../contexts/UserContext";
 import { reportClientError } from "../../utils/reportClientError";
 

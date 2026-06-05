@@ -8,7 +8,7 @@
     "build": "next build",
     "lint": "eslint .",
     "start": "next start --hostname 127.0.0.1",
-    "hygiene": "node scripts/check-hygiene.mjs",
+    "hygiene": "node scripts/check-hygiene.mjs && node scripts/check-source-size.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",

@@ -1,4 +1,3 @@
-// src/features/house/houseComponents/PeopleNumberDropDown.jsx
 import React from "react";
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 import toPersianNumber from "../../../utils/toPersianNumber";

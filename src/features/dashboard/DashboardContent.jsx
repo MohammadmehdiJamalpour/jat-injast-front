@@ -1,4 +1,3 @@
-// src/features/dashboard/DashboardContent.jsx
 
 import React, { useState, useEffect } from "react";
 import Profile from "./Profile";
@@ -9,7 +8,6 @@ import Favorites from "./Favorites";
 import InviteFriends from "./InviteFriends";
 import DashboardReserve from "./reserve/DashboardReserve";
 import DashboardComments from "./DashboardComments";
-      // ⬅️ NEW
 import Tickets from './ticket/Tickets';
 
 const DashboardContent = ({ selectedTab, initialUser, onUpdateUser }) => {
@@ -60,8 +58,8 @@ const DashboardContent = ({ selectedTab, initialUser, onUpdateUser }) => {
           </div>
         );
 
-      case "tickets":                                // ⬅️ NEW
-        return <Tickets user={user} />;              // ⬅️ NEW
+      case "tickets":
+        return <Tickets user={user} />;
 
       default:
         return <Profile user={user} onUpdateUser={onUpdateUser} />;

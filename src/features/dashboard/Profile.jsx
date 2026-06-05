@@ -1,4 +1,3 @@
-// src/features/dashboard/Profile.jsx
 
 import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';

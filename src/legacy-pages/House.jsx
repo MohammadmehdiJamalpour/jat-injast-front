@@ -1,4 +1,3 @@
-// src/pages/House.jsx
 import React from "react";
 import { useParams, Outlet } from "@/lib/router-compat";
 import useShowHouse from "../features/house/useShowHouse"; // or the correct relative path

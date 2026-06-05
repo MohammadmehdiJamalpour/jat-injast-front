@@ -1,4 +1,3 @@
-// src/features/house/houseComponents/HouseCalendar.jsx
 
 import React, { useMemo, useRef, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
