@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "@/lib/router-compat";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardContent from "./DashboardContent";
@@ -7,14 +7,11 @@ import Loading from "../../ui/Loading";
 import { toast } from 'react-hot-toast';
 
 function DashboardContainer() {
-  // ───────── context ─────────
   const { userData, isUserDataLoading } = useUserContext();
 
-  // ───────── local state ─────────
   const [selectedTab, setSelectedTab] = useState("profile");
   const navigate = useNavigate();
 
-  // ───────── redirect unauthenticated users ─────────
   useEffect(() => {
     if (!isUserDataLoading && !userData) {
          toast("لطفا ابتدا وارد پروفایل کاربری خود شوید", { icon: "🔒" });
@@ -22,7 +19,6 @@ function DashboardContainer() {
     }
   }, [isUserDataLoading, userData, navigate]);
 
-  // ───────── loading state ─────────
   if (isUserDataLoading) {
     return (
       <div className="min-h-[100vh] flex items-center justify-center">

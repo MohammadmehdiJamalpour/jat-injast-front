@@ -1,5 +1,3 @@
-// HouseSectionsNav.jsx
-import React from "react";
 
 const sections = [
   { name: "calendar", label: "تقویم" },

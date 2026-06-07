@@ -3,7 +3,7 @@
 import HouseContainer from "@/features/house/HouseContainer";
 import useShowHouse from "@/features/house/useShowHouse";
 import Loading from "@/ui/Loading";
-import NotFound from "@/legacy-pages/NotFound";
+import NotFound from "@/components/NotFound";
 import { OutletContextProvider } from "@/lib/router-compat";
 import Footer from "@/components/Footer";
 

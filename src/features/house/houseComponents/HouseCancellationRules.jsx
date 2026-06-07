@@ -1,4 +1,3 @@
-import React from "react";
 import ExpandableContent from "../../../ui/ExpandableContent";
 
 function HouseCancellationRules({ houseData }) {

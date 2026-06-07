@@ -16,8 +16,8 @@ const Input = forwardRef(
     },
     ref,
   ) => {
-    const generatedId = useId();
-    const inputId = id || generatedId;
+    const reactId = useId();
+    const inputId = id || reactId;
 
     return (
       <div className={clsx("space-y-2 text-right", className)}>

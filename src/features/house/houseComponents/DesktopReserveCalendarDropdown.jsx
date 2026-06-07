@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import {
   ChevronLeftIcon,
@@ -7,7 +7,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import ReserveCalendarSwiper from "../../calendar/ReserveCalendarSwiper";
+import ReserveCalendarSwiper from "@/components/calendar/ReserveCalendarSwiper";
 
 const arrowBase =
   "p-1 lg:p-1.5 xl:p-2 rounded-full shadow transition-colors duration-200";

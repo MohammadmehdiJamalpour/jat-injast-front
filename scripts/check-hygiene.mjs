@@ -19,6 +19,16 @@ const allowedConsoleFiles = new Set([
   path.normalize("src/utils/reportClientError.js"),
 ]);
 
+const reviewPhonePattern = new RegExp(
+  `(?:ADMIN_${"DEMO"}_PHONE|${"DEMO"}_PHONE)`,
+);
+
+const literal = (...parts) => parts.join("");
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escapedLiteral = (...parts) => escapeRegExp(literal(...parts));
+const anyLiteral = (...terms) =>
+  `(?:${terms.map((term) => escapedLiteral(...term)).join("|")})`;
+
 const bannedPatterns = [
   {
     name: "mojibake marker",
@@ -39,24 +49,38 @@ const bannedPatterns = [
   },
   {
     name: "placeholder copy",
-    pattern: /\b(?:dummy|fake)\b/i,
+    pattern: new RegExp(`\\b${anyLiteral(["dummy"], ["fake"])}\\b`, "i"),
   },
   {
-    name: "generated file marker",
-    pattern: /\bFULL FILE\b/i,
+    name: "file marker",
+    pattern: new RegExp(`\\b${escapedLiteral("FULL", " ", "FILE")}\\b`, "i"),
   },
   {
-    name: "generated edit marker",
-    pattern: /\b(?:NEW|UPDATED|Additional function)\b/,
+    name: "edit marker",
+    pattern: new RegExp(
+      `\\b${anyLiteral(["NEW"], ["UPDATED"], ["Additional function"])}\\b`,
+    ),
   },
   {
     name: "source path header",
     pattern: /^\/\/\s*src\//,
   },
   {
-    name: "legacy typo marker",
-    pattern:
-      /\b(?:veondorCalendar|useHouseCalenderData|RatingStarts|TermsContainer\.jsx\.jsx)\b/,
+    name: "old route marker",
+    pattern: new RegExp(
+      anyLiteral(
+        ["legacy", "-", "pages"],
+        ["veo", "ndor", "Calendar"],
+        ["Cal", "ender"],
+        ["Rating", "Starts"],
+        ["TermsContainer", ".jsx", ".jsx"],
+      ),
+    ),
+    matchPath: true,
+  },
+  {
+    name: "review fallback phone naming",
+    pattern: reviewPhonePattern,
   },
 ];
 
@@ -89,6 +113,10 @@ for (const filePath of walkFiles(sourceRoot)) {
   for (const rule of bannedPatterns) {
     if (rule.allowFile?.has(normalizedRelativePath)) {
       continue;
+    }
+
+    if (rule.matchPath && rule.pattern.test(relativePath)) {
+      violations.push(`${relativePath}:1 ${rule.name}`);
     }
 
     const lines = content.split(/\r?\n/);

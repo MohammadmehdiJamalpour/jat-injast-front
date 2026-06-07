@@ -1,7 +1,6 @@
-import React from "react";
 import { Transition } from "@headlessui/react";
 import { MinusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import CalendarContainer from "../../calendar/CalendarContainer";
+import CalendarContainer from "@/components/calendar/CalendarContainer";
 
 export default function MobileReservationCalendarSheet({
   calendarData,

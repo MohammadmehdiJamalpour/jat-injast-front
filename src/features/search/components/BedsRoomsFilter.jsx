@@ -1,13 +1,10 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 import toPersianNumber from "../../../utils/toPersianNumber";
 
-/* --------------------------------------------------
-   Re‑usable counter (plus / minus, persian digits)
--------------------------------------------------- */
 function Counter({ label, value, setValue, min = 0, max = 12 }) {
-  const inc = useCallback(() => value < max && setValue((n) => n + 1), [value, max]);
-  const dec = useCallback(() => value > min && setValue((n) => n - 1), [value, min]);
+  const inc = useCallback(() => value < max && setValue((n) => n + 1), [value, max, setValue]);
+  const dec = useCallback(() => value > min && setValue((n) => n - 1), [value, min, setValue]);
 
   return (
     <div className="flex items-center justify-between px-2 py-1 text-primary-800">
@@ -43,9 +40,6 @@ function Counter({ label, value, setValue, min = 0, max = 12 }) {
   );
 }
 
-/* --------------------------------------------------
-   Beds + Rooms filter
--------------------------------------------------- */
 export default function BedsRoomsFilter() {
   const [beds, setBeds]   = useState(0);
   const [rooms, setRooms] = useState(0);

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   ChevronLeftIcon,
@@ -59,15 +59,15 @@ function GalleryLightbox({
   const count = images.length;
   const activeImage = images[activeIndex] || {};
 
-  const setSlide = (nextIndex, speed = 520) => {
+  const setSlide = useCallback((nextIndex, speed = 520) => {
     const normalized = Math.min(Math.max(nextIndex, 0), count - 1);
     setActiveIndex(normalized);
     mainSwiperRef.current?.slideTo(normalized, speed);
     thumbSwiperRef.current?.slideTo(Math.max(normalized - 2, 0), speed);
-  };
+  }, [count]);
 
-  const goPrevious = () => setSlide(activeIndex - 1);
-  const goNext = () => setSlide(activeIndex + 1);
+  const goPrevious = useCallback(() => setSlide(activeIndex - 1), [activeIndex, setSlide]);
+  const goNext = useCallback(() => setSlide(activeIndex + 1), [activeIndex, setSlide]);
 
   useEffect(() => {
     if (!open) return;
@@ -95,13 +95,13 @@ function GalleryLightbox({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeIndex, count, dir, open]);
+  }, [count, dir, goNext, goPrevious, open]);
 
   if (!count) return null;
 
   return (
     <Transition appear show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-[1800]" dir={dir} onClose={onClose}>
+      <Dialog as="div" className="relative z-[20000]" dir={dir} onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -111,10 +111,13 @@ function GalleryLightbox({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-white/15 backdrop-blur-xl dark:bg-white/5" aria-hidden="true" />
+          <div
+            className="fixed inset-0 bg-slate-950/80 backdrop-blur-xl dark:bg-slate-950/90"
+            aria-hidden="true"
+          />
         </Transition.Child>
 
-        <div className="fixed inset-0 flex items-center justify-center px-3 py-4">
+        <div className="fixed inset-0 flex items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -124,22 +127,22 @@ function GalleryLightbox({
             leaveFrom="opacity-100 translate-y-0 scale-100"
             leaveTo="opacity-0 translate-y-4 scale-95"
           >
-            <Dialog.Panel className="relative flex h-full max-h-[92vh] w-full max-w-6xl flex-col">
-              <div className="mb-3 flex items-center justify-between gap-3 text-white">
-                <Dialog.Title className="truncate text-base font-semibold">
+            <Dialog.Panel className="relative flex h-full max-h-[92vh] w-full max-w-7xl flex-col pt-14 sm:pt-12">
+              <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-3 text-white">
+                <Dialog.Title className="pointer-events-auto max-w-[calc(100%-4rem)] truncate rounded-full bg-slate-950/65 px-4 py-2 text-sm font-semibold shadow-lg ring-1 ring-white/10 backdrop-blur-md sm:text-base">
                   {activeImage.title || "تصویر اقامتگاه"}
                 </Dialog.Title>
                 <button
                   type="button"
                   onClick={onClose}
                   aria-label="بستن"
-                  className="btn-press flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur hover:bg-white/20"
+                  className="btn-press pointer-events-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-slate-950 shadow-xl ring-1 ring-black/10 transition-colors duration-200 hover:bg-primary-action hover:text-primary-contrast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300"
                 >
                   <XMarkIcon className="h-6 w-6" />
                 </button>
               </div>
 
-              <div className="relative min-h-0 flex-1">
+              <div className="relative min-h-0 flex-1 px-12 sm:px-16 lg:px-20">
                 <Swiper
                   dir={dir}
                   slidesPerView={1}
@@ -175,7 +178,7 @@ function GalleryLightbox({
                       onClick={goNext}
                       disabled={activeIndex === count - 1}
                       aria-label="تصویر بعدی"
-                      className="btn-press fixed left-4 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-primary-action text-primary-contrast shadow-lg disabled:bg-white/20 disabled:text-white/50 md:left-12"
+                      className="btn-press absolute left-0 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary-action text-primary-contrast shadow-lg disabled:bg-white/20 disabled:text-white/50 sm:h-11 sm:w-11 lg:left-2"
                     >
                       <ChevronLeftIcon className="h-6 w-6" />
                     </button>
@@ -185,7 +188,7 @@ function GalleryLightbox({
                       onClick={goPrevious}
                       disabled={activeIndex === 0}
                       aria-label="تصویر قبلی"
-                      className="btn-press fixed right-4 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-primary-action text-primary-contrast shadow-lg disabled:bg-white/20 disabled:text-white/50 md:right-12"
+                      className="btn-press absolute right-0 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary-action text-primary-contrast shadow-lg disabled:bg-white/20 disabled:text-white/50 sm:h-11 sm:w-11 lg:right-2"
                     >
                       <ChevronRightIcon className="h-6 w-6" />
                     </button>

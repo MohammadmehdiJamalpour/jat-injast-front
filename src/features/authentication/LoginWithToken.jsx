@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "@/lib/router-compat";
 import { deleteAuthTokenCookie, setAuthTokenInCookie } from "../../services/httpService"; 
 

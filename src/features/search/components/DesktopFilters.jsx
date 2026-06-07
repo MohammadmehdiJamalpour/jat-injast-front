@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import FilterContent from "./FilterContent";
 

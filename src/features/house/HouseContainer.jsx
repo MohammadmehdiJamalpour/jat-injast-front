@@ -1,11 +1,10 @@
-import React, {
+import {
   useState,
   useMemo,
   useEffect,
   useRef,
   useCallback,
 } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useOutletContext } from "@/lib/router-compat";
 import { fa } from "@/i18n/fa";
 
@@ -25,11 +24,10 @@ import HouseSanitaries from "./houseComponents/HouseSanitaries";
 import HouseTopLocation from "./houseComponents/HouseTopLocation";
 import Separator from "../../ui/Separator";
 import RevealSection from "../../ui/RevealSection";
-import { useHouseCalendarData } from "../calendar/useHouseCalendarData";
+import { useHouseCalendarData } from "./useHouseCalendarData";
 import HouseCalendar from "./houseComponents/HouseCalendar";
-import { useAllRoomsCalendarData } from "../calendar/useAllRoomsCalendarData";
+import { useAllRoomsCalendarData } from "./useAllRoomsCalendarData";
 import HouseSimilarHouses from "./houseComponents/HouseSimilarHouses";
-import HouseDiscountDetails from "./houseComponents/HouseDiscountDetails";
 import HouseSectionsNav from './houseComponents/HouseSectionNav';
 
 function HouseContainer() {
@@ -57,7 +55,6 @@ function HouseContainer() {
 
   const rentRoomPrefetchCount = 2;
   const housePrefetchCount = 2;
-  const queryClient = useQueryClient();
 
   const {
     isLoading: isLoadingCalendarHouse,
@@ -278,11 +275,6 @@ function HouseContainer() {
 
             <RevealSection as="div" ref={commentsRef}>
               <HouseComments houseData={houseData} />
-            </RevealSection>
-            <Separator />
-
-            <RevealSection as="div">
-              <HouseDiscountDetails houseData={houseData} />
             </RevealSection>
             <Separator />
 

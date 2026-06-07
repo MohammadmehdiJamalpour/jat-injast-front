@@ -4,7 +4,7 @@ import { routeModes } from "../route-modes";
 
 export const dynamic = "force-static";
 export const metadata = {
-  title: "Admin Panel",
+  title: "پنل مدیریت",
   description: routeModes.adminPanel.reason,
 };
 

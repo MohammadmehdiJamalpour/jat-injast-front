@@ -32,7 +32,7 @@ describe("houseCalendarOwnerService", () => {
     await VendorHouseCalendarByHouse(
       null,
       null,
-      "https://api.test/api/client/house/H12/calendar?year=1405&month=3"
+      "https://api.jat-injast.local/api/client/house/H12/calendar?year=1405&month=3"
     );
 
     expect(http.get).toHaveBeenCalledWith("/house/H12/calendar?year=1405&month=3");

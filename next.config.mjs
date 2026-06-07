@@ -5,6 +5,7 @@ const backendUrl =
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
+  output: "standalone",
   images: {
     disableStaticImages: true,
     remotePatterns: [

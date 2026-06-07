@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title desc">
-  <title id="title">J I house mark</title>
-  <desc id="desc">A J and I monogram shaped like a house.</desc>
+  <title id="title">نشان جات اینجاست</title>
+  <desc id="desc">نشان خانه‌محور جات اینجاست برای آیکن مرورگر.</desc>
   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
     <path d="M22 62 60 28l38 34" stroke="#006f8c" stroke-width="9"/>
     <path d="M34 60v38h52V60" stroke="#006f8c" stroke-width="8"/>

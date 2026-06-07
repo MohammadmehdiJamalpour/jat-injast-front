@@ -1,4 +1,4 @@
-import React, {
+import {
   useState,
   useRef,
   useEffect,
@@ -38,7 +38,6 @@ export default function MobileFilters({
 
   return (
     <>
-      {/* ───── Pill row (mobile only) ───── */}
       <div className="relative z-[6200] flex gap-3 justify-evenly px-3 py-2.5 overflow-x-auto scrollbar-none md:hidden">
         {mobilePrimary.map((filter) => (
           <button
@@ -63,7 +62,6 @@ export default function MobileFilters({
         </button>
       </div>
 
-      {/* ───── Right-side sheet ───── */}
       <Transition appear show={openSheet} as={Fragment}>
         <Dialog
           as="div"

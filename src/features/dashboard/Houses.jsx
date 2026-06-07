@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, RadioGroup } from "@headlessui/react";
 import {
   BuildingOffice2Icon,
@@ -34,7 +34,6 @@ const Houses = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  /* --- data fetching – houses & house types --- */
   const {
     data: houses = [],
     isLoading: isHousesLoading,
@@ -50,7 +49,6 @@ const Houses = () => {
     isError: isHouseTypesError,
   } = useFetchHouseTypes();
 
-  /* --- local UI state --- */
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
     useState(false);
@@ -59,12 +57,10 @@ const Houses = () => {
   const [houseToDelete, setHouseToDelete] = useState(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
-  /* --- initialise first house-type when modal opens --- */
   useEffect(() => {
     if (isAddDialogOpen && houseTypes.length) setSelectedOption(houseTypes[0].key);
   }, [isAddDialogOpen, houseTypes]);
 
-  /* ---------- mutations ---------- */
   const createHouseMutation = useMutation(createHouse, {
     onSuccess: async ({ uuid }) => {
       toast.success("اقامتگاه با موفقیت اضافه شد!");
@@ -94,7 +90,6 @@ const Houses = () => {
     },
   });
 
-  /* ---------- handlers ---------- */
   const handleAddHouse = async () => {
     setDialogErrorMessage("");
     await createHouseMutation.mutateAsync({ structure: selectedOption });
@@ -113,8 +108,7 @@ const Houses = () => {
     }
   };
 
-  /* ---------- UI states ---------- */
-  if (isRefetchingHouses)
+  if (isHousesLoading || isRefetchingHouses)
     return (
       <div className="min-h-[65vh] flex items-center justify-center">
         <Loading message="در حال بارگذاری اقامتگاه‌ها..." />
@@ -181,7 +175,7 @@ const Houses = () => {
             <p className="text-sm text-gray-600 dark:text-slate-300">
               نوع اقامتگاه را انتخاب کنید.
             </p>
-            {isHouseTypesFetching ? (
+            {isHouseTypesLoading || isHouseTypesFetching ? (
               <Loading message="در حال بارگذاری نوع اقامتگاه..." />
             ) : (
               <div className="w-full">

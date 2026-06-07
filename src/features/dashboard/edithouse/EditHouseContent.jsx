@@ -21,7 +21,7 @@ import EditHouseCancellationRules from "./edithouse-components/EditHouseCancella
 import Button from "../../../ui/Button";
 import CustomInfoIcon from "../../../ui/CustomInfoIcon";
 import Modal from "../../../ui/Modal";
-import NotFound from "../../../legacy-pages/NotFound";
+import NotFound from "../../../components/NotFound";
 import { reportClientError } from "../../../utils/reportClientError";
 import { fa } from "../../../i18n/fa";
 

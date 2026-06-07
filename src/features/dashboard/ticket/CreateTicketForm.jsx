@@ -165,6 +165,7 @@ export default function CreateTicketForm({ onCreated, onCancel }) {
 
         <button
           type="submit"
+          data-testid="ticket-submit"
           disabled={sending || !subject.trim()}
           className="btn-primary btn-press min-h-11 rounded-2xl px-8 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-60"
         >

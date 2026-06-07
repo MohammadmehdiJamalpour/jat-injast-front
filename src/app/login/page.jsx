@@ -1,4 +1,5 @@
 import { AuthClient } from "../_components/ClientRoutes";
+import SiteChrome from "../_components/SiteChrome";
 import { routeModes } from "../route-modes";
 
 export const dynamic = "force-static";
@@ -8,5 +9,9 @@ export const metadata = {
 };
 
 export default function LoginPage() {
-  return <AuthClient />;
+  return (
+    <SiteChrome>
+      <AuthClient />
+    </SiteChrome>
+  );
 }

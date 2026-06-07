@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useCallback, useState, useEffect, useRef, useMemo } from "react";
 import toPersianNumber from "../../../utils/toPersianNumber";
 import { MinusIcon } from "@heroicons/react/24/outline";
 import PeopleDropdown from "./PeopleNumberDropDown";
 import Loading from "../../../ui/Loading";
 import { preInvoiceReserve, reserveHouse } from "../../../services/reserveService";
 import PreInvoicePreview from "./PreInvoicePreview";
-import PaymentSimulator from "../../payment/PaymentSimulator";
+import PaymentSimulator from "@/components/payment/PaymentSimulator";
 import { reportClientError } from "../../../utils/reportClientError";
 import { toast } from "react-hot-toast";
 import { useUserContext } from "../../../contexts/UserContext";
@@ -18,7 +18,6 @@ function HouseReservationMenu({
   reserveDateTo,
   setReserveDateFrom,
   setReserveDateTo,
-  uuid,
   calendarData,
   isRentRoom,
   roomOptions,
@@ -72,25 +71,7 @@ function HouseReservationMenu({
     return null;
   }, [calendarData, isRentRoom]);
 
-  useEffect(() => {
-    if (reserveDateFrom?.gregorianDate && reserveDateTo?.gregorianDate) {
-      setPreInvoiceLoading(true);
-      setPreInvoiceError(null);
-      setPreInvoiceData(null);
-
-      if (debounceTimer.current) clearTimeout(debounceTimer.current);
-
-      debounceTimer.current = setTimeout(() => {
-        callPreInvoice();
-      }, 2000);
-    }
-
-    return () => {
-      if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    };
-  }, [reserveDateFrom, reserveDateTo, selectedPeople]);
-
-  const callPreInvoice = async () => {
+  const callPreInvoice = useCallback(async () => {
     const body = {
       house_uuid: houseData.uuid,
       check_in: reserveDateFrom.gregorianDate,
@@ -115,7 +96,25 @@ function HouseReservationMenu({
       );
       setPreInvoiceLoading(false);
     }
-  };
+  }, [houseData.uuid, isRentRoom, reserveDateFrom, reserveDateTo, selectedPeople, selectedRoomUuid]);
+
+  useEffect(() => {
+    if (reserveDateFrom?.gregorianDate && reserveDateTo?.gregorianDate) {
+      setPreInvoiceLoading(true);
+      setPreInvoiceError(null);
+      setPreInvoiceData(null);
+
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+
+      debounceTimer.current = setTimeout(() => {
+        callPreInvoice();
+      }, 2000);
+    }
+
+    return () => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    };
+  }, [callPreInvoice, reserveDateFrom, reserveDateTo]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -190,8 +189,6 @@ function HouseReservationMenu({
       setIsReserving(false);
     }
   };
-
-  const formatPrice = (price) => toPersianNumber(price?.toLocaleString() || "");
 
   return (
     <>

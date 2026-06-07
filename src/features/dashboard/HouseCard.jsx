@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "@/lib/router-compat";
 import { EyeIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-import VendorCalendar from "../calendar/VendorCalendar";
+import VendorCalendar from "@/components/calendar/VendorCalendar";
 import Button from "../../ui/Button";
 import IconButton from "../../ui/IconButton";
 
@@ -44,7 +44,10 @@ export default function HouseCard({ house, onDelete, isDeleting }) {
 
   const statusKey = getKey(house.status).toLowerCase();
   const isPublished = statusKey === "published" || statusKey === "publish";
-  const imageSrc = house.image || house.main_image?.image || "/assets/jat-injast-badge.svg";
+  const imageSrc =
+    house.image ||
+    house.main_image?.image ||
+    "/assets/images/app-icons-dark-tile/app-icon-dark-navy-512.png";
 
   const detailRows = [
     { label: "نام", value: house.name || "اقامتگاه بدون نام" },

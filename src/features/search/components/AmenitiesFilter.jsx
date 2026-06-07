@@ -1,8 +1,7 @@
-import React from "react";
 import { Disclosure } from "@headlessui/react";
 import ToggleSwitchGroupPlain from "./../../../ui/ToggleSwitchGroupPlain";
+import { expandableButtonClassName } from "../../../ui/ExpandableContent";
 
-/* ---------- Skeleton (no-icon grid) ---------- */
 const SkeletonAmenities = ({ label, count = 6 }) => (
   <div className="mt-4 lg:col-span-2">
     <label className="block text-sm font-medium text-gray-500 mb-2">
@@ -88,8 +87,8 @@ export default function AmenitiesFilter({
             </div>
 
             <div className="mt-2 text-right">
-              <Disclosure.Button className="text-primary-600 hover:underline focus:outline-none">
-                {open ? "بستن" : "مشاهده بیشتر …"}
+              <Disclosure.Button className={expandableButtonClassName}>
+                {open ? "بستن" : "مشاهده بیشتر..."}
               </Disclosure.Button>
             </div>
           </div>

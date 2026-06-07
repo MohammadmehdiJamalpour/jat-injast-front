@@ -1,4 +1,3 @@
-import React from "react";
 
 function RadioInput({ label, value, onChange, name, id }) {
   return (

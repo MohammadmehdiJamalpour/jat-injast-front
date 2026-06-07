@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 function CitySearchInput({ onSearch, size = "md" }) {
@@ -50,7 +50,6 @@ function CitySearchInput({ onSearch, size = "md" }) {
   };
   const currentSize = sizeClasses[size] || sizeClasses.md;
 
-  /* ───────── responsive classes ───────── */
 
   return (
     <form

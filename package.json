@@ -8,11 +8,17 @@
     "build": "next build",
     "lint": "eslint .",
     "start": "next start --hostname 127.0.0.1",
-    "hygiene": "node scripts/check-hygiene.mjs && node scripts/check-source-size.mjs",
+    "ai-audit": "node scripts/check-ai-footprint.mjs",
+    "hygiene": "node scripts/check-hygiene.mjs && node scripts/check-source-size.mjs && node scripts/check-boundaries.mjs",
+    "boundaries": "node scripts/check-boundaries.mjs",
+    "typecheck": "tsc --noEmit",
+    "typecheck:services": "tsc -p tsconfig.strict-services.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "quality": "npm run hygiene && npm run lint -- --quiet && npm run test && npm run build"
+    "test:a11y": "playwright test e2e/accessibility-smoke.spec.js e2e/accessibility-workflows.spec.js",
+    "test:responsive": "playwright test e2e/responsive-overflow.spec.js",
+    "quality": "npm run ai-audit && npm run hygiene && npm run typecheck:services && npm run lint -- --max-warnings=0 && npm run test && npm run build"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",

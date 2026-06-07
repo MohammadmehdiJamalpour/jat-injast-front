@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Profile from "./Profile";
 import EditProfile from "./EditProfile";
 import Houses from "./Houses";

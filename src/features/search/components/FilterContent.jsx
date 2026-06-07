@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback } from "react";
 
 import PeopleNumberFilter from "./PeopleNumberFilter";
 import PriceRangeFilter from "./PriceRangeFilter";
@@ -22,7 +22,6 @@ import {
   useFetchHouseViews,
 } from "../../../services/fetchDataService";
 
-/** -------- Offline fallbacks -------- */
 const REGION_FALLBACK = [
   { key: "Village", label: "روستایی" },
   { key: "Forest", label: "جنگلی" },
@@ -60,7 +59,6 @@ const VIEWS_FALLBACK = [
 ];
 
 export default function FilterContent({ filter }) {
-  /** --- Region --- */
   const { data: textures = [], isLoading: isLoadingTextures, isError: isErrorTextures } =
     useFetchTextures();
   const regionOptions = useMemo(() => textures.map((t) => ({ key: t.key, label: t.label })), [textures]);
@@ -69,7 +67,6 @@ export default function FilterContent({ filter }) {
     setSelectedRegions((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
   }, []);
 
-  /** --- Ownership --- */
   const { data: privacy = [], isLoading: isLoadingPrivacy, isError: isErrorPrivacy } =
     useFetchPrivacyOptions();
   const ownershipOptions = useMemo(() => privacy.map((p) => ({ key: p.key, label: p.label })), [privacy]);
@@ -78,7 +75,6 @@ export default function FilterContent({ filter }) {
     setSelectedOwnership((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
   }, []);
 
-  /** --- Amenities --- */
   const { data: facilities = [], isLoading: isLoadingFacilities, isError: isErrorFacilities } =
     useFetchFacilities();
   const amenitiesOptions = useMemo(() => facilities.map((f) => ({ key: f.key, label: f.label })), [facilities]);
@@ -87,7 +83,6 @@ export default function FilterContent({ filter }) {
     setSelectedAmenities((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
   }, []);
 
-  /** --- Property Types --- */
   const { data: propertyTypes = [], isLoading: isLoadingTypes, isError: isErrorTypes } =
     useFetchPropertyTypes();
   const propertyTypeOptions = useMemo(
@@ -99,7 +94,6 @@ export default function FilterContent({ filter }) {
     setSelectedPropertyTypes((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
   }, []);
 
-  /** --- Rules --- */
   const { data: rules = [], isLoading: isLoadingRules, isError: isErrorRules } = useFetchRules();
   const rulesOptions = useMemo(() => rules.map((r) => ({ key: r.key, label: r.label })), [rules]);
   const [selectedRules, setSelectedRules] = useState([]);
@@ -107,7 +101,6 @@ export default function FilterContent({ filter }) {
     setSelectedRules((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
   }, []);
 
-  /** --- Structure (floors) --- */
   const { data: floors = [], isLoading: isLoadingFloors, isError: isErrorFloors } =
     useFetchHouseFloors();
   const structureOptions = useMemo(() => floors.map((f) => ({ key: f.key, label: f.label })), [floors]);
@@ -116,7 +109,6 @@ export default function FilterContent({ filter }) {
     setSelectedStructures((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
   }, []);
 
-  /** --- Views --- */
   const { data: houseViews = [], isLoading: isLoadingViews, isError: isErrorViews } =
     useFetchHouseViews();
   const viewOptions = useMemo(() => houseViews.map((v) => ({ key: v.key, label: v.label })), [houseViews]);

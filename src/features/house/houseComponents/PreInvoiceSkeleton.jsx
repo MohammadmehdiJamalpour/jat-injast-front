@@ -1,4 +1,3 @@
-// PreInvoiceSkeleton.jsx
 export default function PreInvoiceSkeleton() {
     return (
       <div className="border rounded-3xl p-3 bg-gray-50 mt-2">

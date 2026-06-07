@@ -1,4 +1,3 @@
-import React from "react";
 import PreInvoiceSkeleton from "./PreInvoiceSkeleton";
 import toPersianNumber from "../../../utils/toPersianNumber";
 
@@ -13,12 +12,10 @@ function PreInvoicePreview({
   preInvoiceError,
   preInvoiceData,
 }) {
-  /* ─────────────── loading */
   if (preInvoiceLoading) {
     return <PreInvoiceSkeleton />;
   }
 
-  /* ─────────────── error */
   if (preInvoiceError) {
     // Normalise the error into a plain string
     const msg =
@@ -31,10 +28,8 @@ function PreInvoicePreview({
     );
   }
 
-  /* ─────────────── no-data (but not an error) */
   if (!preInvoiceData) return null;
 
-  /* ─────────────── success UI */
   return (
     <div className="border rounded-3xl py-2 px-3 xs:px-4 bg-gray-50 mt-2">
       {/* bills list */}

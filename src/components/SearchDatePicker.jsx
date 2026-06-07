@@ -1,4 +1,3 @@
-import React from "react";
 import { Calendar, utils } from "react-modern-calendar-datepicker";
 
 /**

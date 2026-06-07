@@ -1,19 +1,16 @@
-import React, { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 
 import toPersianNumber from "./../../../utils/toPersianNumber";
 import Vote from "./../../../ui/Vote";
 
-/* ---------------------------------- helpers --------------------------------- */
 const cleanNumber = (val) => Number(val?.toString().replace(/[^0-9]/g, ""));
 const formatPrice = (value) => `${toPersianNumber(value)} تومان / شب`;
 
-/* --------------------------------------------------------------------------- */
 function SearchHouseCard({ house }) {
   const safeHouse = house ?? {};
 
-  /* ------------------------------ discount logic ------------------------------ */
   const discountPercent = useMemo(() => {
     if (safeHouse.discountPercent) return safeHouse.discountPercent;
     if (safeHouse.originalPrice) {
@@ -26,7 +23,6 @@ function SearchHouseCard({ house }) {
     return 0;
   }, [safeHouse.discountPercent, safeHouse.originalPrice, safeHouse.price]);
 
-  /* ------------------------------ images logic -------------------------------- */
   const images = useMemo(() => {
     if (Array.isArray(safeHouse.images) && safeHouse.images.length) return safeHouse.images;
     return safeHouse.avatar ? [safeHouse.avatar] : [];
@@ -36,7 +32,6 @@ function SearchHouseCard({ house }) {
   const canGoPrev = activeIndex > 0;
   const canGoNext = activeIndex < images.length - 1;
 
-  /* ---------------------------- navigation helpers --------------------------- */
   const prevImg = useCallback(() => {
     if (canGoPrev) setActiveIndex((idx) => idx - 1);
   }, [canGoPrev]);
@@ -45,7 +40,6 @@ function SearchHouseCard({ house }) {
     if (canGoNext) setActiveIndex((idx) => idx + 1);
   }, [canGoNext]);
 
-  /* --------------------------- swipe / drag logic --------------------------- */
   const dragThreshold = 50;
   const [startX, setStartX] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -80,12 +74,10 @@ function SearchHouseCard({ house }) {
 
   const [isSliderHovered, setIsSliderHovered] = useState(false);
 
-  /* --------------------------- compute transform ---------------------------- */
   const translateX = -((images.length - 1 - activeIndex) * 100);
 
   if (!house) return null;
 
-  /* --------------------------------------------------------------------------- */
   return (
     <div className="relative m-2.5 flex select-none flex-col overflow-hidden rounded-3xl border border-primary-600 bg-primary-50/30 shadow-centered shadow-primary-50 transition-transform duration-500 hover:scale-[1.02] hover:shadow-primary-100">
       {/* Featured badge */}
@@ -102,7 +94,6 @@ function SearchHouseCard({ house }) {
         </span>
       )}
 
-      {/* ----------------------------- image slider ------------------------------ */}
       <div
         className="relative h-52 w-full overflow-hidden xs:h-60 sm:h-60 550:sm-72 lg:h-72 xl:h-60 3xl:h-72"
         onMouseEnter={() => setIsSliderHovered(true)}
@@ -178,7 +169,6 @@ function SearchHouseCard({ house }) {
 
     
 
-      {/* ----------------------------- house details ----------------------------- */}
       <div className="flex items-center ">
         {/* left-hand text block (unchanged) */}
         <div className="flex flex-col  gap-2.5 w-full pr-4 py-2">

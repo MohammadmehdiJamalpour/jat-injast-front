@@ -1,4 +1,3 @@
-﻿import React from "react";
 
 function HowBecomeHostContent({ selectedSection }) {
   const sections = {
@@ -59,7 +58,7 @@ function HowBecomeHostContent({ selectedSection }) {
         </p>
         <ul className="list-disc pr-5 space-y-2">
           <li>تلفن: ۰۲۱‑۹۱۲۳۴۵۶۷</li>
-          <li>ایمیل: host-support@jat-injast.test</li>
+          <li>ارسال درخواست از بخش تیکت پشتیبانی پنل میزبان</li>
           <li>
             راهنمای جامع میزبان در{" "}
             <a href="/host-guide" className="text-primary-600 hover:underline">

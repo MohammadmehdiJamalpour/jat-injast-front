@@ -5,7 +5,7 @@ import {
   PhoneIcon,
 } from "@heroicons/react/24/outline";
 
-const brandLogo = "/assets/jat-injast-badge.svg";
+const brandLogo = "/assets/images/core-transparent/jat-injast-icon-white-transparent-512.png";
 
 export default function InfoSection({ info, isLoading = false }) {
   if (!info && !isLoading) return null;
@@ -18,12 +18,12 @@ export default function InfoSection({ info, isLoading = false }) {
     <section className="min-w-0 space-y-4">
       <div className={clsx("space-y-3", isLoading && "animate-pulse")}>
         <div className="flex items-start gap-3">
-          <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-2xl border border-primary-100 bg-primary-50 dark:border-slate-700 dark:bg-slate-900">
+          <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 p-1.5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             {!isLoading ? (
               <img
                 src={brandLogo}
                 alt={title}
-              className="h-full w-full object-cover"
+                className="h-full w-full object-contain"
               />
             ) : (
               <span className="h-7 w-7 rounded-xl bg-primary-100 dark:bg-slate-800" />

@@ -1,4 +1,3 @@
-import React from "react";
 import toPersianNumber from "../../../utils/toPersianNumber";
 import ExpandableContent from "../../../ui/ExpandableContent";
 
@@ -73,7 +72,6 @@ function HouseRules({ houseData }) {
           collapsedHeight={128}
           contentClassName="flex flex-col pb-1"
           dir="rtl"
-          buttonClassName="text-primary-600 hover:underline focus:outline-none"
         >
           {rules.map((rule, index) => renderRule(rule, index))}
 

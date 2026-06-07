@@ -4,7 +4,7 @@ import { routeModes } from "./route-modes";
 
 export const dynamic = "force-static";
 export const metadata = {
-  title: "Jat Injast",
+  title: { absolute: "جات اینجاست" },
   description: routeModes.home.reason,
 };
 

@@ -1,4 +1,4 @@
-import React, {
+import {
   useState,
   useEffect,
   useRef,
@@ -9,9 +9,8 @@ import toPersianNumber from "../../../utils/toPersianNumber";
 import Loading from "../../../ui/Loading";
 import { toast } from "react-hot-toast";
 import { useUserContext } from "../../../contexts/UserContext";
-import ReserveCalendarSwiper from "../../calendar/ReserveCalendarSwiper";
 import PreInvoicePreview from "./PreInvoicePreview";
-import PaymentSimulator from "../../payment/PaymentSimulator";
+import PaymentSimulator from "@/components/payment/PaymentSimulator";
 import {
   preInvoiceReserve,
   reserveHouse,
@@ -101,6 +100,8 @@ function ReserveMenuDesktop({
     reserveDateTo,
     selectedPeople,
     selectedRoomUuid,
+    houseData.uuid,
+    isRentRoom,
   ]);
 
   useEffect(() => {

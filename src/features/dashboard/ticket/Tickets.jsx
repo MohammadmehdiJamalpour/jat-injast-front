@@ -81,6 +81,7 @@ export default function Tickets() {
 
             <button
               type="button"
+              data-testid="ticket-create-trigger"
               onClick={() => setView("create")}
               className="btn-primary btn-press inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl px-4 text-sm font-bold"
             >

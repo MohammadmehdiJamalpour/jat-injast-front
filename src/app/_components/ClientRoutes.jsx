@@ -3,33 +3,33 @@
 import dynamic from "next/dynamic";
 import RouteLoading from "./RouteLoading";
 
-export const HomeClient = dynamic(() => import("@/legacy-pages/Home"), {
+export const HomeClient = dynamic(() => import("@/routes/clients/HomeClient"), {
   ssr: false,
   loading: () => <RouteLoading />,
 });
-export const SearchClient = dynamic(() => import("@/legacy-pages/SearchPage"), {
+export const SearchClient = dynamic(() => import("@/routes/clients/SearchClient"), {
   ssr: false,
   loading: () => <RouteLoading />,
 });
-export const AboutClient = dynamic(() => import("@/legacy-pages/AboutUs"), {
+export const AboutClient = dynamic(() => import("@/routes/clients/AboutClient"), {
   ssr: false,
   loading: () => <RouteLoading />,
 });
 export const HowBecomeHostClient = dynamic(
-  () => import("@/legacy-pages/HowBecomeHost"),
+  () => import("@/routes/clients/HowBecomeHostClient"),
   {
     ssr: false,
     loading: () => <RouteLoading />,
   },
 );
 export const TermsClient = dynamic(
-  () => import("@/legacy-pages/TermsOfService"),
+  () => import("@/routes/clients/TermsClient"),
   {
     ssr: false,
     loading: () => <RouteLoading />,
   },
 );
-export const AuthClient = dynamic(() => import("@/legacy-pages/Auth"), {
+export const AuthClient = dynamic(() => import("@/routes/clients/AuthClient"), {
   ssr: false,
   loading: () => <RouteLoading />,
 });

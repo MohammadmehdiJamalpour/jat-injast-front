@@ -17,7 +17,8 @@ import { logOutUser } from "../../services/userService";
 import { useQueryClient } from "@tanstack/react-query";
 import { reportClientError } from "../../utils/reportClientError";
 
-const ADMIN_DEMO_PHONE = "09123456789";
+const ADMIN_FALLBACK_PHONE = "09123456789";
+const FALLBACK_PROFILE_AVATAR = "/assets/images/core-transparent/jat-injast-icon-white-transparent-512.png";
 
 function DashboardSidebar({ setSelectedTab, user }) {
   const svgClasses = "ml-1 w-5 h-5 text-current";
@@ -25,8 +26,12 @@ function DashboardSidebar({ setSelectedTab, user }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const displayedPhone =
     user?.type === "Admin"
-      ? ADMIN_DEMO_PHONE
+      ? ADMIN_FALLBACK_PHONE
       : user?.phone || "شماره ثبت نشده";
+  const profileAvatar = user?.avatar || FALLBACK_PROFILE_AVATAR;
+  const profileAvatarClassName = user?.avatar
+    ? "h-16 w-16 shrink-0 rounded-full border border-primary-100 object-cover shadow-sm dark:border-slate-700"
+    : "h-16 w-16 shrink-0 rounded-full border border-primary-100 bg-slate-950 object-contain shadow-sm dark:border-slate-700";
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -51,8 +56,8 @@ function DashboardSidebar({ setSelectedTab, user }) {
       >
         <div className="flex items-center gap-3">
           <img
-            className="h-16 w-16 shrink-0 rounded-full border border-primary-100 object-cover shadow-sm dark:border-slate-700"
-            src={user?.avatar || "/pwa-icon.webp"}
+            className={profileAvatarClassName}
+            src={profileAvatar}
             alt="Profile"
           />
 
@@ -187,4 +192,3 @@ function DashboardSidebar({ setSelectedTab, user }) {
 }
 
 export default DashboardSidebar;
-

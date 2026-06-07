@@ -1,21 +1,16 @@
-import React, { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import toPersianNumber from "./../../../utils/toPersianNumber";
 
 import Vote from './../../../ui/Vote';
 
-/* ---------- helpers ---------- */
-const cleanNumber = (val) =>
-  Number(val?.toString().replace(/[^0-9]/g, "")) || 0;
 const formatPrice = (value) =>
   value ? `${toPersianNumber(value)} تومان / شب` : "نامشخـص";
 
-/* ---------- component ---------- */
 function SimilarHouseCard({ house }) {
   const safeHouse = house ?? {};
 
-  /* ---- 1. Normalise *everything* that can be missing ---- */
   const {
     /* names & ids */
     uuid,
@@ -32,12 +27,9 @@ function SimilarHouseCard({ house }) {
     /* misc */
     score: scoreProp,
     vote: voteProp,
-    rooms = 0,
     featured = false,
-    structure = {},
   } = safeHouse;
 
-  /* ---- 2. Prices & discount ---- */
   const currentPrice = priceObj?.final ?? priceNumber ?? 0;
   const oldPrice = priceObj?.initial ?? originalPrice ?? 0;
 
@@ -47,7 +39,6 @@ function SimilarHouseCard({ house }) {
       ? Math.round(((oldPrice - currentPrice) / oldPrice) * 100)
       : 0);
 
-  /* ---- 3. Images ---- */
   const images = useMemo(() => {
     if (Array.isArray(rawImages) && rawImages.length) return rawImages;
     if (avatar) return [avatar];
@@ -107,7 +98,6 @@ function SimilarHouseCard({ house }) {
                  border border-primary-600 shadow-centered shadow-primary-50
                  transition-transform duration-500 hover:scale-105 hover:shadow-primary-100"
     >
-      {/* --- badges --- */}
       {featured && (
         <span className="absolute right-2 top-2 z-20 rounded-full bg-primary-500/95
                          px-3 py-1 text-sm font-medium text-secondary-50 shadow-lg backdrop-blur">
@@ -122,7 +112,6 @@ function SimilarHouseCard({ house }) {
         </span>
       )}
 
-      {/* --- slider --- */}
       <div
         className="group relative h-40 w-full overflow-hidden xs:h-48 sm:h-64
                    md:h-44 550:h-56 lg:h-50 3xl:h-52 select-none"
@@ -184,7 +173,6 @@ function SimilarHouseCard({ house }) {
         )}
       </div>
 
-      {/* --- details --- */}
       <div className="flex flex-col gap-2.5 bg-primary-50/30 px-4 py-2">
         <div className="flex items-center gap-2">
           <h3 className="truncate text-sm font-semibold text-primary-900 md:text-base">

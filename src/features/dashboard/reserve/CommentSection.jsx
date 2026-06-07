@@ -1,6 +1,3 @@
-// =============================
-// =============================
-import React from "react";
 import toPersianNumber from "../../../utils/toPersianNumber";
 
 import Vote from './../../../ui/Vote';

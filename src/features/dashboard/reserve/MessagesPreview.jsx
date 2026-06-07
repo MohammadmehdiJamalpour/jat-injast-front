@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
 import {
   ChatBubbleLeftRightIcon,
@@ -116,7 +116,7 @@ export default function MessagesPreview({
 
       recorder.start();
       setIsRecording(true);
-    } catch (error) {
+    } catch {
       setRecordingError("برای ضبط صدا باید اجازه دسترسی به میکروفون را بدهید.");
       setIsRecording(false);
       stopRecordingTracks();
@@ -271,7 +271,7 @@ export default function MessagesPreview({
         >
           <div className="flex shrink-0 items-center gap-1">
             {mediaButtons.map(({ key, label, icon: Icon, ref, accept }) => (
-              <React.Fragment key={key}>
+              <Fragment key={key}>
                 <input
                   ref={ref}
                   type="file"
@@ -289,7 +289,7 @@ export default function MessagesPreview({
                 >
                   <Icon className="h-5 w-5" />
                 </button>
-              </React.Fragment>
+              </Fragment>
             ))}
 
             <button

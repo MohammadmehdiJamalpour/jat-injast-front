@@ -1,6 +1,5 @@
-// HouseLocation.jsx
 
-import React, { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import L from "leaflet";
 import { createMapIrTileLayer } from "../../../lib/mapIr";
 
@@ -63,7 +62,8 @@ function HouseLocation({ cords }) {
   }, [cords?.latitude, cords?.longitude]);
 
   useEffect(() => {
-    if (!containerRef.current || !position) return undefined;
+    const container = containerRef.current;
+    if (!container || !position) return undefined;
 
     if (mapRef.current) {
       mapRef.current.remove();
@@ -72,9 +72,9 @@ function HouseLocation({ cords }) {
 
     // Leaflet stamps the container DOM node. Removing this stamp prevents
     // strict-mode remounts from failing with "Map container is already initialized".
-    delete containerRef.current._leaflet_id;
+    delete container._leaflet_id;
 
-    const map = L.map(containerRef.current, {
+    const map = L.map(container, {
       center: position,
       zoom: 13,
       zoomControl: false,
@@ -100,9 +100,7 @@ function HouseLocation({ cords }) {
       map.remove();
       mapRef.current = null;
 
-      if (containerRef.current) {
-        delete containerRef.current._leaflet_id;
-      }
+      delete container._leaflet_id;
     };
   }, [position]);
 

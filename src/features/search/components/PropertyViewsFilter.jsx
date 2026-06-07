@@ -1,7 +1,5 @@
-import React from "react";
 import ToggleSwitchGroupPlain from "../../../ui/ToggleSwitchGroupPlain";
 
-/* ---------- Skeleton ---------- */
 const SkeletonViews = ({ label, count = 6 }) => (
   <div className="mt-4 md:mt-0 lg:col-span-2">
     <label className="block text-sm font-medium text-gray-500 mb-2">{label}</label>
@@ -44,7 +42,6 @@ export default function PropertyViewsFilter({
 
   const data = options.length ? options : fallbackOptions;
 
-  /* ---------- Always show full list (scroll if long) ---------- */
   return (
     <div className="mt-4 md:mt-0 lg:col-span-2">
       <div className="max-h-[90vh] lg:max-h-[50vh] overflow-y-auto pr-1">

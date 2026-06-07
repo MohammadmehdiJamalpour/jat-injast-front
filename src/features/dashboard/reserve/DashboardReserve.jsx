@@ -14,7 +14,7 @@ import Loading from "../../../ui/Loading";
 import SectionHeader from "../../../ui/SectionHeader";
 import toPersianNumber from "../../../utils/toPersianNumber";
 import ReserveInformation from "./ReserveInformation";
-import PaymentStatusBadge from "../../payment/PaymentStatusBadge";
+import PaymentStatusBadge from "@/components/payment/PaymentStatusBadge";
 import { reportClientError } from "../../../utils/reportClientError";
 import { fa } from "../../../i18n/fa";
 

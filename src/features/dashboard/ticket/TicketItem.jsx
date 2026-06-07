@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TicketBody from "./TicketBody";
 import DeleteDialog from "./DeleteDialog";
 

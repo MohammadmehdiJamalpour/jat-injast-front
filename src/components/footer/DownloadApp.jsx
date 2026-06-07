@@ -1,6 +1,6 @@
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 
-const logotype = "/assets/jat-injast-wordmark-primary.svg";
+const logotype = "/assets/images/core-transparent/jat-injast-logo-horizontal-darkmode-white-text.png";
 const downloadGoogle = "/download-google.webp";
 const downloadMyket = "/download-myket.webp";
 const downloadSibApp = "/download-sibapp.webp";
@@ -38,7 +38,9 @@ export default function DownloadApp({ downloads = [] }) {
             <ArrowDownTrayIcon className="h-5 w-5" />
           </span>
           <div className="min-w-0">
-            <img src={logotype} alt="جات اینجاست" className="h-7 w-auto max-w-36" />
+            <span className="inline-flex w-fit rounded-2xl bg-slate-950 px-2.5 py-1.5">
+              <img src={logotype} alt="جات اینجاست" className="h-8 w-auto max-w-40 object-contain" />
+            </span>
             <p className="mt-1 text-xs text-primary-700 dark:text-slate-400">
               دریافت اپلیکیشن نمونه رزرو اقامتگاه
             </p>

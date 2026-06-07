@@ -1,7 +1,5 @@
-import React from "react";
 import ToggleSwitchGroupPlain from "../../../ui/ToggleSwitchGroupPlain";
 
-/* ---------- Skeleton ---------- */
 const SkeletonRegion = ({ label, count = 6 }) => (
   <div className="mt-4 md:mt-0 lg:col-span-2">
     <label className="block text-sm font-medium text-gray-500 mb-2">{label}</label>
@@ -25,7 +23,6 @@ export default function RegionFilter({
   isLoading = false,
   isError = false,
 }) {
-  /* ---------- States ---------- */
   if (isLoading) return <SkeletonRegion label={label} />;
 
   if (isError)

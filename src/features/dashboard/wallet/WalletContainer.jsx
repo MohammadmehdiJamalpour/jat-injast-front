@@ -1,5 +1,5 @@
 // components/WalletContainer.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Toaster } from "react-hot-toast";
 
 import WalletBalances      from "./WalletBalances";
@@ -8,12 +8,10 @@ import WithdrawSection     from "./WithdrawSection";
 import TransactionsSection from "./TransactionsSection";
 
 function WalletContainer({ user }) {
-  /* --- modal state --- */
   const [showAddCardModal,  setShowAddCardModal]  = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [showChargeModal,   setShowChargeModal]   = useState(false);
 
-  /* --- wallet main balance for withdraw limits --- */
   const mainBalance = user?.wallet?.main ?? 0;
   const actions = [
     { label: "اضافه کردن کارت", onClick: () => setShowAddCardModal(true), variant: "secondary" },

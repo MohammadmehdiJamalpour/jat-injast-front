@@ -16,8 +16,8 @@ const Textarea = forwardRef(
     },
     ref,
   ) => {
-    const generatedId = useId();
-    const textareaId = id || generatedId;
+    const reactId = useId();
+    const textareaId = id || reactId;
 
     return (
       <div className={clsx("space-y-2 text-right", className)}>

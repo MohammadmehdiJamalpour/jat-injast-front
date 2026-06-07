@@ -1,10 +1,9 @@
-import React from "react";
 import { Navigate, Outlet, useLocation } from "@/lib/router-compat";
 import { useUserContext } from "../contexts/UserContext";
 import Loading from "../ui/Loading";
 
 export default function ProtectedRoute({ children }) {
-  const { userData, isUserDataLoading, isUserError, userError } = useUserContext();
+  const { isUserDataLoading, isUserError, userError } = useUserContext();
   const location = useLocation();
 
   // Still checking auth → show a loader

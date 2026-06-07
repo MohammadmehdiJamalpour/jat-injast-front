@@ -1,5 +1,4 @@
-// HouseHeader.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { HeartIcon as HeartIconSolid, ShareIcon } from "@heroicons/react/24/solid";
 import { HeartIcon as HeartIconOutline } from "@heroicons/react/24/outline";
 import Loading from "../../ui/Loading";

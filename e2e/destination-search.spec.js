@@ -41,14 +41,14 @@ const searchHouse = {
 };
 
 async function stubPublicApi(page) {
-  await page.route("**/assets/zone", (route) =>
+  await page.route("**/assets/zone**", (route) =>
     route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({ success: true, data: [destination] }),
     }),
   );
 
-  await page.route("**/content/homepage", (route) =>
+  await page.route("**/content/homepage**", (route) =>
     route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({
@@ -58,7 +58,7 @@ async function stubPublicApi(page) {
     }),
   );
 
-  await page.route("**/content/footer", (route) =>
+  await page.route("**/content/footer**", (route) =>
     route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({
@@ -74,7 +74,7 @@ async function stubPublicApi(page) {
     }),
   );
 
-  await page.route("**/house", (route) =>
+  await page.route("**/house**", (route) =>
     route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({ success: true, data: [searchHouse] }),
@@ -97,7 +97,8 @@ test.describe("destination search flow", () => {
   test("opens search from a popular destination and preserves destination context", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.locator("body").waitFor({ state: "visible" });
 
     const destinationCard = page.getByTestId("destination-card-lut-desert");
     await expect(destinationCard).toBeVisible();

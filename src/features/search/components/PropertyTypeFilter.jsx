@@ -1,7 +1,5 @@
-import React from "react";
 import ToggleSwitchGroupPlain from "../../../ui/ToggleSwitchGroupPlain";
 
-/* ---------- Skeleton without icons ---------- */
 const SkeletonTogglePlain = ({ label, count = 4 }) => (
   <div className="mt-4 lg:col-span-2">
     <label className="block text-sm font-medium text-gray-500 mb-2">

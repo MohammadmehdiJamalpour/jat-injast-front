@@ -41,6 +41,7 @@ export default function MapSection({ houses, loading, selectedPlace }) {
     }
     return TEHRAN_CENTER;
   }, [houses, selectedPlace?.lat, selectedPlace?.lng]);
+  const initialCenterRef = useRef(center);
 
   const fadeNeighbours = (marker, fade) => {
     const map = mapRef.current;
@@ -175,7 +176,7 @@ export default function MapSection({ houses, loading, selectedPlace }) {
     }
 
     const map = L.map(node, {
-      center,
+      center: initialCenterRef.current,
       zoom: 5,
       scrollWheelZoom: true,
       zoomControl: false,

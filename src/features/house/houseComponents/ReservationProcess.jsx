@@ -1,5 +1,4 @@
-// ReservationProcess.jsx
-import React, { Fragment, useState } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { toast } from "react-hot-toast";
 import Loading from "../../../ui/Loading";

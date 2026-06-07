@@ -1,4 +1,3 @@
-import React from "react";
 import ZonesSwiperList from "./ZonesSwiperList";
 import SectionsSwipers from "./SectionsSwipers";
 import BecomeHostSection from "./BecomeHostSection";

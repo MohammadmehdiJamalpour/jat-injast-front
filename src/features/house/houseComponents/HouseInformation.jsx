@@ -1,6 +1,4 @@
-import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
-import React from 'react';
-import toPersianNumber from '../../../utils/toPersianNumber';
+import { MapPinIcon } from '@heroicons/react/24/solid';
 import Vote from '../../../ui/Vote';
 
 function HouseInformation({ houseData }) {

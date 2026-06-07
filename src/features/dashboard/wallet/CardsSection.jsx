@@ -1,5 +1,5 @@
 // components/CardsSection.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import BeatLoader from "react-spinners/BeatLoader";
 
@@ -23,21 +23,16 @@ function StatusBadge({ status }) {
 }
 
 function CardsSection({ showAddCardModal, setShowAddCardModal }) {
-  /* ------------------------------ Data ------------------------------ */
   const { data: banks, isLoading: banksLoading, isError: banksError } = useBanksList();
   const { data: cards, isLoading: cardsLoading, isError: cardsError } = useCardsList();
 
-  /* --------------------------- Mutation ----------------------------- */
   const addCardMutation = useAddCard();
 
-  /* ----------------------------- State ------------------------------ */
   const [newCard, setNewCard]   = useState({ account_number:"", card_number:"", iban:"IR-", bank:"" });
   const [addCardErrors, setAddCardErrors] = useState({});
 
-  /* ---------------------------- Helpers ----------------------------- */
   const banksOptions = banks?.map((b) => ({ value: b.key, label: b.label })) ?? [];
 
-  /* --------------------------- Handlers ----------------------------- */
   async function handleAddCard() {
     try {
       setAddCardErrors({});
@@ -56,7 +51,6 @@ function CardsSection({ showAddCardModal, setShowAddCardModal }) {
     }
   }
 
-  /* -------------------- Loading / Error States ---------------------- */
   if (banksLoading || cardsLoading)
     return (
       <div className="flex justify-center items-center min-h-[30vh]">
@@ -65,7 +59,6 @@ function CardsSection({ showAddCardModal, setShowAddCardModal }) {
     );
   if (banksError || cardsError) return <div>خطایی در دریافت اطلاعات کارت‌ها رخ داده است.</div>;
 
-  /* ------------------------------------------------------------------ */
   const cardRows = Array.isArray(cards) ? cards : [];
   const cardColumns = [
     {
@@ -122,7 +115,6 @@ function CardsSection({ showAddCardModal, setShowAddCardModal }) {
         />
       </WalletDataSection>
 
-      {/* ======= Add-Card Modal (controlled by parent) ======= */}
       <Modal
         isOpen={showAddCardModal}
         onClose={() => setShowAddCardModal(false)}

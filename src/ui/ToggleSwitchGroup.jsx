@@ -1,4 +1,3 @@
-import React from "react";
 import { Switch } from "@headlessui/react";
 
 const ToggleSwitchGroup = ({ label, options, selectedOptions, onChange }) => (

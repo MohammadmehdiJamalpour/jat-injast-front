@@ -1,4 +1,3 @@
-import React from "react";
 import { Switch } from "@headlessui/react";
 
 const ToggleSwitch = ({ checked, onChange, label, icon }) => (

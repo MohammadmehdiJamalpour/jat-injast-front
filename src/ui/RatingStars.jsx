@@ -1,4 +1,3 @@
-import React from "react";
 import { HiStar } from "react-icons/hi";
 import toPersianNumber from './../utils/toPersianNumber';
 

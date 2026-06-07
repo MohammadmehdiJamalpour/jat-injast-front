@@ -29,7 +29,7 @@ export async function generateMetadata({ params }) {
   const house = await getHouseMetadata(uuid);
 
   return {
-    title: house?.name || "House",
+    title: house?.name || "اقامتگاه",
     description: house?.description || routeModes.house.reason,
   };
 }

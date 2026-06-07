@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Disclosure } from "@headlessui/react";
 import { HomeIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
@@ -28,7 +28,6 @@ function EditHouseSidebar({ setSelectedTab, selectedTab, tabSections }) {
         // The parent's label
         const parentLabel = section.label;
 
-        // If openSection === parentLabel, this parent is open
         const isSectionOpen = openSection === parentLabel;
 
         // This helps us highlight the parent tab if any of its child tabs is selected

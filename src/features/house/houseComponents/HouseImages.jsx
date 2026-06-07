@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import GalleryLightbox from "../../../ui/GalleryLightbox";
+import { expandableButtonClassName } from "../../../ui/ExpandableContent";
 
 const FALLBACK_IMAGES = [
   { media: "/assets/favorite-1.jpg", title: "تصویر اقامتگاه" },
@@ -31,6 +32,7 @@ function ImageWithSkeleton({
   return (
     <button
       type="button"
+      aria-label={title || alt}
       className={`relative block ${wrapperClassName} cursor-pointer overflow-hidden text-right btn-press`}
       onClick={handleClick}
     >
@@ -157,10 +159,10 @@ export default function HouseImages({ houseData }) {
                   {index === 1 && displayImages.length > 4 && (
                     <button
                       type="button"
-                      className="absolute inset-0 flex items-center justify-center rounded-2xl bg-gray-900/45 text-sm text-white backdrop-blur-[1px] transition-colors duration-300 hover:bg-gray-900/55"
+                      className="absolute inset-0 flex items-center justify-center rounded-2xl bg-gray-900/35 backdrop-blur-[1px] transition-colors duration-300 hover:bg-gray-900/45"
                       onClick={() => open(imageIndex)}
                     >
-                      مشاهده بیشتر
+                      <span className={expandableButtonClassName}>مشاهده بیشتر...</span>
                     </button>
                   )}
                 </div>

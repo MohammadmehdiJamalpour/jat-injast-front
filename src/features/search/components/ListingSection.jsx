@@ -1,4 +1,3 @@
-import React from 'react';
 import SearchHouseCard from './SearchHouseCard';
 import { fa } from '@/i18n/fa';
 

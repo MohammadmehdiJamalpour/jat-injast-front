@@ -1,5 +1,3 @@
-// AppLayout.jsx
-import React from "react";
 import { Outlet, useLocation } from "@/lib/router-compat";
 import Header from "./Header";
 import HeroOnlyOnHome from './../components/home/HeroOnlyOnHome';

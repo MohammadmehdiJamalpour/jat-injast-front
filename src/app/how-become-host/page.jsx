@@ -4,7 +4,7 @@ import { routeModes } from "../route-modes";
 
 export const dynamic = "force-static";
 export const metadata = {
-  title: "Become a Host",
+  title: "میزبان شوید",
   description: routeModes.staticContent.reason,
 };
 

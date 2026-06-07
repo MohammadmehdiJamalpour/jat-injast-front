@@ -1,5 +1,5 @@
 // components/TransactionsSection.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import BeatLoader from "react-spinners/BeatLoader";
 
@@ -19,26 +19,21 @@ const txDescription = (tx) => tx.label || tx.description || "—";
 const txReference = (tx) => tx.reference_uuid ? String(tx.reference_uuid).slice(0, 8) : "";
 
 function TransactionsSection({ showChargeModal, setShowChargeModal }) {
-  /* ---------------- data ----------------- */
   const { data: defaultTx, isLoading: defaultL, isError: defaultE } = useDefaultTransactions();
   const { data: blockedTx, isLoading: blockedL, isError: blockedE } = useBlockedTransactions();
   const defaultTransactions = Array.isArray(defaultTx) ? defaultTx : [];
   const blockedTransactions = Array.isArray(blockedTx) ? blockedTx : [];
 
-  /* ------------- mutation --------------- */
   const chargeWalletMutation = useChargeWallet();
 
-  /* ------------- state ------------------ */
   const [chargePrice, setChargePrice] = useState("");
   const [chargeErrors, setChargeErrors] = useState({});
 
-  /* ----------- input change ------------- */
   const handlePriceChange = (e) => {
     const raw = e.target.value.replace(/,/g, "").replace(/\D/g, "");
     setChargePrice(raw);            // store un-formatted digits only
   };
 
-  /* -------- submit handler -------------- */
   async function handleChargeWallet() {
     try {
       setChargeErrors({});
@@ -54,13 +49,11 @@ function TransactionsSection({ showChargeModal, setShowChargeModal }) {
     }
   }
 
-  /* --------- loading / error ------------ */
   if (defaultL || blockedL)
     return <div className="flex justify-center items-center min-h-[30vh]"><Loading/></div>;
   if (defaultE  || blockedE )
     return <div>خطایی در دریافت تراکنش‌ها رخ داده است.</div>;
 
-  /* -------------------------------------- */
   const txColumns = [
     {
       key: "index",
@@ -96,7 +89,6 @@ function TransactionsSection({ showChargeModal, setShowChargeModal }) {
 
   return (
     <section className="space-y-6">
-      {/* -------- Default tx table -------- */}
       <WalletDataSection
         title="تراکنش‌های کیف پول"
         description="واریز، برداشت و پرداخت‌های آزمایشی"
@@ -111,7 +103,6 @@ function TransactionsSection({ showChargeModal, setShowChargeModal }) {
         />
       </WalletDataSection>
 
-      {/* -------- Blocked tx table -------- */}
       <WalletDataSection
         title="تراکنش‌های در انتظار تسویه"
         description="مبالغی که هنوز قابل برداشت نیستند"
@@ -126,7 +117,6 @@ function TransactionsSection({ showChargeModal, setShowChargeModal }) {
         />
       </WalletDataSection>
 
-      {/* ============ Charge Modal ============ */}
       <Modal
         isOpen={showChargeModal}
         onClose={() => setShowChargeModal(false)}

@@ -1,6 +1,3 @@
-import React from "react";
-import CustomInfoIcon from "../../../ui/CustomInfoIcon";
-
 const HouseAreas = ({ areas}) => {
  
   return (

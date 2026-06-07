@@ -4,7 +4,7 @@ import { routeModes } from "../route-modes";
 
 export const dynamic = "force-static";
 export const metadata = {
-  title: "Terms",
+  title: "قوانین و مقررات",
   description: routeModes.staticContent.reason,
 };
 

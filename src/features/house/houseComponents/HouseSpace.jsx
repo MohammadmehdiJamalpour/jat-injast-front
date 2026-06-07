@@ -1,9 +1,7 @@
-import React from "react";
 import toPersianNumber from "../../../utils/toPersianNumber";
-import CustomInfoIcon from "../../../ui/CustomInfoIcon";
 
 function HouseSpace({ houseData }) {
-  const { structure, reservation, arrivals, areas } = houseData;
+  const { structure, reservation, arrivals } = houseData;
 
   return (
     <div className="w-full px-3 pt-2">

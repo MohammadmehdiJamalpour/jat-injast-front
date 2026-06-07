@@ -1,6 +1,4 @@
-// =============================
-// =============================
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import {
   getReserveMessages,
@@ -14,9 +12,9 @@ import InvoiceDetails       from "./InvoiceDetails";
 import AddCommentSection    from "./AddCommentSection";
 import UpdateOptionsButtons from "./UpdateOptionsButtons";
 import CommentSection       from "./CommentSection";
-import PaymentSimulator from "../../payment/PaymentSimulator";
-import PaymentStatusBadge from "../../payment/PaymentStatusBadge";
-import ReservationTimeline from "../../payment/ReservationTimeline";
+import PaymentSimulator from "@/components/payment/PaymentSimulator";
+import PaymentStatusBadge from "@/components/payment/PaymentStatusBadge";
+import ReservationTimeline from "@/components/payment/ReservationTimeline";
 
 const getMessageList = (response) => {
   const payload = response?.data ?? response;
@@ -37,7 +35,6 @@ export default function ReserveInformation({ reserve, onBack, onUpdateSuccess })
     setPayment(reserve.payment || null);
   }, [reserve.payment, reserve.uuid]);
 
-  /* ────────── Fetch chat messages ────────── */
   useEffect(() => {
     if (!reserve?.uuid) return;
     const fetchMessages = async () => {
@@ -61,7 +58,6 @@ export default function ReserveInformation({ reserve, onBack, onUpdateSuccess })
 
   if (!reserve) return <p>هیچ اطلاعاتی وجود ندارد</p>;
 
-  /* ────────── Helpers ────────── */
   const handleSendMessage = async ({ attachment, attachmentKind } = {}) => {
     const messageText = newMessage.trim();
     if (!messageText && !attachment) return false;
@@ -91,18 +87,16 @@ export default function ReserveInformation({ reserve, onBack, onUpdateSuccess })
     }
   };
 
-  /* ────────── Derived data ────────── */
   const currentReserve  = payment ? { ...reserve, payment, payment_status: payment.status } : reserve;
   const invoice         = currentReserve.invoice || {};
   const payLink         = invoice.links?.pay || null;
   const canSendComment  = currentReserve.comment?.can_send_comment;
   const canSendChat     = (currentReserve.can_update_to?.length ?? 0) > 0;
   const paymentKey      = currentReserve.payment_status?.key || currentReserve.payment?.status?.key;
-  const canPayDemo      =
+  const canPaySandbox   =
     invoice.links?.pay_available ||
     ["created", "failed", "pending"].includes(paymentKey);
 
-  /* ────────── UI ────────── */
   return (
     <div className="p-4 space-y-4">
       {/* Header */}
@@ -130,9 +124,10 @@ export default function ReserveInformation({ reserve, onBack, onUpdateSuccess })
         onUpdateSuccess={onUpdateSuccess}
       />
 
-      {canPayDemo && (
+      {canPaySandbox && (
         <button
           type="button"
+          data-testid="reservation-payment-trigger"
           onClick={() => setIsPaymentOpen(true)}
           className="btn-press rounded-2xl bg-primary-action px-4 py-2 text-sm text-primary-contrast hover:bg-primary-action-hover"
         >

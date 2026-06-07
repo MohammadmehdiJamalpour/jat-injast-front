@@ -265,6 +265,7 @@ export default function TicketBody({ ticketId, onRemove }) {
         title="آخرین پیام‌ها"
         subtitle="گفت‌وگو درباره همین تیکت"
         emptyMessage="هنوز پیامی برای این تیکت ثبت نشده است."
+        messagesAreaClassName="ticket-chat-scroll min-h-48 flex-none"
       />
     </article>
   );

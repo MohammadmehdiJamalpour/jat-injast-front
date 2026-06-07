@@ -1,5 +1,4 @@
-// UserContext.jsx
-import React, { createContext, useContext } from "react";
+import { createContext, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "../services/userService";
 

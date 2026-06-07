@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "@/lib/router-compat";
 import { Menu } from "@headlessui/react";
 import {
@@ -13,26 +13,22 @@ import toast from "react-hot-toast";
 import Loading from "./Loading.jsx";
 import { useUserContext } from "../contexts/UserContext";
 import { logOutUser } from "../services/userService.js";
-import CitySearchInput from "./CitySearchInput.jsx";
 import ThemeToggle from "./ThemeToggle.jsx";
 import { reportClientError } from "../utils/reportClientError";
 
-const logo = "/assets/jat-injast-wordmark-white.svg";
+const logo = "/assets/images/core-transparent/jat-injast-logo-horizontal-darkmode-white-text.png";
 
-/* ───── navigation links (desktop) ───── */
 const navLinks = [
   { path: "/about", label: "درباره ما" },
   { path: "/terms-of-service", label: "قوانین ما" },
 ];
 
 function Header() {
-  /* ───────── context & router ───────── */
   const { userData, isUserDataLoading } = useUserContext();
   const navigate  = useNavigate();
   const location  = useLocation();
   const queryClient = useQueryClient();
 
-  /* ───────── state ───────── */
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -42,7 +38,6 @@ function Header() {
   const headerRef = useRef(null);
   const isDashboard = location.pathname.startsWith("/dashboard");
 
-  /* ───────── helpers ───────── */
   const toggleMobileMenu = () => setShowMobileMenu((p) => !p);
 
   const handleMouseEnter = () => {
@@ -60,7 +55,6 @@ function Header() {
     ? "صفحه اصلی"
     : "پنل کاربری";
 
-  /* ───────── logout ───────── */
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -78,7 +72,6 @@ function Header() {
     }
   };
 
-  /* ───────── hide-on-scroll ───────── */
   useEffect(() => {
     const syncHeight = () => {
       if (headerRef.current) {
@@ -125,15 +118,6 @@ function Header() {
     );
   }, [isHidden]);
 
-  /* ───────── search handler ───────── */
-  const handleCitySearch = (city) =>
-    navigate(`/search?city=${encodeURIComponent(city)}`);
-
-  /* ───────── derived data ───────── */
-  const avatarUrl  = userData?.avatar || "";
-  const userStatus = userData?.status || "فعال"; // fallback
-
-  /* ───────── render ───────── */
   return (
     <div
       ref={headerRef}
@@ -143,15 +127,19 @@ function Header() {
     >
       <nav
         dir="rtl"
+        aria-label="ناوبری اصلی"
         className="relative mx-auto flex w-full items-center justify-between rounded-b-xl bg-primary-action px-5 py-2 shadow-centered-lg shadow-primary-400 lg:py-2.5"
       >
-        {/* ───── left: logo + nav ───── */}
         <div className="flex items-center">
-          <Link to="/" className="flex flex-shrink-0 items-center" aria-label="Jat Injast">
+          <Link
+            to="/"
+            className="flex flex-shrink-0 items-center"
+            aria-label="صفحه اصلی جات اینجاست"
+          >
             <img
               src={logo}
-              alt="Jat Injast"
-              className="h-8 w-auto max-w-40 md:h-9 md:max-w-48"
+              alt="جات اینجاست"
+              className="h-8 w-auto max-w-44 object-contain md:h-9 md:max-w-52"
             />
           </Link>
 
@@ -161,6 +149,7 @@ function Header() {
                 <Link
                   to={path}
                   className="text-white transition duration-300 hover:text-secondary-100"
+                  aria-current={location.pathname === path ? "page" : undefined}
                 >
                   {label}
                 </Link>
@@ -169,13 +158,16 @@ function Header() {
           </ul>
         </div>
 
-        {/* ───── right (desktop) ───── */}
         <div className="hidden md:flex items-center gap-4 lg:gap-6">
           <ThemeToggle />
 
           {/* User menu */}
           {!userData && !isUserDataLoading ? (
-            <Link to="/login" className="text-secondary-50 hover:text-secondary-300">
+            <Link
+              to="/login"
+              className="text-secondary-50 hover:text-secondary-300"
+              aria-current={location.pathname === "/login" ? "page" : undefined}
+            >
               ورود | ثبت نام
             </Link>
           ) : isUserDataLoading ? (
@@ -190,6 +182,8 @@ function Header() {
                 type="button"
                 onClick={handleUserPanelClick}
                 aria-label={buttonText}
+                aria-haspopup="menu"
+                aria-expanded={isDropdownVisible}
                 title={buttonText}
                 className="btn-press flex h-10 w-10 items-center justify-center rounded-full border border-white/55 bg-white/5 text-white transition hover:border-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60"
               >
@@ -249,16 +243,25 @@ function Header() {
           )}
         </div>
 
-        {/* ───── mobile bar (≤ md) ───── */}
         <div className="md:hidden flex items-center">
           {/* Hamburger */}
-          <button className="px-2 py-1" onClick={toggleMobileMenu}>
+          <button
+            type="button"
+            className="px-2 py-1"
+            onClick={toggleMobileMenu}
+            aria-label={showMobileMenu ? "بستن منوی اصلی" : "باز کردن منوی اصلی"}
+            aria-expanded={showMobileMenu}
+            aria-controls="mobile-main-menu"
+          >
             <Bars3Icon className="h-6 w-6 text-secondary-200" />
           </button>
 
           {/* Mobile drawer */}
           {showMobileMenu && (
-            <div className="absolute top-full left-0 z-[13000] w-full rounded-b-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+            <div
+              id="mobile-main-menu"
+              className="absolute top-full left-0 z-[13000] w-full rounded-b-md bg-white text-right shadow-lg ring-1 ring-black ring-opacity-5"
+            >
               {/* nav links */}
               {navLinks.map(({ path, label }) => (
                 <Link
@@ -266,6 +269,7 @@ function Header() {
                   to={path}
                   onClick={() => setShowMobileMenu(false)}
                   className="w-full block px-4 py-2 hover:bg-gray-100"
+                  aria-current={location.pathname === path ? "page" : undefined}
                 >
                   {label}
                 </Link>

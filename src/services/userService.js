@@ -1,4 +1,3 @@
-
 import http from "./httpService";
 
 export function getUser() {
@@ -6,7 +5,6 @@ export function getUser() {
     .get("/client/profile")
     .then(({ data }) => data.data)
     .catch((error) => {
-      // Handle errors if needed
       return Promise.reject(error);
     });
 }
@@ -16,7 +14,6 @@ export function editUser(data) {
     .put("/client/profile", data)
     .then(({ data }) => data.data)
     .catch((error) => {
-      // Handle errors if needed
       return Promise.reject(error);
     });
 }
@@ -26,7 +23,6 @@ export function logOutUser() {
     .delete("/client/profile/logout")
     .then(({ data }) => data.data)
     .catch((error) => {
-      // Handle errors if needed
       return Promise.reject(error);
     });
 }
@@ -36,7 +32,6 @@ export function becomeVendor(data) {
     .put("/client/profile/vendor", data)
     .then(({ data }) => data.data)
     .catch((error) => {
-      // Handle errors if needed
       return Promise.reject(error);
     });
 }

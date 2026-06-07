@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DynamicSwiperList from "../DynamicSwiperList";
 import HouseCard from "./HouseCard";
 import { fa } from "../../i18n/fa";

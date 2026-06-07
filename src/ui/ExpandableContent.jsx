@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Disclosure } from "@headlessui/react";
 import SmoothCollapse from "./SmoothCollapse";
+
+export const expandableButtonClassName =
+  "btn-press inline-flex items-center rounded-full bg-primary-50 px-3 py-1 text-sm font-medium text-primary-800 hover:bg-primary-100 focus:outline-none focus:ring-2 focus:ring-primary-300";
 
 function ExpandableContent({
   children,
   collapsedHeight = 128,
   duration = 320,
   contentClassName = "",
-  buttonClassName = "btn-press inline-flex items-center rounded-full bg-primary-50 px-3 py-1 text-sm font-medium text-primary-800 hover:bg-primary-100 focus:outline-none focus:ring-2 focus:ring-primary-300",
+  buttonClassName = expandableButtonClassName,
   fadeClassName = "",
   expandLabel = "مشاهده بیشتر...",
   collapseLabel = "بستن",

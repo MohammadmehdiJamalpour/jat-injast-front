@@ -52,10 +52,8 @@ export default [
           skipRegExps: true,
         },
       ],
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      // Next route modules intentionally export metadata/dynamic values alongside components.
+      'react-refresh/only-export-components': 'off',
     },
   },
 ]

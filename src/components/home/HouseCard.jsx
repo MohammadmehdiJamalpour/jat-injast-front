@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "@/lib/router-compat";
 
@@ -14,7 +14,7 @@ const imagesOf = (house) => {
 
 function HouseCard({ house }) {
   const navigate = useNavigate();
-  const safeHouse = house ?? {};
+  const safeHouse = useMemo(() => house ?? {}, [house]);
   const destination = `/house/${safeHouse.id}`;
 
   const imageSrc = useMemo(() => imagesOf(safeHouse)[0] ?? "", [safeHouse]);

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
@@ -17,7 +17,6 @@ function FormSelect({
   const selectedOption =
     options.find((option) => option.value === value) || null;
 
-  /* extra classes only when compact === true */
   const buttonSizeClasses = compact ? "h-10 py-1" : "";
   const optionsSizeClasses = compact ? "max-h-48" : "max-h-60";
 
@@ -28,7 +27,6 @@ function FormSelect({
       <Listbox value={selectedOption} onChange={(val) => onChange(name, val.value)}>
         {({ open }) => (
           <div className="relative shadow-centered shadow-primary-50 text-primary-800 rounded-3xl">
-            {/* ---------- Trigger button ---------- */}
             <Listbox.Button className={`listbox__button ${buttonSizeClasses}`}>
               <span>
                 {selectedOption ? selectedOption.label : "انتخاب کنید"}
@@ -41,7 +39,6 @@ function FormSelect({
               />
             </Listbox.Button>
 
-            {/* ---------- Dropdown ---------- */}
             <Transition as={Fragment}>
               <Listbox.Options
                 className={`absolute z-50 w-full scrollbar-thin mt-1 bg-white border  rounded-3xl shadow-centered border-primary-200 overflow-y-auto ${optionsSizeClasses}`}

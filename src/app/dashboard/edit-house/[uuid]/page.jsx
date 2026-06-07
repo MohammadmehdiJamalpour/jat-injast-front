@@ -4,7 +4,7 @@ import { routeModes } from "../../../route-modes";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Edit House",
+  title: "ویرایش اقامتگاه",
   description: routeModes.editHouse.reason,
 };
 

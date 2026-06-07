@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import HowBecomeHostSidebar from "./HowBecomeHostSidebar";
 import HowBecomeHostContent from "./HowBecomeHostContent";
 

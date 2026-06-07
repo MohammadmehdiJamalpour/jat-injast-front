@@ -1,4 +1,3 @@
-import React from "react";
 import toPersianNumber from "../../../utils/toPersianNumber";
 
 export default function ReserveDetailsPanel({ reserve }) {

@@ -19,11 +19,38 @@ const themeScript = `
 `;
 
 export const metadata = {
+  manifest: "/manifest.webmanifest",
   title: {
-    default: "Jat Injast",
-    template: "%s | Jat Injast",
+    default: "جات اینجاست",
+    template: "%s | جات اینجاست",
   },
-  description: "Jat Injast house rental and reservation platform.",
+  description: "پلتفرم رزرو اقامتگاه و مدیریت سفر در ایران.",
+  icons: {
+    icon: [
+      {
+        url: "/assets/images/favicons-transparent/favicon-teal-transparent-32.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: "/assets/images/favicons-transparent/favicon-teal-transparent-64.png",
+        sizes: "64x64",
+        type: "image/png",
+      },
+      {
+        url: "/assets/images/favicons-transparent/favicon-teal-transparent-192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/assets/images/favicons-transparent/favicon-teal-transparent-512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+    shortcut: "/assets/images/favicons-transparent/favicon-teal-transparent-32.png",
+    apple: "/assets/images/app-icons-dark-tile/app-icon-dark-navy-512.png",
+  },
 };
 
 export const viewport = {
@@ -33,7 +60,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fa" dir="ltr" suppressHydrationWarning>
+    <html lang="fa" dir="rtl" suppressHydrationWarning>
       <body>
         <Script
           id="jat-injast-theme-init"

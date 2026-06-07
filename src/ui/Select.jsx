@@ -16,8 +16,8 @@ export default function Select({
   onChange,
   ...props
 }) {
-  const generatedId = useId();
-  const selectId = id || generatedId;
+  const reactId = useId();
+  const selectId = id || reactId;
 
   return (
     <div className={clsx("space-y-2 text-right", className)}>

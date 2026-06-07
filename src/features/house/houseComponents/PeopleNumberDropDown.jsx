@@ -1,4 +1,3 @@
-import React from "react";
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 import toPersianNumber from "../../../utils/toPersianNumber";
 
@@ -18,6 +17,7 @@ const PeopleDropdown = ({ selectedPeople, setSelectedPeople }) => {
   return (
     <div className="flex items-center justify-between text-gray-700 py-2 px-4 w-full">
       <button
+        aria-label="کاهش تعداد نفرات"
         className={`flex items-center justify-center text-gray-700 px-2 py-1 ${
           selectedPeople > 1
             ? "cursor-pointer"
@@ -34,6 +34,7 @@ const PeopleDropdown = ({ selectedPeople, setSelectedPeople }) => {
       </span>
 
       <button
+        aria-label="افزایش تعداد نفرات"
         className={`flex items-center justify-center text-gray-700 px-2 py-1 ${
           selectedPeople < 12
             ? "cursor-pointer"

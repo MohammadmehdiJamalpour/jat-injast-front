@@ -164,10 +164,10 @@ const EditHouseLocationDetails = forwardRef(
     useEffect(() => {
       if (mapRef.current || !mapContainerRef.current) return undefined;
 
-      mapRef.current = L.map(mapContainerRef.current).setView([latitude, longitude], 11);
+      mapRef.current = L.map(mapContainerRef.current).setView([DEFAULT_LAT, DEFAULT_LNG], 11);
       createMapIrTileLayer(L).addTo(mapRef.current);
 
-      markerRef.current = L.marker([latitude, longitude], {
+      markerRef.current = L.marker([DEFAULT_LAT, DEFAULT_LNG], {
         draggable: true,
         icon: customMarkerIcon,
       }).addTo(mapRef.current);

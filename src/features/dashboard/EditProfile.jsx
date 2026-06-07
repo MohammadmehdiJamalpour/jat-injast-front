@@ -253,7 +253,7 @@ function EditProfile({ user, onUpdateUser }) {
             type="email"
             value={formData.email}
             onChange={handleInputChange}
-            placeholder="name@example.com"
+            placeholder="name@domain.ir"
             disabled={isVendor}
             error={fieldErrors.email}
             dir="ltr"

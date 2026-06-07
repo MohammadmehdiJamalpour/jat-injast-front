@@ -1,6 +1,5 @@
-// EditHouseContainer.js
 
-import React, { useState } from "react";
+import { useState } from "react";
 import EditHouseSidebar from "./EditHouseSidebar";
 import EditHouseContent from "./EditHouseContent";
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Range, getTrackBackground } from "react-range";
 import { toPersian, toLatin } from "../../../utils/toPersianDigits";
 
@@ -30,7 +30,6 @@ export default function PriceRangeFilter({ onChange }) {
     <div className="space-y-4 px-2" dir="rtl">
       <h3 className="text-sm font-medium">محدوده اجاره‌بها (تومان)</h3>
 
-      {/* ─── Slider (RTL) ─── */}
       <Range
         rtl
         values={values}
@@ -71,7 +70,6 @@ export default function PriceRangeFilter({ onChange }) {
         )}
       />
 
-      {/* ─── Numeric inputs (min right, max left) ─── */}
       <div className="flex flex-row-reverse gap-2">
         {/* max */}
         <input
@@ -97,7 +95,6 @@ export default function PriceRangeFilter({ onChange }) {
         />
       </div>
 
-      {/* ─── Text summary ─── */}
       <p className="text-xs text-primary-600">
         از&nbsp;{fmt(values[0])}&nbsp;تا&nbsp;{fmt(values[1])}&nbsp;تومان
       </p>

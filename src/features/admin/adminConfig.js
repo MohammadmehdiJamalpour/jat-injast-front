@@ -58,8 +58,8 @@ const paymentStatusOptions = [
 ];
 
 const paymentMethodOptions = [
-  { value: "demo_card", label: "کارت تست" },
-  { value: "demo_wallet", label: "کیف پول تست" },
+  { value: "sandbox_card", label: "پرداخت آزمایشی کارت" },
+  { value: "sandbox_wallet", label: "پرداخت آزمایشی کیف پول" },
 ];
 
 const typeGroups = [

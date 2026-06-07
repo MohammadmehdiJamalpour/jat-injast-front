@@ -402,6 +402,18 @@
     margin-inline: auto;
   }
 
+  .ticket-chat-scroll {
+    max-height: clamp(18rem, 44dvh, 30rem);
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+
+  @media (max-width: 640px) {
+    .ticket-chat-scroll {
+      max-height: clamp(16rem, 54dvh, 28rem);
+    }
+  }
+
   @media (min-width: 768px) {
     .dashboard-stage {
       --dashboard-desktop-gap: 1rem;
@@ -426,7 +438,7 @@
     position: absolute;
     inset-inline: -6vw;
     top: -0.35rem;
-    height: 6.2rem;
+    height: 5.5rem;
     z-index: 1;
     pointer-events: none;
     overflow: hidden;
@@ -436,7 +448,7 @@
     position: absolute;
     z-index: 0;
     inset-inline: 0;
-    top: 4.65rem;
+    top: 4.15rem;
     bottom: 0;
     background-color: var(--color-secondary-50);
     pointer-events: none;
@@ -469,9 +481,9 @@
   .home-wave-svg--surface {
     z-index: 1;
     color: var(--color-secondary-50);
-    --wave-surface-start-y: 0.08rem;
-    --wave-surface-end-y: -0.12rem;
-    --wave-surface-end-scale-y: 1.025;
+    --wave-surface-start-y: 0.06rem;
+    --wave-surface-end-y: -0.08rem;
+    --wave-surface-end-scale-y: 1.018;
     filter: drop-shadow(0 -8px 18px rgb(255 255 255 / 0.26));
     animation: home-wave-surface 11s ease-in-out infinite alternate;
   }
@@ -479,10 +491,10 @@
   .home-wave-svg--wash {
     z-index: 2;
     color: color-mix(in srgb, var(--color-primary-500) 46%, white);
-    --wave-wash-min-stroke: 3;
-    --wave-wash-max-stroke: 5.5;
-    --wave-wash-start-y: 0.26rem;
-    --wave-wash-end-y: -0.2rem;
+    --wave-wash-min-stroke: 2.5;
+    --wave-wash-max-stroke: 4.5;
+    --wave-wash-start-y: 0.18rem;
+    --wave-wash-end-y: -0.14rem;
     stroke-width: 4;
     opacity: 0.72;
     filter: drop-shadow(0 8px 16px rgb(0 111 140 / 0.16));
@@ -492,10 +504,10 @@
   .home-wave-svg--foam {
     z-index: 3;
     color: rgb(255 255 255 / 0.92);
-    --wave-foam-min-stroke: 8;
-    --wave-foam-max-stroke: 11.5;
-    --wave-foam-start-y: 0.32rem;
-    --wave-foam-end-y: -0.16rem;
+    --wave-foam-min-stroke: 7;
+    --wave-foam-max-stroke: 9.5;
+    --wave-foam-start-y: 0.22rem;
+    --wave-foam-end-y: -0.1rem;
     stroke-width: 10;
     opacity: 0.88;
     filter: drop-shadow(0 5px 12px rgb(255 255 255 / 0.36));

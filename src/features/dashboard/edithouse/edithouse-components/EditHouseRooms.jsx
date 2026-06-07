@@ -158,7 +158,7 @@ const EditHouseRooms = ({ houseData, houseId, refetchHouseData }) => {
       await refetchHouseData();
       removeRoomFromState(roomData);
       toast.success(roomCopy.deleteSuccess);
-    } catch (error) {
+    } catch {
       toast.error(roomCopy.deleteError);
     } finally {
       setLoadingDelete(false);

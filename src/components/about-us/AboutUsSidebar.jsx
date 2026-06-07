@@ -1,55 +1,46 @@
-import React from "react";
-import { Tab } from "@headlessui/react";
 import {
-  BuildingOffice2Icon,
-  SparklesIcon,
-  EyeIcon,
-  ShieldCheckIcon,
-  BookOpenIcon,
   CheckCircleIcon,
-  ChatBubbleLeftRightIcon,
-  LifebuoyIcon,
-  RocketLaunchIcon,
-  EnvelopeIcon,
-  UserIcon,
-} from "@heroicons/react/24/solid";
+  HeartIcon,
+  ShieldCheckIcon,
+  SparklesIcon,
+} from "@heroicons/react/24/outline";
+import clsx from "clsx";
+import { aboutSections } from "./AboutUsContent";
 
-function AboutUsSidebar({ setSelectedSection }) {
-  const svgClasses = "ml-1 w-5 h-5 text-current";
+const iconByKey = {
+  overview: SparklesIcon,
+  mission: ShieldCheckIcon,
+  values: HeartIcon,
+  experience: CheckCircleIcon,
+};
 
-  const tabs = [
-    { key: "overview", label: "درباره ما", Icon: BuildingOffice2Icon },
-    { key: "mission", label: "ماموریت ما", Icon: SparklesIcon },
-    { key: "vision", label: "چشم‌انداز ما", Icon: EyeIcon },
-    { key: "values", label: "ارزش‌ها", Icon: ShieldCheckIcon },
-    { key: "story", label: "داستان ما", Icon: BookOpenIcon },
-    { key: "benefits", label: "مزایا", Icon: CheckCircleIcon },
-    { key: "testimonials", label: "نظرات کاربران", Icon: ChatBubbleLeftRightIcon },
-    { key: "support", label: "پشتیبانی", Icon: LifebuoyIcon },
-    { key: "future", label: "طرح‌های توسعه", Icon: RocketLaunchIcon },
-    { key: "contact", label: "تماس با ما", Icon: EnvelopeIcon },
-    { key: "ceo", label: "سخن مدیر عامل", Icon: UserIcon },
-  ];
-
+export default function AboutUsSidebar({ selectedSection, setSelectedSection, scrollTo }) {
   return (
-    <Tab.Group defaultIndex={0}>
-      <Tab.List className="rounded-xl flex flex-col justify-center items-center p-2 gap-y-2">
-        {tabs.map(({ key, label, Icon }) => (
-          <Tab
+    <nav className="space-y-2" aria-label="بخش‌های درباره ما">
+      {aboutSections.map(({ key, eyebrow }) => {
+        const Icon = iconByKey[key] || SparklesIcon;
+        const selected = selectedSection === key;
+
+        return (
+          <button
             key={key}
-            as="div"
-            className={({ selected }) =>
-              `tab ${selected ? "tab-selected" : "tab-hover"}`
-            }
-            onClick={() => setSelectedSection(key)}
+            type="button"
+            onClick={() => {
+              setSelectedSection(key);
+              scrollTo?.(key);
+            }}
+            className={clsx(
+              "flex w-full items-center justify-between gap-3 rounded-2xl px-4 py-3 text-right text-sm font-black transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300",
+              selected
+                ? "bg-primary-600 text-white shadow-sm shadow-primary-500/25 dark:bg-primary-500 dark:text-white"
+                : "text-gray-600 hover:bg-primary-50 hover:text-primary-800 dark:text-sky-100/80 dark:hover:bg-primary-500/10 dark:hover:text-white",
+            )}
           >
-            {label}
-            <Icon className={svgClasses} />
-          </Tab>
-        ))}
-      </Tab.List>
-    </Tab.Group>
+            <span className="min-w-0 break-words">{eyebrow}</span>
+            <Icon className="h-5 w-5 shrink-0" />
+          </button>
+        );
+      })}
+    </nav>
   );
 }
-
-export default AboutUsSidebar;

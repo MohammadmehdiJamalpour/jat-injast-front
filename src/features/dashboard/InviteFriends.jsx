@@ -1,5 +1,4 @@
 
-import React from "react";
 import { toast } from "react-hot-toast";
 import toPersianNumber from "../../utils/toPersianNumber";
 
@@ -15,7 +14,7 @@ function InviteFriends({ user }) {
     try {
       await navigator.clipboard.writeText(referralLink);
       toast.success("لینک کپی شد!");
-    } catch (error) {
+    } catch {
       toast.error("خطایی در کپی کردن لینک رخ داد!");
     }
   };

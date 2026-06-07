@@ -1,7 +1,7 @@
 
-import React, { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import ReserveCalendarSwiper from "../../calendar/ReserveCalendarSwiper";
+import ReserveCalendarSwiper from "@/components/calendar/ReserveCalendarSwiper";
 
 function HouseCalendar({
   calendarData,

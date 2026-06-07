@@ -1,4 +1,3 @@
-import React from "react";
 import toPersianNumber from "../../../utils/toPersianNumber";
 import CustomInfoIcon from "../../../ui/CustomInfoIcon";
 

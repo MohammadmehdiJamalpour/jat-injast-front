@@ -1,13 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import HomeBody from "./HomeBody";
 import Footer from "../Footer";
 
-/**
- * HomaContainer
- * Page shell: handles overall layout and forwards fetched zones to the footer.
- */
-function HomaContainer() {
-  const [zones, setZones] = useState([]);  // receives data from HomeBody
+function HomeContainer() {
+  const [zones, setZones] = useState([]);
 
   return (
     <div className="relative flex w-full flex-col">
@@ -52,10 +48,7 @@ function HomaContainer() {
         <div className="home-wave-content-bg" aria-hidden="true" />
 
         <div className="relative z-10 flex w-full flex-col items-center">
-          {/* Main content */}
           <HomeBody onZonesLoaded={setZones} />
-
-          {/* Footer */}
           <Footer zones={zones} />
         </div>
       </div>
@@ -63,4 +56,4 @@ function HomaContainer() {
   );
 }
 
-export default HomaContainer;
+export default HomeContainer;

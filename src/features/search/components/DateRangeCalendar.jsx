@@ -1,4 +1,4 @@
-import React, {
+import {
   useState,
   useMemo,
   useEffect,
@@ -15,7 +15,6 @@ import { toPersian } from "./../../../utils/toPersianDigits";
 
 dayjs.extend(jalaliday);
 
-/* ───── Static helpers ───── */
 const PERSIAN_MONTHS = [
   "فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور",
   "مهر","آبان","آذر","دی","بهمن","اسفند",
@@ -35,7 +34,6 @@ const isBetween = (d, s, e) => {
   );
 };
 
-/* ───── build calendar ───── */
 const selectedDayCls =
   "!border-primary-action !bg-primary-action !text-white shadow-lg shadow-primary-200/60 ring-2 ring-primary-200 ring-offset-2 ring-offset-white dark:!border-sky-300 dark:!bg-sky-300 dark:!text-slate-950 dark:shadow-sky-950/30 dark:ring-sky-200/70 dark:ring-offset-slate-950";
 const previewEdgeDayCls =
@@ -81,7 +79,6 @@ const buildCalendarData = (months = 12) => {
   return data;
 };
 
-/* ───── Cell classes ───── */
 const baseDayCls = (day, extraDisabled) => {
   if (day.isBlank) return "invisible";
   if (day.isDisable || extraDisabled)
@@ -92,7 +89,6 @@ const baseDayCls = (day, extraDisabled) => {
   return cls.join(" ");
 };
 
-/* ───── Component ───── */
 const DateRangeCalendar = forwardRef(({ months = 12, onChange }, ref) => {
   const calendarData = useMemo(() => buildCalendarData(months), [months]);
 

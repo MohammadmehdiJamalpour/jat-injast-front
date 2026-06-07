@@ -1,5 +1,4 @@
 // components/WalletBalances.jsx
-import React from "react";
 import toPersianNumber from "../../../utils/toPersianNumber";
 
 function WalletBalances({ user }) {

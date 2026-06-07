@@ -1,7 +1,6 @@
-import React from "react";
 import { Disclosure, Switch } from "@headlessui/react";
+import { expandableButtonClassName } from "../../../ui/ExpandableContent";
 
-/* ---------- Skeleton (single-column) ---------- */
 const SkeletonRules = ({ label, count = 6 }) => (
   <div className="mt-2 md:mt-0 lg:col-span-2">
     <label className="block text-sm font-medium text-gray-500 mb-3">{label}</label>
@@ -16,7 +15,6 @@ const SkeletonRules = ({ label, count = 6 }) => (
   </div>
 );
 
-/* ---------- One-column switch list ---------- */
 function RulesSwitchList({ options, selected, onToggle }) {
   return (
     <div className="space-y-3">
@@ -103,8 +101,8 @@ export default function RulesFilter({
             </div>
 
             <div className="mt-2 text-right">
-              <Disclosure.Button className="text-primary-600 hover:underline focus:outline-none">
-                {open ? "بستن" : "مشاهده بیشتر …"}
+              <Disclosure.Button className={expandableButtonClassName}>
+                {open ? "بستن" : "مشاهده بیشتر..."}
               </Disclosure.Button>
             </div>
           </div>

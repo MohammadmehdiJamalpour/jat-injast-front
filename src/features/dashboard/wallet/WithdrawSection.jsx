@@ -1,5 +1,5 @@
 // components/WithdrawSection.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import BeatLoader from "react-spinners/BeatLoader";
 
@@ -43,7 +43,6 @@ function WithdrawSection({
   setShowWithdrawModal,
   maxBalance,
 }) {
-  /* ---------------- data ---------------- */
   const {
     data: cards,
     isLoading: cardsLoading,
@@ -55,14 +54,11 @@ function WithdrawSection({
     isError: withdrawsError,
   } = useWithdrawsList();
 
-  /* -------------- mutation --------------- */
   const addWithdrawMutation = useAddWithdraw();
 
-  /* --------------- state ----------------- */
   const [withdraw, setWithdraw] = useState({ card_id: "", price: "" });
   const [withdrawErrors, setWithdrawErrors] = useState({});
 
-  /* ---------- select options ------------- */
   const cardsForWithdrawOptions =
     cards?.map((c) => ({
       value: c.id,
@@ -74,7 +70,6 @@ function WithdrawSection({
       disabled: c.status?.key === "Pending",
     })) ?? [];
 
-  /* ------------- input change ------------ */
   function handlePriceChange(e) {
     const raw = e.target.value.replace(/,/g, "").replace(/\D/g, "");
     if (!raw) {
@@ -86,7 +81,6 @@ function WithdrawSection({
     setWithdraw((p) => ({ ...p, price: num.toString() }));
   }
 
-  /* ----------- submit handler ------------ */
   async function handleAddWithdraw() {
     const price = parseInt(withdraw.price || "0", 10);
 
@@ -116,7 +110,6 @@ function WithdrawSection({
     }
   }
 
-  /* ---------- loading / error ------------ */
   if (cardsLoading || withdrawsLoading)
     return (
       <div className="flex justify-center items-center min-h-[30vh]">
@@ -126,7 +119,6 @@ function WithdrawSection({
   if (cardsError || withdrawsError)
     return <div>خطایی در دریافت برداشت‌ها رخ داده است.</div>;
 
-  /* --------------------------------------- */
   const priceNumeric = parseInt(withdraw.price || "0", 10);
 
   // true → amount exists AND is below MIN_PRICE
@@ -192,7 +184,6 @@ function WithdrawSection({
         />
       </WalletDataSection>
 
-      {/* ================= Withdraw Modal ================= */}
       <Modal
         isOpen={showWithdrawModal}
         onClose={() => setShowWithdrawModal(false)}
