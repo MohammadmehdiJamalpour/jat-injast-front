@@ -16,7 +16,9 @@ const genericErrorMessage = "خطایی رخ داد";
 const priceRequiredMessage = "لطفا قیمت را وارد کنید";
 
 function apiErrorMessage(error) {
-  return error?.response?.data?.message || error?.message || genericErrorMessage;
+  return (
+    error?.response?.data?.message || error?.message || genericErrorMessage
+  );
 }
 
 export function useVendorCalendarOperations({
@@ -56,12 +58,14 @@ export function useVendorCalendarOperations({
   }
 
   function handleDayClick(dayData) {
+    const canSelectOffsiteBooking =
+      operationGroup === "offsite" && dayData?.isBookingOffSite;
+
     if (
       !dayData ||
-      dayData.isDisable ||
       dayData.isBlank ||
-      dayData.isLock ||
-      dayData.isCurrentMonth
+      dayData.isCurrentMonth ||
+      (!canSelectOffsiteBooking && (dayData.isDisable || dayData.isLock))
     ) {
       return;
     }
@@ -127,14 +131,14 @@ export function useVendorCalendarOperations({
   async function handleAddPeak() {
     await runOperation(
       () => addPeakDays(houseUuid, reserveDateFrom.date, reserveDateTo.date),
-      "ایام پیک با موفقیت اضافه شد"
+      "ایام پیک با موفقیت اضافه شد",
     );
   }
 
   async function handleRemovePeak() {
     await runOperation(
       () => removePeakDays(houseUuid, reserveDateFrom.date, reserveDateTo.date),
-      "ایام پیک با موفقیت حذف شد"
+      "ایام پیک با موفقیت حذف شد",
     );
   }
 
@@ -146,9 +150,9 @@ export function useVendorCalendarOperations({
           reserveDateFrom.date,
           reserveDateTo.date,
           quantityIfNeeded(),
-          roomUuidIfNeeded()
+          roomUuidIfNeeded(),
         ),
-      "رزرو خارج از سایت با موفقیت ثبت شد"
+      "رزرو خارج از سایت با موفقیت ثبت شد",
     );
   }
 
@@ -159,9 +163,9 @@ export function useVendorCalendarOperations({
           houseUuid,
           reserveDateFrom.date,
           reserveDateTo.date,
-          roomUuidIfNeeded()
+          roomUuidIfNeeded(),
         ),
-      "رزرو خارج از سایت با موفقیت حذف شد"
+      "رزرو خارج از سایت با موفقیت حذف شد",
     );
   }
 
@@ -179,9 +183,9 @@ export function useVendorCalendarOperations({
           reserveDateFrom.date,
           reserveDateTo.date,
           price,
-          roomUuidIfNeeded()
+          roomUuidIfNeeded(),
         ),
-      "قیمت ویژه تغییر کرد"
+      "قیمت ویژه تغییر کرد",
     );
   }
 
@@ -192,9 +196,9 @@ export function useVendorCalendarOperations({
           houseUuid,
           reserveDateFrom.date,
           reserveDateTo.date,
-          roomUuidIfNeeded()
+          roomUuidIfNeeded(),
         ),
-      "قیمت ویژه با موفقیت حذف شد"
+      "قیمت ویژه با موفقیت حذف شد",
     );
   }
 

@@ -1,18 +1,16 @@
-// components/CardsSection.jsx
 import { useState } from "react";
 import toast from "react-hot-toast";
 import BeatLoader from "react-spinners/BeatLoader";
 
-/** Hooks & utils **/
 import { useBanksList, useCardsList, useAddCard } from "./useWallet";
 import formatIban       from "./formatIban";
 import toPersianNumber  from "../../../utils/toPersianNumber";
 
-/** UI **/
 import Loading from "../../../ui/Loading";
 import Modal   from "../../../ui/Modal";
 import FormSelect from "../../../ui/FormSelect";
 import { ResponsiveDataTable, WalletDataSection } from "./WalletDataSection";
+import { WALLET_MODAL_SIZE } from "./walletModalLayout";
 
 function StatusBadge({ status }) {
   return (
@@ -119,7 +117,8 @@ function CardsSection({ showAddCardModal, setShowAddCardModal }) {
         isOpen={showAddCardModal}
         onClose={() => setShowAddCardModal(false)}
         title="اضافه کردن کارت جدید"
-        maxWidth="max-w-3xl"
+        size={WALLET_MODAL_SIZE}
+        testId="wallet-add-card-modal"
       >
         <div className="p-4 flex flex-col space-y-3 max-w-md mx-auto">
           <FormSelect
@@ -130,11 +129,11 @@ function CardsSection({ showAddCardModal, setShowAddCardModal }) {
             options={banksOptions}
             compact
           />
-          {/* card_number */}
           <div>
             <input
               className="field-surface"
               placeholder="شماره کارت"
+              aria-label={'\u0634\u0645\u0627\u0631\u0647 \u06a9\u0627\u0631\u062a'}
               value={newCard.card_number}
               onChange={(e) => setNewCard((p) => ({ ...p, card_number: e.target.value }))}
             />
@@ -142,11 +141,11 @@ function CardsSection({ showAddCardModal, setShowAddCardModal }) {
               <p className="text-red-600 text-sm mt-1">{addCardErrors.card_number.join(", ")}</p>
             )}
           </div>
-          {/* account_number */}
           <div>
             <input
               className="field-surface"
               placeholder="شماره حساب"
+              aria-label={'\u0634\u0645\u0627\u0631\u0647 \u062d\u0633\u0627\u0628'}
               value={newCard.account_number}
               onChange={(e) => setNewCard((p) => ({ ...p, account_number: e.target.value }))}
             />
@@ -154,11 +153,11 @@ function CardsSection({ showAddCardModal, setShowAddCardModal }) {
               <p className="text-red-600 text-sm mt-1">{addCardErrors.account_number.join(", ")}</p>
             )}
           </div>
-          {/* iban */}
           <div>
             <input
               className="field-surface"
               placeholder="شماره شبا"
+              aria-label={'\u0634\u0645\u0627\u0631\u0647 \u0634\u0628\u0627'}
               value={newCard.iban}
               onChange={(e) => setNewCard((p) => ({ ...p, iban: formatIban(e.target.value) }))}
             />
@@ -167,6 +166,7 @@ function CardsSection({ showAddCardModal, setShowAddCardModal }) {
             )}
           </div>
           <button
+            type="button"
             onClick={handleAddCard}
             disabled={addCardMutation.isLoading}
             className="btn-primary btn-press min-h-11 rounded-full text-sm font-medium"

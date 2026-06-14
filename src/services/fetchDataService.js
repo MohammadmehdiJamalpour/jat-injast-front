@@ -1,6 +1,8 @@
 import http from "./httpService";
 import { useQuery } from "@tanstack/react-query";
 
+const PUBLIC_LOOKUP_STALE_TIME = 60 * 60 * 1000;
+
 export function getProvinces(data) {
   return http.get("/assets/province", data).then(({ data }) => data.data);
 }
@@ -83,6 +85,7 @@ export function useFetchCancellationRules() {
     queryKey: ["get-cancellation-rules"],
     queryFn: getCancellationRules,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 
@@ -91,6 +94,7 @@ export function useFetchRoomFacilities() {
     queryKey: ["get-room-facilities"],
     queryFn: getRoomFacilities,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 
@@ -99,6 +103,7 @@ export function useFetchCoolingAndHeatingOptions() {
     queryKey: ["get-cooling-and-heating-options"],
     queryFn: getCoolingAndHeatingOptions,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 
@@ -107,6 +112,7 @@ export function useFetchWeekendOptions() {
     queryKey: ["get-weekend-options"],
     queryFn: getWeekendOptions,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 
@@ -115,6 +121,7 @@ export function useFetchRules() {
     queryKey: ["get-rules"],
     queryFn: getRules,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 
@@ -123,6 +130,7 @@ export function useFetchFacilities() {
     queryKey: ["get-facilities"],
     queryFn: getFacilities,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 
@@ -131,6 +139,7 @@ export function useFetchTextures() {
     queryKey: ["get-textures"],
     queryFn: getTextures,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 
@@ -139,6 +148,7 @@ export function useFetchHouseViews() {
     queryKey: ["get-house-views"],
     queryFn: getHouseViews,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 
@@ -147,19 +157,21 @@ export function useFetchNeighbours() {
     queryKey: ["get-neighbours"],
     queryFn: getNeighbours,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 export const useFetchPropertyTypes       = () =>
   useQuery({
     queryKey: ["property-types"],
     queryFn : getPropertyTypes,
-    staleTime: 5 * 60 * 1000,   
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 export function useFetchRoutes() {
   return useQuery({
     queryKey: ["get-routes"],
     queryFn: getRoutes,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 
@@ -168,6 +180,7 @@ export function useFetchHouseFloors() {
     queryKey: ["get-house-floors"],
     queryFn: getHouseFloors,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 
@@ -176,6 +189,7 @@ export function useFetchPrivacyOptions() {
     queryKey: ["get-privacy-options"],
     queryFn: getPrivacyOptions,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }
 
@@ -184,5 +198,6 @@ export function useFetchSanitaryOptions() {
     queryKey: ["get-sanitary-options"],
     queryFn: getSanitaryOptions,
     retry: false,
+    staleTime: PUBLIC_LOOKUP_STALE_TIME,
   });
 }

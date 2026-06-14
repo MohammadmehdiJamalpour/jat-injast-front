@@ -189,7 +189,7 @@ function EditHouseContent({
         open={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
         title={copy.moreInfo}
-        size="sm"
+        size="content"
       >
         <p className="leading-8 text-gray-700 dark:text-sky-50">{infoText}</p>
         <div className="mt-6 flex justify-end">

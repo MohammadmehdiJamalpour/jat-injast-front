@@ -52,7 +52,7 @@ export default function TicketList({ tickets, onSelect }) {
   }
 
   return (
-    <div className="scrollbar-thin scrollbar-no-arrows mt-8 max-h-[70vh] space-y-2 overflow-y-auto px-1 lg:px-3">
+    <div className="scrollbar-thin scrollbar-no-arrows mt-6 max-h-[70vh] space-y-2 overflow-y-auto px-1 py-2 lg:px-3">
       {tickets.map((ticket) => {
         const priorityLabel =
           ticket.priority?.label || ticket.priority?.title || ticket.priority || "معمولی";

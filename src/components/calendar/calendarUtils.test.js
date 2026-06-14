@@ -18,8 +18,12 @@ describe("calendar utilities", () => {
   it("reads supported backend date field variants", () => {
     expect(getDayDateValue({ date: "2026-06-14" })).toBe("2026-06-14");
     expect(getDayDateValue({ gregorianDate: "2026-06-15" })).toBe("2026-06-15");
-    expect(getDayDateValue({ date_info: { gregorian: "2026-06-16" } })).toBe("2026-06-16");
-    expect(getDayDateValue({ dateInfo: { gregorian: "2026-06-17" } })).toBe("2026-06-17");
+    expect(getDayDateValue({ date_info: { gregorian: "2026-06-16" } })).toBe(
+      "2026-06-16",
+    );
+    expect(getDayDateValue({ dateInfo: { gregorian: "2026-06-17" } })).toBe(
+      "2026-06-17",
+    );
     expect(getDayDateValue(null)).toBeNull();
   });
 
@@ -36,9 +40,49 @@ describe("calendar utilities", () => {
 
     expect(canSelectCalendarDay(makeDay("2026-06-14"))).toBe(true);
     expect(canSelectCalendarDay(makeDay("2026-06-09"))).toBe(false);
-    expect(canSelectCalendarDay(makeDay("2026-06-14", { isBlank: true }))).toBe(false);
-    expect(canSelectCalendarDay(makeDay("2026-06-14", { isLock: true }))).toBe(false);
-    expect(canSelectCalendarDay(makeDay("2026-06-14", { isDisable: true }))).toBe(false);
+    expect(canSelectCalendarDay(makeDay("2026-06-14", { isBlank: true }))).toBe(
+      false,
+    );
+    expect(canSelectCalendarDay(makeDay("2026-06-14", { isLock: true }))).toBe(
+      false,
+    );
+    expect(
+      canSelectCalendarDay(makeDay("2026-06-14", { isDisable: true })),
+    ).toBe(false);
+
+    vi.useRealTimers();
+  });
+
+  it("allows selecting future off-site bookings only when that operation needs removal", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 5, 10, 12));
+
+    const offsiteDay = makeDay("2026-06-14", {
+      isBookingOffSite: true,
+      isDisable: true,
+      isLock: true,
+    });
+
+    expect(canSelectCalendarDay(offsiteDay)).toBe(false);
+    expect(
+      canSelectCalendarDay(offsiteDay, { allowOffsiteBooking: true }),
+    ).toBe(true);
+    expect(
+      canSelectCalendarDay(
+        makeDay("2026-06-14", { isDisable: true, isLock: true }),
+        { allowOffsiteBooking: true },
+      ),
+    ).toBe(false);
+    expect(
+      canSelectCalendarDay(
+        makeDay("2026-06-09", {
+          isBookingOffSite: true,
+          isDisable: true,
+          isLock: true,
+        }),
+        { allowOffsiteBooking: true },
+      ),
+    ).toBe(false);
 
     vi.useRealTimers();
   });
@@ -57,6 +101,47 @@ describe("calendar utilities", () => {
 
     expect(start).toContain("bg-primary-action");
     expect(start).toContain("text-primary-contrast");
+    expect(middle).toContain("bg-primary-200");
+    expect(middle).toContain("text-white");
+
+    vi.useRealTimers();
+  });
+
+  it("does not mark a vendor preview range when only the start date is selected", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 5, 10, 12));
+
+    const start = getVendorDayStyles({
+      day: makeDay("2026-06-14"),
+      reserveDateFrom: { date: "2026-06-14" },
+      reserveDateTo: null,
+      hoverDate: null,
+    });
+    const later = getVendorDayStyles({
+      day: makeDay("2026-06-16"),
+      reserveDateFrom: { date: "2026-06-14" },
+      reserveDateTo: null,
+      hoverDate: null,
+    });
+
+    expect(start).toContain("bg-primary-400");
+    expect(later).not.toContain("bg-primary-200");
+    expect(later).not.toContain("text-white");
+
+    vi.useRealTimers();
+  });
+
+  it("still marks a vendor preview range when a hover date is supplied", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 5, 10, 12));
+
+    const middle = getVendorDayStyles({
+      day: makeDay("2026-06-16"),
+      reserveDateFrom: { date: "2026-06-14" },
+      reserveDateTo: null,
+      hoverDate: makeDay("2026-06-18"),
+    });
+
     expect(middle).toContain("bg-primary-200");
     expect(middle).toContain("text-white");
 

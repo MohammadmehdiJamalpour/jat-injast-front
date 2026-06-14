@@ -2,13 +2,17 @@ import {
   useState,
   useEffect,
   useMemo,
+  useCallback,
   useImperativeHandle,
   forwardRef,
 } from "react";
 import toPersianNumber from "../../utils/toPersianNumber";
+import { toPersian } from "../../utils/toPersianDigits";
+import { canUseHoverPreview } from "./calendarUtils";
 
 const formatPrice = (n) =>
   n == null ? "" : toPersianNumber(Math.round(n / 1_000).toLocaleString());
+const formatCalendarYear = (year) => toPersian(year ?? "");
 const isSame = (a, b) =>
   a && b && a.year === b.year && a.month === b.month && +a.day === +b.day;
 const isBefore = (a, b) => {
@@ -56,6 +60,7 @@ const ReserveCalendarSwiper = forwardRef(
       onRangeComplete,
       instantBooking = false,
       readOnly = false,
+      monthsPerViewOverride,
     },
     ref
   ) => {
@@ -70,8 +75,15 @@ const ReserveCalendarSwiper = forwardRef(
         : calendarData;
     }, [loading, calendarData, isRentRoom, selectedRoomUuid]);
 
+    const getResponsiveMonthsPerView = useCallback(
+      () =>
+        monthsPerViewOverride ??
+        (typeof window !== "undefined" && window.innerWidth < 1024 ? 1 : 2),
+      [monthsPerViewOverride]
+    );
+
     const [monthsPerView, setMonthsPerView] = useState(
-      typeof window !== "undefined" && window.innerWidth < 1024 ? 1 : 2
+      getResponsiveMonthsPerView
     );
     const [index, setIndex] = useState(0);
     const [hoverDate, setHoverDate] = useState(null);
@@ -81,7 +93,7 @@ const ReserveCalendarSwiper = forwardRef(
 
     useEffect(() => {
       const onResize = () => {
-        const m = window.innerWidth < 1024 ? 1 : 2;
+        const m = getResponsiveMonthsPerView();
         setMonthsPerView((prev) => {
           if (prev !== m)
             setIndex((old) =>
@@ -91,8 +103,9 @@ const ReserveCalendarSwiper = forwardRef(
         });
       };
       window.addEventListener("resize", onResize);
+      onResize();
       return () => window.removeEventListener("resize", onResize);
-    }, [displayedData.length]);
+    }, [displayedData.length, getResponsiveMonthsPerView]);
 
     const maxIndex = Math.max(0, displayedData.length - monthsPerView);
 
@@ -125,28 +138,47 @@ const ReserveCalendarSwiper = forwardRef(
         pricing: day.pricing,
         availability: day.availability,
       };
+      setHoverDate(null);
       if (!reserveDateFrom || (reserveDateFrom && reserveDateTo)) {
         setReserveDateFrom(dateObj);
         setReserveDateTo(null);
-        setHoverDate(null);
         return;
       }
       if (isBefore(dateObj, reserveDateFrom)) return;
       setReserveDateTo(dateObj);
       onRangeComplete?.(dateObj);
-      setHoverDate(null);
+    };
+
+    const handleDayPointerEnter = (event, date, day) => {
+      if (
+        !canUseHoverPreview(event) ||
+        readOnly ||
+        !reserveDateFrom ||
+        reserveDateTo ||
+        day.isDisable ||
+        day.isLock ||
+        day.isBlank
+      ) {
+        return;
+      }
+      setHoverDate(date);
+    };
+
+    const handleDayPointerLeave = (event) => {
+      if (canUseHoverPreview(event) && hoverDate) setHoverDate(null);
     };
 
     const translateX =
       monthsPerView === 1
         ? index * 100
         : (index * 100) / monthsPerView;
+    const monthWidthClass = monthsPerView === 1 ? "w-full" : "w-1/2";
 
     if (loading) {
       return (
         <div className="w-full flex">
           {Array.from({ length: monthsPerView }).map((_, mi) => (
-            <div key={mi} className="w-full lg:w-1/2 px-2">
+            <div key={mi} className={`${monthWidthClass} px-2`}>
               <div className="grid grid-cols-7 gap-0.5">
                 {Array.from({ length: 35 }).map((__, i) => (
                   <div
@@ -170,9 +202,9 @@ const ReserveCalendarSwiper = forwardRef(
             style={{ transform: `translateX(${translateX}%)` }}
           >
             {displayedData.map((month, mi) => (
-              <div key={mi} className="flex-shrink-0 w-full lg:w-1/2 px-2">
+              <div key={mi} className={`flex-shrink-0 ${monthWidthClass} px-2`}>
                 <h4 className="text-center font-bold mb-2">
-                  {month.month_name} {toPersianNumber(month.year)}
+                  {month.month_name} {formatCalendarYear(month.year)}
                 </h4>
 
                 <div className="grid grid-cols-7 text-center font-semibold mb-2">
@@ -228,19 +260,10 @@ const ReserveCalendarSwiper = forwardRef(
                         type="button"
                         key={di}
                         onClick={() => pick(day, month)}
-                        onMouseEnter={() => {
-                          if (
-                            !readOnly &&
-                            reserveDateFrom &&
-                            !reserveDateTo &&
-                            !day.isDisable &&
-                            !day.isLock
-                          )
-                            setHoverDate(date);
-                        }}
-                        onMouseLeave={() =>
-                          !readOnly && hoverDate && setHoverDate(null)
+                        onPointerEnter={(event) =>
+                          handleDayPointerEnter(event, date, day)
                         }
+                        onPointerLeave={handleDayPointerLeave}
                         aria-disabled={readOnly || isBlocked}
                         className={`relative border border-gray-200 bg-white text-gray-800 transition-all duration-200 ease-out dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 rounded-2xl flex flex-col justify-center aspect-square overflow-hidden text-2xs sm:text-xs ${cls} ${
                           readOnly || day.isBlank ? "cursor-default" : isBlocked ? "" : "cursor-pointer"

@@ -207,6 +207,13 @@ async function stubHouseApi(page) {
       body: JSON.stringify({ success: true, data: house }),
     }),
   );
+
+  await page.route("**/client/profile", (route) =>
+    route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({ success: false, data: null }),
+    }),
+  );
 }
 
 async function expectActiveElementInside(locator) {
@@ -223,6 +230,21 @@ async function expectFocusStaysInside(locator, page, presses = 4) {
     await expectActiveElementInside(locator);
   }
 }
+
+const compactWalletModals = [
+  {
+    triggerName: "\u0627\u0636\u0627\u0641\u0647 \u06a9\u0631\u062f\u0646 \u06a9\u0627\u0631\u062a",
+    panelTestId: "wallet-add-card-modal-panel",
+  },
+  {
+    triggerName: "\u062f\u0631\u062e\u0648\u0627\u0633\u062a \u0628\u0631\u062f\u0627\u0634\u062a",
+    panelTestId: "wallet-withdraw-modal-panel",
+  },
+  {
+    triggerName: "\u0634\u0627\u0631\u0698 \u06a9\u06cc\u0641 \u067e\u0648\u0644",
+    panelTestId: "wallet-charge-modal-panel",
+  },
+];
 
 test.describe("authenticated accessibility workflows", () => {
   test("dashboard sidebar supports keyboard tab movement", async ({ page }) => {
@@ -269,6 +291,48 @@ test.describe("authenticated accessibility workflows", () => {
     await page.keyboard.press("Escape");
     await expect(page.locator('[role="dialog"][data-open]')).toHaveCount(0);
     await expect(chargeTrigger).toBeFocused();
+  });
+
+  test("wallet modals use compact desktop panels", async ({ page }) => {
+    await stubDashboardApi(page);
+    await addAuthCookie(page);
+
+    await page.setViewportSize({ width: 1366, height: 768 });
+    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
+    await page.locator("body").waitFor({ state: "visible" });
+
+    await page.getByRole("tab").nth(2).click();
+
+    for (const modal of compactWalletModals) {
+      await page.getByRole("button", { name: modal.triggerName }).click();
+
+      const panel = page.getByTestId(modal.panelTestId);
+      await expect(panel).toBeVisible();
+
+      const metrics = await panel.evaluate((element) => {
+        const panelRect = element.getBoundingClientRect();
+        const firstField = element.querySelector(".field-surface");
+        const fieldRect = firstField?.getBoundingClientRect();
+
+        return {
+          fieldWidth: fieldRect?.width ?? 0,
+          panelWidth: panelRect.width,
+          sideSpace: fieldRect
+            ? Math.max(
+                fieldRect.left - panelRect.left,
+                panelRect.right - fieldRect.right,
+              )
+            : 0,
+        };
+      });
+
+      expect(metrics.panelWidth).toBeLessThanOrEqual(520);
+      expect(metrics.fieldWidth).toBeGreaterThanOrEqual(320);
+      expect(metrics.sideSpace).toBeLessThanOrEqual(96);
+
+      await page.keyboard.press("Escape");
+      await expect(page.locator('[role="dialog"][data-open]')).toHaveCount(0);
+    }
   });
 
   test("ticket creation exposes keyboard reachable required state", async ({ page }) => {
@@ -335,6 +399,12 @@ test.describe("search accessibility workflow", () => {
       route.fulfill({
         contentType: "application/json",
         body: JSON.stringify({ value: [] }),
+      }),
+    );
+    await page.route("**/client/profile", (route) =>
+      route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({ success: false, data: null }),
       }),
     );
 

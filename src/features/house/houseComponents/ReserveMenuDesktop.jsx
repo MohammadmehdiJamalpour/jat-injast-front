@@ -4,6 +4,7 @@ import {
   useRef,
   useMemo,
 } from "react";
+import dynamic from "next/dynamic";
 import PeopleDropdown from "./PeopleNumberDropDown";
 import toPersianNumber from "../../../utils/toPersianNumber";
 import Loading from "../../../ui/Loading";
@@ -15,7 +16,14 @@ import {
   preInvoiceReserve,
   reserveHouse,
 } from "../../../services/reserveService";
-import DesktopReserveCalendarDropdown from "./DesktopReserveCalendarDropdown";
+
+const DesktopReserveCalendarDropdown = dynamic(
+  () => import("./DesktopReserveCalendarDropdown"),
+  {
+    ssr: false,
+    loading: () => null,
+  },
+);
 
 function ReserveMenuDesktop({
   reserveDateFrom,
@@ -32,6 +40,7 @@ function ReserveMenuDesktop({
   setSelectedPeople,
 }) {
   const [showCal, setShowCal] = useState(false);
+  const [hasOpenedCalendar, setHasOpenedCalendar] = useState(false);
   const calRef   = useRef(null);
   const { userData } = useUserContext();
   const debounceRef = useRef(null);
@@ -109,6 +118,10 @@ function ReserveMenuDesktop({
   }, [reserveDateFrom, reserveDateTo]);
 
   useEffect(() => {
+    if (showCal) setHasOpenedCalendar(true);
+  }, [showCal]);
+
+  useEffect(() => {
     const h = (e) => {
       if (showCal && calRef.current && !calRef.current.contains(e.target))
         setShowCal(false);
@@ -165,8 +178,8 @@ function ReserveMenuDesktop({
     ].join(" ");
 
   return (
-    <div className="w-full bg-gray-50 border border-primary-100 shadow-centered shadow-primary-50 pb-4 rounded-3xl relative">
-      <div className="flex justify-between px-4 py-3 bg-primary-500 rounded-t-3xl">
+    <div className="relative w-full rounded-3xl border border-primary-100 bg-gray-50 pb-4 shadow-centered shadow-primary-50 dark:border-slate-700 dark:bg-slate-900 dark:shadow-black/25">
+      <div className="flex justify-between gap-3 rounded-t-3xl bg-primary-500 px-4 py-3">
         <span className="text-white text-sm lg:text-lg">قیمت هر شب از</span>
         {firstPrice ? (
           <span className="text-white text-sm lg:text-lg">
@@ -180,8 +193,11 @@ function ReserveMenuDesktop({
       <div className="mx-4 mt-4">
         <p className="mb-1">تاریخ رزرو</p>
         <button
+          type="button"
           onClick={() => setShowCal((s) => !s)}
-          className="flex w-full h-12 items-center rounded-3xl border shadow-sm overflow-hidden"
+          aria-expanded={showCal}
+          data-testid="reservation-date-button"
+          className="flex h-12 w-full min-w-0 items-center overflow-hidden rounded-3xl border bg-white shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 dark:border-slate-700 dark:bg-slate-950"
         >
           <div
             className={inpCls(
@@ -226,33 +242,35 @@ function ReserveMenuDesktop({
           </div>
         </button>
 
-        <DesktopReserveCalendarDropdown
-          calendarData={calendarData}
-          calIndex={calIndex}
-          calMaxIndex={calMaxIndex}
-          calRef={calRef}
-          houseData={houseData}
-          isRentRoom={isRentRoom}
-          onIndexChange={(i, m) => {
-            setCalIndex(i);
-            setCalMaxIndex(m);
-          }}
-          reserveDateFrom={reserveDateFrom}
-          reserveDateTo={reserveDateTo}
-          roomOptions={roomOptions}
-          selectedRoomUuid={selectedRoomUuid}
-          setReserveDateFrom={setReserveDateFrom}
-          setReserveDateTo={setReserveDateTo}
-          setSelectedRoomUuid={setSelectedRoomUuid}
-          setShowCal={setShowCal}
-          showCal={showCal}
-          swiperRef={swiperRef}
-        />
+        {hasOpenedCalendar && (
+          <DesktopReserveCalendarDropdown
+            calendarData={calendarData}
+            calIndex={calIndex}
+            calMaxIndex={calMaxIndex}
+            calRef={calRef}
+            houseData={houseData}
+            isRentRoom={isRentRoom}
+            onIndexChange={(i, m) => {
+              setCalIndex(i);
+              setCalMaxIndex(m);
+            }}
+            reserveDateFrom={reserveDateFrom}
+            reserveDateTo={reserveDateTo}
+            roomOptions={roomOptions}
+            selectedRoomUuid={selectedRoomUuid}
+            setReserveDateFrom={setReserveDateFrom}
+            setReserveDateTo={setReserveDateTo}
+            setSelectedRoomUuid={setSelectedRoomUuid}
+            setShowCal={setShowCal}
+            showCal={showCal}
+            swiperRef={swiperRef}
+          />
+        )}
       </div>
 
       <div className="mx-4 mt-6">
         <p className="mb-1">تعداد نفرات :</p>
-        <div className="border rounded-3xl bg-white">
+        <div className="rounded-3xl border bg-white dark:border-slate-700 dark:bg-slate-950">
           <PeopleDropdown
             selectedPeople={selectedPeople}
             setSelectedPeople={setSelectedPeople}
@@ -274,6 +292,7 @@ function ReserveMenuDesktop({
         <button
           onClick={reserve}
           disabled={resLoad}
+          aria-busy={resLoad}
           className="w-full btn bg-primary-500 shadow-centered shadow-primary-50 hover:shadow-centered-lg hover:shadow-primary-100 hover:bg-primary-600 rounded-3xl py-2 flex items-center justify-center gap-2 text-white"
         >
           {resLoad && <Loading type="beat" size={5} color="white" />} رزرو

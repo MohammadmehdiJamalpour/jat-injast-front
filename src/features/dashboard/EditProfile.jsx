@@ -22,11 +22,10 @@ import {
 } from "./profile/EditProfileLayout";
 import {
   DEFAULT_GENDER,
-  birthDateFields,
   genderOptions,
-  gregorianToPersian,
+  getBirthdayPickerConfig,
+  gregorianToJalaliDate,
   makeInitialFormData,
-  persianToGregorian,
   profileFieldCopy,
 } from "./profile/editProfileUtils";
 
@@ -40,7 +39,7 @@ function EditProfile({ user, onUpdateUser }) {
   } = useFetchProvinces();
 
   const birthDate = useMemo(
-    () => gregorianToPersian(user?.birth_date),
+    () => gregorianToJalaliDate(user?.birth_date),
     [user?.birth_date],
   );
 
@@ -50,6 +49,7 @@ function EditProfile({ user, onUpdateUser }) {
   const [fieldErrors, setFieldErrors] = useState({});
 
   const isVendor = user?.type === "Vendor";
+  const birthdayPickerConfig = useMemo(() => getBirthdayPickerConfig(), []);
 
   const {
     data: citiesData,
@@ -162,6 +162,17 @@ function EditProfile({ user, onUpdateUser }) {
     setFieldErrors((prev) => ({ ...prev, sex: undefined }));
   }
 
+  function handleBirthDateChange(value) {
+    if (isVendor) return;
+
+    setFormData((prev) => ({ ...prev, birthDate: value }));
+    setFieldErrors((prev) => ({
+      ...prev,
+      birthDate: undefined,
+      birth_date: undefined,
+    }));
+  }
+
   function handleAvatarChange(event) {
     const file = event.target.files?.[0] || null;
     if (!file || isVendor) return;
@@ -173,11 +184,7 @@ function EditProfile({ user, onUpdateUser }) {
     event.preventDefault();
     if (isVendor) return;
 
-    const birthDateGregorian = persianToGregorian(
-      formData.birthYear,
-      formData.birthMonth,
-      formData.birthDay,
-    );
+    const birthDateGregorian = formData.birthDate?.gregorianIso || "";
 
     const payload = new FormData();
     payload.append("_method", "PUT");
@@ -299,12 +306,17 @@ function EditProfile({ user, onUpdateUser }) {
         </div>
 
         <BirthDateFields
-          formData={formData}
-          onChange={updateField}
+          value={formData.birthDate}
+          onChange={handleBirthDateChange}
           disabled={isVendor}
           title={profileFieldCopy.birthDateTitle}
           helper={profileFieldCopy.birthDateHelper}
-          fields={birthDateFields}
+          placeholder={profileFieldCopy.birthDatePlaceholder}
+          error={fieldErrors.birth_date}
+          minDate={birthdayPickerConfig.minDate}
+          maxDate={birthdayPickerConfig.maxDate}
+          initialMonth={formData.birthDate || birthdayPickerConfig.initialMonth}
+          yearRange={birthdayPickerConfig.yearRange}
         />
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">

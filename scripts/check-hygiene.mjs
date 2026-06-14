@@ -52,6 +52,11 @@ const bannedPatterns = [
     pattern: new RegExp(`\\b${anyLiteral(["dummy"], ["fake"])}\\b`, "i"),
   },
   {
+    name: "sample product copy",
+    pattern:
+      /(?:نمونه\s+(?:پروژه|محصول|رابط کاربری)|sample\s+(?:project|product|interface|app)|demo\s+(?:project|product|interface|app))/i,
+  },
+  {
     name: "file marker",
     pattern: new RegExp(`\\b${escapedLiteral("FULL", " ", "FILE")}\\b`, "i"),
   },
@@ -63,7 +68,8 @@ const bannedPatterns = [
   },
   {
     name: "source path header",
-    pattern: /^\/\/\s*src\//,
+    pattern:
+      /^\s*\/\/\s*(?:(?:src|components|utils)\/[\w./-]+|[\w./-]+\.(?:jsx?|tsx?))\s*$/i,
   },
   {
     name: "old route marker",

@@ -31,19 +31,19 @@ function PreInvoicePreview({
   if (!preInvoiceData) return null;
 
   return (
-    <div className="border rounded-3xl py-2 px-3 xs:px-4 bg-gray-50 mt-2">
+    <div className="mt-2 rounded-3xl border bg-gray-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-950 xs:px-4">
       {/* bills list */}
       {preInvoiceData?.data?.bills?.map((bill, i) => (
         <div
           key={i}
-          className="flex justify-between text-xs sm:text-sm md:text-xs lg:text-sm truncate items-center border-b last:border-none py-1.5"
+          className="flex min-w-0 items-start justify-between gap-3 border-b py-1.5 text-xs last:border-none dark:border-slate-800 sm:text-sm md:text-xs lg:text-sm"
         >
-          <span className="text-gray-700">
+          <span className="min-w-0 break-words text-gray-700 dark:text-sky-100">
             {bill.title}
             {bill.nights ? ` (${bill.nights} شب)` : ""}
             {bill.persons ? ` - ${bill.persons} نفر` : ""}
           </span>
-          <span className={bill.is_discount ? "text-red-600" : ""}>
+          <span className={`shrink-0 text-left ${bill.is_discount ? "text-red-600 dark:text-red-300" : "dark:text-sky-50"}`}>
             {bill.final_price
               ? `${toPersianNumber(
                   bill.final_price.toLocaleString()
@@ -55,7 +55,7 @@ function PreInvoicePreview({
 
       {/* total */}
       {preInvoiceData?.total && (
-        <div className="flex justify-between pt-2 mt-2 text-sm sm:text-md md:text-sm lg:text-md">
+        <div className="mt-2 flex min-w-0 justify-between gap-3 pt-2 text-sm sm:text-md md:text-sm lg:text-md">
           <span className="font-bold">مجموع</span>
           <span className="font-bold text-primary-700">
             {toPersianNumber(preInvoiceData.total.toLocaleString())} تومان

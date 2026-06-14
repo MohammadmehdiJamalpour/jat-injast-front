@@ -1,7 +1,8 @@
 import ClipLoader from "react-spinners/ClipLoader";
 import BeatLoader from "react-spinners/BeatLoader";
+import clsx from "clsx";
 
-const Loading = ({ size, type = "clip", color }) => {
+const Loading = ({ size, type = "clip", color, message, className }) => {
   let defaultColor = type === "beat" ? "#e9f7fa" : "#006f8c";
 
   // Override defaults if color prop is provided
@@ -19,8 +20,17 @@ const Loading = ({ size, type = "clip", color }) => {
     );
 
   return (
-    <div className="flex justify-center items-center">
+    <div
+      role="status"
+      aria-live="polite"
+      className={clsx("flex min-w-0 items-center justify-center gap-2 text-center", className)}
+    >
       {LoaderComponent}
+      {message && (
+        <span className="min-w-0 text-sm font-medium text-primary-800 dark:text-sky-100">
+          {message}
+        </span>
+      )}
     </div>
   );
 };

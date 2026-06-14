@@ -41,5 +41,11 @@ describe("overlay and icon primitives", () => {
     expect(modalFile).toContain("<Dialog.Title");
     expect(modalFile).toContain("aria-label");
     expect(modalFile).toContain("onClose");
+    expect(modalFile).toContain('content: "max-w-md"');
+    expect(modalFile).toContain('confirm: "max-w-md"');
+    expect(modalFile).toContain('form: "max-w-lg"');
+    expect(modalFile).toContain('DEFAULT_MODAL_SIZE = "form"');
+    expect(modalFile).not.toContain('maxWidth = "max-w-9xl"');
+    expect(modalFile).not.toContain("max-w-[calc(100vw-1rem)]");
   });
 });

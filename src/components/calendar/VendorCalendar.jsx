@@ -17,8 +17,12 @@ export default function VendorCalendar({
   houseUuid,
   instantBooking = false,
 }) {
-  const { data: houseData, isLoading: loadingHouse, isError: isErrorHouse, error: errorHouse } =
-    useCalendarHouseDetails(houseUuid);
+  const {
+    data: houseData,
+    isLoading: loadingHouse,
+    isError: isErrorHouse,
+    error: errorHouse,
+  } = useCalendarHouseDetails(houseUuid);
 
   const isRentRoom = houseData?.is_rent_room === true;
   const isRentRoomDefined = typeof houseData?.is_rent_room !== "undefined";
@@ -87,11 +91,11 @@ export default function VendorCalendar({
   ]);
 
   async function fetchNextMonth() {
-    if (!isRentRoomDefined) return;
+    if (!isRentRoomDefined) return 0;
     if (isRentRoom) {
-      await roomFetchNextMonth();
+      return roomFetchNextMonth();
     } else {
-      await houseFetchNextMonth();
+      return houseFetchNextMonth();
     }
   }
 
@@ -143,7 +147,15 @@ export default function VendorCalendar({
   } = calendarOperations;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="تقویم اقامتگاه" maxWidth="max-w-5xl">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="تقویم اقامتگاه"
+      maxWidth="md:max-w-[80vw]"
+      viewportClassName="items-start justify-center px-3 pb-3 pt-16 sm:px-6 md:pt-20"
+      maxHeightClassName="max-h-[calc(100vh-5rem)] md:max-h-[calc(100vh-6rem)]"
+      bodyClassName="px-3 pb-3 pt-2 sm:px-5 sm:pb-4"
+    >
       {isOpen && (isLoadingCalendar || isRefetchingCalendar) && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-sm dark:bg-slate-950/60">
           <div className="flex flex-col items-center">
@@ -152,58 +164,73 @@ export default function VendorCalendar({
         </div>
       )}
 
-      <div dir="rtl" className="relative max-h-[68vh] space-y-1.5 overflow-y-auto px-1 py-0 text-right scrollbar-thin sm:px-2">
+      <div
+        dir="rtl"
+        className="relative max-h-[calc(100vh-10rem)] space-y-1.5 overflow-y-auto px-1 py-0 text-right scrollbar-thin sm:px-2 md:max-h-[calc(100vh-11rem)] md:space-y-2"
+      >
         {operationGroup && (
           <div className="absolute inset-0 z-10 pointer-events-none bg-white/70 backdrop-blur-sm transition duration-200 ease-in-out dark:bg-slate-950/50" />
         )}
 
-        {loadingHouse ? (
-          <div className="h-12 w-full animate-pulse rounded-2xl bg-gray-200 dark:bg-slate-800" />
-        ) : isErrorHouse ? (
-          <div className="text-center text-sm text-red-500">{combinedError}</div>
-        ) : houseData ? (
-          <div className="rounded-2xl border border-primary-100 bg-primary-50/70 px-3 py-1.5 text-xs font-bold text-gray-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 sm:text-sm">
-            {houseData.name} - {houseData.structure?.label}
+        <div className="grid grid-cols-1 gap-1.5 rounded-2xl border border-primary-100 bg-white/85 p-2 shadow-sm dark:border-slate-700 dark:bg-slate-900/80 md:grid-cols-2 md:grid-rows-[auto_auto] md:items-center md:gap-x-3 md:gap-y-1.5 lg:grid-cols-[minmax(0,60%)_minmax(0,40%)] lg:grid-rows-[auto_auto] xl:grid-cols-[minmax(0,70%)_minmax(0,30%)]">
+          <div className="min-w-0 md:col-start-1 md:row-start-1 lg:col-start-1 lg:row-start-1">
+            <div className="flex min-w-0 flex-col gap-2 md:flex-row md:items-center md:justify-start">
+              {loadingHouse ? (
+                <div className="h-7 w-full animate-pulse rounded-full bg-gray-200 dark:bg-slate-800 sm:w-64" />
+              ) : houseData ? (
+                <div className="flex min-w-0 justify-start">
+                  <div className="inline-flex h-8 w-fit max-w-full items-center rounded-full border border-gray-200 bg-gray-50 px-3 text-xs font-semibold text-gray-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 sm:text-sm">
+                    <span className="min-w-0 truncate">
+                      {houseData.name} - {houseData.structure?.label}
+                    </span>
+                  </div>
+                </div>
+              ) : null}
+
+              {isRentRoomDefined && isRentRoom && roomOptions.length > 0 && (
+                <div className="w-full sm:w-52 md:w-56">
+                  <select
+                    className="h-8 w-full rounded-xl border border-gray-200 bg-white px-3 text-right text-xs text-gray-700 shadow-sm outline-none transition focus:border-primary-500 focus:ring-2 focus:ring-primary-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:ring-primary-900/40"
+                    value={selectedRoomUuid || ""}
+                    onChange={(e) => setSelectedRoomUuid(e.target.value)}
+                  >
+                    {roomOptions.map((room) => (
+                      <option key={room.uuid} value={room.uuid}>
+                        {room.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
           </div>
-        ) : null}
+
+          <DateRangeSelector
+            className="w-full min-w-0 md:col-span-2 md:row-start-2 md:self-end lg:col-span-1 lg:col-start-1 lg:row-start-2 xl:ml-auto xl:w-[60%] 2xl:w-[55%]"
+            operationGroup={operationGroup}
+            reserveDateFrom={reserveDateFrom}
+            reserveDateTo={reserveDateTo}
+          />
+
+          <div className="w-full min-w-0 md:col-start-2 md:row-start-1 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full lg:self-stretch">
+            <OperationButtons
+              operationGroup={operationGroup}
+              openOperationFlow={openOperationFlow}
+              handleReset={handleReset}
+            />
+          </div>
+        </div>
 
         {!loadingHouse && combinedError && (
-          <div className="py-1 text-center text-sm text-red-600">{combinedError}</div>
+          <div className="py-1 text-center text-sm text-red-600">
+            {combinedError}
+          </div>
         )}
 
         {errorMessage && (
           <div className="text-center text-sm text-red-500">{errorMessage}</div>
         )}
 
-        {isRentRoomDefined && isRentRoom && roomOptions.length > 0 && (
-          <div className="mb-1 w-full sm:w-52">
-            <select
-              className="w-full rounded-xl border border-primary-600 bg-white px-3 py-1.5 text-right text-xs text-gray-700 dark:bg-slate-950 dark:text-slate-100"
-              value={selectedRoomUuid || ""}
-              onChange={(e) => setSelectedRoomUuid(e.target.value)}
-            >
-              {roomOptions.map((room) => (
-                <option key={room.uuid} value={room.uuid}>
-                  {room.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-       
-        <div className="flex w-full justify-center">
-          <OperationButtons
-            operationGroup={operationGroup}
-            openOperationFlow={openOperationFlow}
-            handleReset={handleReset}
-          />
-        </div>
-        <DateRangeSelector
-          operationGroup={operationGroup}
-          reserveDateFrom={reserveDateFrom}
-          reserveDateTo={reserveDateTo}
-        />
-          
         {finalCalendarData && finalCalendarData.length > 0 && (
           <div className={operationGroup ? "relative z-20" : ""}>
             <VendorCalendarContainer
@@ -217,6 +244,7 @@ export default function VendorCalendar({
               fetchNextMonth={fetchNextMonth}
               reserveDateFrom={reserveDateFrom}
               reserveDateTo={reserveDateTo}
+              operationGroup={operationGroup}
             />
           </div>
         )}

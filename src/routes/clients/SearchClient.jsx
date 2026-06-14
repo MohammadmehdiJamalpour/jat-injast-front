@@ -1,9 +1,9 @@
 import SearchContainer from "@/features/search/SearchContainer";
 
-function SearchClient() {
+function SearchClient({ initialSearchData }) {
   return (
     <div className="w-full justify-center md:flex">
-      <SearchContainer />
+      <SearchContainer initialSearchData={initialSearchData} />
     </div>
   );
 }

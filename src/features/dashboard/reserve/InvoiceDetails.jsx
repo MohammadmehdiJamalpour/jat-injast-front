@@ -6,7 +6,6 @@ export default function InvoiceDetails({ invoice }) {
   const bills = invoice.bills || [];
 
   return (
-    /* 👇  added h-full flex flex-col so it can stretch */
     <div className="border border-primary-500 p-4 rounded-3xl h-full flex flex-col">
       <h3 className="font-bold text-lg mb-2">جزئیات مالی</h3>
 
@@ -27,7 +26,6 @@ export default function InvoiceDetails({ invoice }) {
         <p className="flex-grow">هیچ جزئیاتی برای فاکتور یافت نشد</p>
       )}
 
-      {/* footer rows */}
       {invoice.commission > 0 && (
         <div className="flex items-center justify-between pt-2">
           <span>کمیسیون جات اینجاست:</span>

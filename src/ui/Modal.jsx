@@ -4,6 +4,10 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 import { fa } from "../i18n/fa";
 
 const sizes = {
+  content: "max-w-md",
+  confirm: "max-w-md",
+  form: "max-w-lg",
+  rich: "max-w-xl",
   sm: "max-w-md",
   md: "max-w-2xl",
   lg: "max-w-4xl",
@@ -11,24 +15,32 @@ const sizes = {
   full: "max-w-9xl",
 };
 
+const DEFAULT_MODAL_SIZE = "form";
+
 const Modal = ({
   open,
   isOpen,
   onClose,
   title,
   children,
-  size,
-  maxWidth = "max-w-9xl",
+  size = DEFAULT_MODAL_SIZE,
+  maxWidth,
+  zIndexClassName = "z-50",
+  viewportClassName = "items-center justify-center px-3 py-4 sm:px-6",
+  maxHeightClassName = "max-h-[95vh]",
+  bodyClassName = "px-4 pb-4 pt-3 sm:px-6 sm:pb-6",
+  testId,
 }) => {
   const visible = open ?? isOpen;
-  const panelWidth = size ? sizes[size] || maxWidth : maxWidth;
+  const panelWidth = maxWidth || sizes[size] || sizes[DEFAULT_MODAL_SIZE];
 
   return (
     <Transition show={Boolean(visible)} as={Fragment}>
       <Dialog
         as="div"
         dir="rtl"
-        className="relative z-50 text-right"
+        className={`relative ${zIndexClassName} text-right`}
+        data-testid={testId}
         onClose={onClose || (() => {})}
       >
         <Transition.Child
@@ -47,7 +59,7 @@ const Modal = ({
           />
         </Transition.Child>
 
-        <div className="fixed inset-0 flex items-center justify-center px-3 py-4 sm:px-6">
+        <div className={`fixed inset-0 flex ${viewportClassName}`}>
           <Transition.Child
             as={Fragment}
             enter="transition ease-out duration-300"
@@ -60,12 +72,13 @@ const Modal = ({
             {/* Modal Panel */}
             <Dialog.Panel
               dir="rtl"
+              data-testid={testId ? `${testId}-panel` : undefined}
               className={`
                 w-full
                 bg-white flex flex-col dark:bg-slate-900 dark:text-slate-100
-                mx-2 sm:mx-10 md:mx-14
+                min-w-0
                 rounded-3xl shadow-lg dark:border dark:border-slate-700 dark:shadow-black/30
-                max-h-[95vh]
+                ${maxHeightClassName}
                 overflow-hidden
                 text-right
                 ${panelWidth}
@@ -73,16 +86,16 @@ const Modal = ({
             >
               {/* The container that scrolls, so the header can remain sticky */}
               <div
-                className="
+                className={`
                   flex flex-col 
-                  max-h-[95vh] 
+                  ${maxHeightClassName}
                   overflow-auto 
                   scrollbar-thin 
                   scrollbar-thumb-gray-300 
                   scrollbar-track-gray-100 
                   scrollbar-thumb-rounded-full 
                   scrollbar-track-rounded-full
-                "
+                `}
               >
                 {/* Sticky Header (RTL: title on the right, close on the left) */}
                 <div dir="rtl" className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-primary-100 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-900 sm:px-6">
@@ -95,20 +108,19 @@ const Modal = ({
                   )}
 
                   {onClose && (
-                    <div className="btn-press h-9 w-9 shrink-0 rounded-full bg-primary-action text-primary-contrast transition duration-150 ease-in-out hover:bg-primary-action-hover">
-                      <button
-                        onClick={onClose}
-                        className="flex items-center w-full h-full justify-center"
-                        aria-label={fa.common.actions.close}
-                      >
-                        <XMarkIcon className="w-5 h-5" />
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="btn-press flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-action text-primary-contrast transition duration-150 ease-in-out hover:bg-primary-action-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300"
+                      aria-label={fa.common.actions.close}
+                    >
+                      <XMarkIcon className="w-5 h-5" />
+                    </button>
                   )}
                 </div>
 
                 {/* Scrollable content */}
-                <div dir="rtl" className="w-full px-4 pb-4 pt-3 text-right sm:px-6 sm:pb-6">
+                <div dir="rtl" className={`w-full text-right ${bodyClassName}`}>
                   {children}
                 </div>
               </div>

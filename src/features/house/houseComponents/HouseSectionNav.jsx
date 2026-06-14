@@ -9,24 +9,28 @@ const sections = [
 function HouseSectionsNav({ isVisible, onScrollTo, activeSection }) {
   return (
     <nav
+      data-testid="house-section-nav"
       style={{ top: "calc(var(--header-offset, 0px) + 0.75rem)" }}
-      className={`sticky z-20 mx-2 md:max-w-md 
-                  rounded-3xl shadow-centered mb-4 transition-opacity duration-300
+      aria-hidden={!isVisible}
+      className={`fixed inset-x-0 z-[450] box-border px-3 transition-opacity duration-300 md:left-1/2 md:right-auto md:w-full md:max-w-md md:-translate-x-1/2 md:px-0
                   ${isVisible ? "opacity-100 pointer-events-auto"
                               : "opacity-0 pointer-events-none"}`}
     >
-      <ul className="flex py-2 px-3 bg-primary-300 rounded-3xl
-                     justify-between lg:justify-start md:gap-8 text-white">
+      <ul className="no-scrollbar flex max-w-full gap-2 overflow-x-auto rounded-3xl bg-primary-300 px-3 py-2 text-white shadow-centered lg:justify-start">
         {sections.map(({ name, label }) => (
-          <li
-            key={name}
-            onClick={() => onScrollTo(name)}
-            className={`cursor-pointer px-3 py-1.5 rounded-3xl transition-all
+          <li key={name} className="shrink-0">
+            <button
+              type="button"
+              data-testid={`house-section-nav-${name}`}
+              onClick={() => onScrollTo(name)}
+              aria-current={activeSection === name ? "true" : undefined}
+              className={`whitespace-nowrap rounded-3xl px-3 py-1.5 text-sm font-semibold leading-6 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80
                         ${activeSection === name
-                          ? "bg-primary-600"
-                          : "bg-primary-300"}`}
-          >
-            {label}
+                          ? "bg-primary-600 shadow-sm"
+                          : "bg-primary-300 hover:bg-primary-400"}`}
+            >
+              {label}
+            </button>
           </li>
         ))}
       </ul>

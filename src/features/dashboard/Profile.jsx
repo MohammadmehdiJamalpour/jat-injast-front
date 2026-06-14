@@ -22,15 +22,14 @@ dayjs.extend(jalaliday);
 
 const Profile = ({ user, onUpdateUser }) => {
   const [errorMessage, setErrorMessage] = useState(null);
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation modal
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
   const { mutate, isLoading: isBecomingVendor } = useMutation(becomeVendor, {
     onSuccess: async () => {
       try {
-        // Fetch the updated user data
         const newUserData = await getUser();
         onUpdateUser(newUserData);
-        setErrorMessage(null); // Clear any previous error message
+        setErrorMessage(null);
       } catch (error) {
         setErrorMessage(error.response?.data?.message || 'خطایی رخ داده است');
       }
@@ -41,13 +40,13 @@ const Profile = ({ user, onUpdateUser }) => {
   });
 
   const handleBecomeVendorClick = () => {
-    setErrorMessage(null); // Clear any previous error message
-    setIsConfirmationOpen(true); // Open the confirmation modal
+    setErrorMessage(null);
+    setIsConfirmationOpen(true);
   };
 
   const confirmBecomeVendor = () => {
-    setIsConfirmationOpen(false); // Close the modal
-    mutate(); // Trigger the mutation
+    setIsConfirmationOpen(false);
+    mutate();
   };
 
   const formatPersianDate = (date) => {
@@ -125,14 +124,12 @@ const Profile = ({ user, onUpdateUser }) => {
         />
       </div>
 
-      {/* Display error message if exists */}
       {errorMessage && (
         <p className="mt-4 rounded-2xl border border-red-100 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">
           {errorMessage}
         </p>
       )}
 
-      {/* Show Become Vendor Button */}
       {!isVendor && !isAdmin && (
         <button
           onClick={handleBecomeVendorClick}
@@ -143,14 +140,13 @@ const Profile = ({ user, onUpdateUser }) => {
         </button>
       )}
 
-      {/* Confirmation Modal */}
       <Dialog open={isConfirmationOpen} onClose={() => setIsConfirmationOpen(false)} dir="rtl" className="relative z-50 text-right">
         <div className="fixed inset-0 bg-white/15 backdrop-blur-md dark:bg-white/5" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel dir="rtl" className="w-full max-w-lg space-y-4 rounded-3xl border border-primary-100 bg-white p-6 text-right shadow-xl dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-            <Dialog.Title className="text-xl font-bold">آیا از تبدیل شدن به میزبان مطمئن هستید؟</Dialog.Title>
+          <Dialog.Panel dir="rtl" className="w-full max-w-md space-y-4 rounded-3xl border border-primary-100 bg-white p-6 text-right shadow-xl dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            <Dialog.Title className="text-lg font-bold">آیا از تبدیل شدن به میزبان مطمئن هستید؟</Dialog.Title>
             <p className="mt-4 text-sm leading-7 text-gray-600 dark:text-slate-300">در صورت تایید، اطلاعات شما به عنوان میزبان در سیستم ثبت خواهد شد.</p>
-            <div className="mt-4 flex gap-3">
+            <div className="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
               <button
                 className="btn-secondary btn-press"
                 onClick={() => setIsConfirmationOpen(false)}

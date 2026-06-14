@@ -71,7 +71,7 @@ function AuthContainer() {
 
   return (
     <div className="mx-auto w-full max-w-sm text-right" dir="rtl">
-      <div className="rounded-2xl border border-primary-100 bg-gray-100 p-6 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-8">
+      <div className="rounded-[2.25rem] border border-primary-100 bg-gray-100 p-6 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:rounded-[3rem] sm:p-8">
         <form
           onSubmit={handleSubmit}
           className="space-y-4"
@@ -82,7 +82,7 @@ function AuthContainer() {
             <img
               src={logo}
               alt="جات اینجاست"
-              className="mx-auto h-20 w-20 rounded-3xl object-contain shadow-sm"
+              className="mx-auto h-20 w-20 rounded-[2rem] object-contain shadow-sm"
             />
           </div>
 
@@ -95,7 +95,7 @@ function AuthContainer() {
             </p>
           </div>
 
-          <div className="grid gap-2" role="group" aria-label="انتخاب حساب ورود سریع">
+          <div className="grid gap-2.5" role="group" aria-label="انتخاب حساب ورود سریع">
             {QUICK_LOGIN_ACCOUNTS.map((account) => {
               const isSelected = username === account.username;
               return (
@@ -105,7 +105,7 @@ function AuthContainer() {
                 onClick={() => selectQuickLoginAccount(account)}
                 aria-pressed={isSelected}
                 aria-label={`انتخاب نقش ${account.role}`}
-                className={`rounded-xl border px-3 py-2 text-right transition ${
+                className={`rounded-[2rem] border px-5 py-3.5 text-right transition sm:px-6 ${
                   isSelected
                     ? "border-primary-600 bg-primary-50 dark:bg-primary-900/40"
                     : "border-gray-200 bg-white hover:border-primary-300 dark:border-slate-700 dark:bg-slate-950 dark:hover:border-primary-400"
@@ -137,7 +137,7 @@ function AuthContainer() {
             <input
               id="username"
               name="username"
-              className="textField__input text-left"
+              className="textField__input !rounded-full text-left"
               dir="ltr"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
@@ -156,7 +156,7 @@ function AuthContainer() {
             <input
               id="password"
               name="password"
-              className="textField__input text-left"
+              className="textField__input !rounded-full text-left"
               dir="ltr"
               type="password"
               value={password}
@@ -173,7 +173,7 @@ function AuthContainer() {
           )}
 
           <button
-            className="btn hover:bg-primary-700 bg-primary-600 w-full"
+            className="btn w-full !rounded-full bg-primary-600 hover:bg-primary-700"
             type="submit"
             disabled={loginMutation.isLoading}
             aria-busy={loginMutation.isLoading}

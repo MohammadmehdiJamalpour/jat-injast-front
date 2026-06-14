@@ -33,7 +33,7 @@ export default function DownloadApp({ downloads = [] }) {
   return (
     <section className="rounded-3xl border border-primary-100/70 bg-primary-50/40 p-3 dark:border-slate-800 dark:bg-slate-900/70 sm:p-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-w-0 items-start gap-3">
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary-600 text-white dark:bg-primary-500">
             <ArrowDownTrayIcon className="h-5 w-5" />
           </span>
@@ -42,7 +42,7 @@ export default function DownloadApp({ downloads = [] }) {
               <img src={logotype} alt="جات اینجاست" className="h-8 w-auto max-w-40 object-contain" />
             </span>
             <p className="mt-1 text-xs text-primary-700 dark:text-slate-400">
-              دریافت اپلیکیشن نمونه رزرو اقامتگاه
+              دریافت اپلیکیشن جات اینجاست برای رزرو اقامتگاه
             </p>
           </div>
         </div>

@@ -1,37 +1,45 @@
-import {
-  useState,
-  useMemo,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useOutletContext } from "@/lib/router-compat";
 import { fa } from "@/i18n/fa";
 
 import HouseHeader from "./HouseHeader";
-import HouseFacilities from "./houseComponents/HouseFacilities";
 import HouseImages from "./houseComponents/HouseImages";
-import HouseLocation from "./houseComponents/HouseLocation";
 import HouseReservationMenu from "./houseComponents/HouseReservationMenu";
 import ReserveMenuDesktop from "./houseComponents/ReserveMenuDesktop";
 import HouseDescription from "./houseComponents/HouseDescription";
 import HouseSpace from "./houseComponents/HouseSpace";
-import HouseRooms from "./houseComponents/HouseRooms";
 import HouseRules from "./houseComponents/HouseRules";
 import HouseCancellationRules from "./houseComponents/HouseCancellationRules";
 import HouseComments from "./houseComponents/HouseComments";
-import HouseSanitaries from "./houseComponents/HouseSanitaries";
 import HouseTopLocation from "./houseComponents/HouseTopLocation";
 import Separator from "../../ui/Separator";
 import RevealSection from "../../ui/RevealSection";
+import ViewportLazyBoundary from "../../ui/ViewportLazyBoundary";
 import { useHouseCalendarData } from "./useHouseCalendarData";
-import HouseCalendar from "./houseComponents/HouseCalendar";
 import { useAllRoomsCalendarData } from "./useAllRoomsCalendarData";
 import HouseSimilarHouses from "./houseComponents/HouseSimilarHouses";
 import HouseSectionsNav from './houseComponents/HouseSectionNav';
+import { HouseCalendar, HouseFacilities, HouseLocation, HouseRooms, HouseSanitaries, MapSkeleton, SectionSkeleton } from "./lazyHouseSections";
+
+function getHeaderOffset() {
+  const cssHeaderOffset =
+    parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--header-offset",
+      ),
+    ) || 0;
+  const fixedHeaderHeight =
+    document.querySelector("body nav[aria-label]")?.parentElement?.offsetHeight || 0;
+
+  return Math.max(cssHeaderOffset, fixedHeaderHeight);
+}
+
+function getSectionNavHeight() {
+  return document.querySelector("[data-testid='house-section-nav']")?.offsetHeight || 0;
+}
 
 function HouseContainer() {
-  const { houseData, uuid } = useOutletContext();
+  const { houseData, uuid, initialSimilarHouses } = useOutletContext();
 
   const isRentRoom = useMemo(() => houseData?.is_rent_room ?? false, [houseData]);
 
@@ -91,20 +99,32 @@ function HouseContainer() {
   const roomsRef = useRef(null);
   const rulesRef = useRef(null);
   const commentsRef = useRef(null);
+  const sectionRefs = useMemo(
+    () => ({
+      calendar: calendarRef,
+      rooms: roomsRef,
+      rules: rulesRef,
+      comments: commentsRef,
+    }),
+    [],
+  );
   const [showNav, setShowNav] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const headerHeight = houseHeaderRef.current
-        ? houseHeaderRef.current.offsetHeight
-        : 0;
-      const desktopOffset = window.innerWidth >= 1280 ? 400 : 0;
+      const headerOffset = getHeaderOffset();
+      const navHeight = getSectionNavHeight();
+      const sectionOffset = headerOffset + navHeight + 24;
 
-      setShowNav(scrollTop >= headerHeight + desktopOffset);
+      if (houseHeaderRef.current) {
+        const headerRect = houseHeaderRef.current.getBoundingClientRect();
+        setShowNav(headerRect.bottom <= headerOffset + 16);
+      } else {
+        setShowNav(false);
+      }
 
-      const threshold = window.innerHeight / 2;
+      const threshold = Math.min(sectionOffset + 96, window.innerHeight / 2);
       let currentActiveSection = "";
 
       if (calendarRef.current) {
@@ -144,24 +164,19 @@ function HouseContainer() {
 
   const scrollToSection = useCallback(
     (sectionName) => {
-      switch (sectionName) {
-        case "calendar":
-          calendarRef.current?.scrollIntoView({ behavior: "smooth" });
-          break;
-        case "rooms":
-          roomsRef.current?.scrollIntoView({ behavior: "smooth" });
-          break;
-        case "rules":
-          rulesRef.current?.scrollIntoView({ behavior: "smooth" });
-          break;
-        case "comments":
-          commentsRef.current?.scrollIntoView({ behavior: "smooth" });
-          break;
-        default:
-          break;
-      }
+      const section = sectionRefs[sectionName]?.current;
+      if (!section) return;
+
+      const headerOffset = getHeaderOffset();
+      const navHeight = getSectionNavHeight();
+      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+
+      window.scrollTo({
+        top: Math.max(0, sectionTop - headerOffset - navHeight - 24),
+        behavior: "smooth",
+      });
     },
-    []
+    [sectionRefs],
   );
 
   if (isErrorCalendar) {
@@ -178,25 +193,31 @@ function HouseContainer() {
         activeSection={activeSection}
       />
 
-      <div className="flex items-start -mt-10 md:-mt-5 flex-col w-full shadow-centered-lg rounded-2xl md:p-2">
+      <div className="mt-5 flex w-full min-w-0 flex-col items-start rounded-2xl shadow-centered-lg md:-mt-5 md:p-2">
         <RevealSection as="div" className="w-full md:mb-3">
           <HouseImages houseData={houseData} />
         </RevealSection>
 
-        <div className="w-full shadow-centered-lg-top mb-12 pb-12 rounded-t-3xl mt-4  pt-2 xs:pt-3 -top-2 z-10 flex relative px-1 xs:px-2 py-1 lg:pt-3 xl:pt-6 flex-row">
-          <div className="flex flex-col w-full md:w-3/5 xl:w-3/4">
+        <div className="relative -top-2 z-10 mt-4 mb-12 flex w-full min-w-0 flex-row rounded-t-3xl px-1 py-1 pt-2 pb-12 shadow-centered-lg-top xs:px-2 xs:pt-3 lg:pt-3 xl:pt-6">
+          <div className="flex min-w-0 flex-col w-full md:w-3/5 xl:w-3/4">
             <RevealSection
               as="div"
               ref={houseHeaderRef}
               className="flex flex-col justify-between xl:flex-row"
             >
               <HouseHeader houseData={houseData} />
-              <div className="flex flex-col w-full max-w-lg p-4">
+              <div className="flex w-full max-w-lg min-w-0 flex-col p-4">
                 <h3 className="text-lg font-bold text-gray-800 mb-2">
                   {fa.house.location.title}
                 </h3>
                 <div className="w-full h-full flex relative">
-                  <HouseLocation cords={houseData.address?.geography} />
+                  <ViewportLazyBoundary
+                    className="h-full w-full"
+                    fallback={<MapSkeleton />}
+                    rootMargin="400px"
+                  >
+                    <HouseLocation cords={houseData.address?.geography} />
+                  </ViewportLazyBoundary>
                 </div>
               </div>
             </RevealSection>
@@ -211,18 +232,24 @@ function HouseContainer() {
             </RevealSection>
             <Separator />
 
-            <RevealSection as="div" ref={roomsRef}>
-              <HouseRooms houseData={houseData} />
+            <RevealSection as="div" ref={roomsRef} data-testid="house-section-rooms">
+              <ViewportLazyBoundary fallback={<SectionSkeleton />} rootMargin="500px">
+                <HouseRooms houseData={houseData} />
+              </ViewportLazyBoundary>
             </RevealSection>
             <Separator />
 
             <RevealSection as="div">
-              <HouseFacilities houseData={houseData} />
+              <ViewportLazyBoundary fallback={<SectionSkeleton />} rootMargin="500px">
+                <HouseFacilities houseData={houseData} />
+              </ViewportLazyBoundary>
             </RevealSection>
             <Separator />
 
             <RevealSection as="div">
-              <HouseSanitaries houseData={houseData} />
+              <ViewportLazyBoundary fallback={<SectionSkeleton />} rootMargin="500px">
+                <HouseSanitaries houseData={houseData} />
+              </ViewportLazyBoundary>
             </RevealSection>
 
             {isLoadingCalendar && (
@@ -238,19 +265,24 @@ function HouseContainer() {
             {!isLoadingCalendar && calendarData && calendarData.length > 0 && (
               <>
                 <Separator />
-                <RevealSection as="div" ref={calendarRef}>
-                  <HouseCalendar
-                    calendarData={calendarData}
-                    isRentRoom={isRentRoom}
-                    roomOptions={roomOptions}
-                    selectedRoomUuid={selectedRoomUuid}
-                    instantBooking={houseData.instant_booking}
-                    setSelectedRoomUuid={setSelectedRoomUuid}
-                    reserveDateFrom={reserveDateFrom}
-                    setReserveDateFrom={setReserveDateFrom}
-                    reserveDateTo={reserveDateTo}
-                    setReserveDateTo={setReserveDateTo}
-                  />
+                <RevealSection as="div" ref={calendarRef} data-testid="house-section-calendar">
+                  <ViewportLazyBoundary
+                    fallback={<SectionSkeleton className="h-64" />}
+                    rootMargin="500px"
+                  >
+                    <HouseCalendar
+                      calendarData={calendarData}
+                      isRentRoom={isRentRoom}
+                      roomOptions={roomOptions}
+                      selectedRoomUuid={selectedRoomUuid}
+                      instantBooking={houseData.instant_booking}
+                      setSelectedRoomUuid={setSelectedRoomUuid}
+                      reserveDateFrom={reserveDateFrom}
+                      setReserveDateFrom={setReserveDateFrom}
+                      reserveDateTo={reserveDateTo}
+                      setReserveDateTo={setReserveDateTo}
+                    />
+                  </ViewportLazyBoundary>
                 </RevealSection>
                 <Separator />
               </>
@@ -263,7 +295,7 @@ function HouseContainer() {
               </>
             )}
 
-            <RevealSection as="div" ref={rulesRef}>
+            <RevealSection as="div" ref={rulesRef} data-testid="house-section-rules">
               <HouseRules houseData={houseData} />
             </RevealSection>
             <Separator />
@@ -273,7 +305,7 @@ function HouseContainer() {
             </RevealSection>
             <Separator />
 
-            <RevealSection as="div" ref={commentsRef}>
+            <RevealSection as="div" ref={commentsRef} data-testid="house-section-comments">
               <HouseComments houseData={houseData} />
             </RevealSection>
             <Separator />
@@ -283,12 +315,15 @@ function HouseContainer() {
             </RevealSection>
             
             <RevealSection as="div">
-              <HouseSimilarHouses houseUuid={houseData.uuid} />
+              <HouseSimilarHouses
+                houseUuid={houseData.uuid}
+                initialHouses={initialSimilarHouses}
+              />
             </RevealSection>
           </div>
 
-          <div className="hidden md:flex items-start relative justify-center w-2/5 xl:w-1/4 h-full">
-            <div className="sticky top-24 w-full">
+          <div className="relative hidden h-full min-w-0 items-start justify-center md:flex md:w-2/5 xl:w-1/4">
+            <div className="sticky top-24 w-full min-w-0">
               <ReserveMenuDesktop
                 houseData={houseData}
                 uuid={uuid}

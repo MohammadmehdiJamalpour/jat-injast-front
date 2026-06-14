@@ -1,11 +1,15 @@
-import { useState, useRef, useEffect } from "react";
+import { Fragment, useCallback, useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { Link, useNavigate, useLocation } from "@/lib/router-compat";
-import { Menu } from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
 import {
   UserIcon,
   UserCircleIcon,
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
+  XMarkIcon,
+  InformationCircleIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -13,6 +17,7 @@ import toast from "react-hot-toast";
 import Loading from "./Loading.jsx";
 import { useUserContext } from "../contexts/UserContext";
 import { logOutUser } from "../services/userService.js";
+import { clearClientAuthState } from "../services/httpService";
 import ThemeToggle from "./ThemeToggle.jsx";
 import { reportClientError } from "../utils/reportClientError";
 
@@ -22,6 +27,11 @@ const navLinks = [
   { path: "/about", label: "درباره ما" },
   { path: "/terms-of-service", label: "قوانین ما" },
 ];
+
+const mobileNavIcons = {
+  "/about": InformationCircleIcon,
+  "/terms-of-service": DocumentTextIcon,
+};
 
 function Header() {
   const { userData, isUserDataLoading } = useUserContext();
@@ -39,6 +49,7 @@ function Header() {
   const isDashboard = location.pathname.startsWith("/dashboard");
 
   const toggleMobileMenu = () => setShowMobileMenu((p) => !p);
+  const closeMobileMenu = useCallback(() => setShowMobileMenu(false), []);
 
   const handleMouseEnter = () => {
     clearTimeout(timerRef.current);
@@ -48,19 +59,21 @@ function Header() {
     timerRef.current = setTimeout(() => setDropdownVisible(false), 1000);
   };
 
-  const handleUserPanelClick = () =>
+  const handleUserPanelClick = () => {
+    closeMobileMenu();
     location.pathname.includes("/dashboard") ? navigate("/") : navigate("/login");
+  };
 
   const buttonText = location.pathname.includes("/dashboard")
     ? "صفحه اصلی"
     : "پنل کاربری";
 
   const handleLogout = async () => {
+    closeMobileMenu();
     setIsLoggingOut(true);
     try {
       await logOutUser();
-      document.cookie =
-        "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      clearClientAuthState();
       queryClient.setQueryData(["get-user"], null);
       queryClient.invalidateQueries(["get-user"]);
       toast.success("از حساب کاربری خود با موفقیت خارج شدید !");
@@ -71,6 +84,32 @@ function Header() {
       setIsLoggingOut(false);
     }
   };
+
+  useEffect(() => {
+    closeMobileMenu();
+  }, [closeMobileMenu, location.pathname]);
+
+  useEffect(() => {
+    if (!showMobileMenu) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") closeMobileMenu();
+    };
+
+    const handlePointerDown = (event) => {
+      if (!headerRef.current?.contains(event.target)) closeMobileMenu();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+    };
+  }, [closeMobileMenu, showMobileMenu]);
 
   useEffect(() => {
     const syncHeight = () => {
@@ -121,7 +160,7 @@ function Header() {
   return (
     <div
       ref={headerRef}
-      className={`fixed inset-x-0 top-0 z-[12000] w-full rounded-b-lg px-8 transition-transform duration-300 small:px-10 sm:px-12 md:px-14 lg:px-20 xl:px-28 2xl:px-36 ${
+      className={`fixed inset-x-0 top-0 z-[12000] w-full rounded-b-lg px-4 transition-transform duration-300 small:px-5 sm:px-6 md:px-14 lg:px-20 xl:px-28 2xl:px-36 ${
         isHidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
@@ -136,9 +175,13 @@ function Header() {
             className="flex flex-shrink-0 items-center"
             aria-label="صفحه اصلی جات اینجاست"
           >
-            <img
+            <Image
               src={logo}
               alt="جات اینجاست"
+              width={769}
+              height={195}
+              priority
+              sizes="(min-width: 768px) 13rem, 11rem"
               className="h-8 w-auto max-w-44 object-contain md:h-9 md:max-w-52"
             />
           </Link>
@@ -247,64 +290,109 @@ function Header() {
           {/* Hamburger */}
           <button
             type="button"
-            className="px-2 py-1"
+            className="btn-press inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-secondary-50 transition hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             onClick={toggleMobileMenu}
             aria-label={showMobileMenu ? "بستن منوی اصلی" : "باز کردن منوی اصلی"}
             aria-expanded={showMobileMenu}
             aria-controls="mobile-main-menu"
           >
-            <Bars3Icon className="h-6 w-6 text-secondary-200" />
+            {showMobileMenu ? (
+              <XMarkIcon className="h-5 w-5" />
+            ) : (
+              <Bars3Icon className="h-5 w-5" />
+            )}
           </button>
 
           {/* Mobile drawer */}
-          {showMobileMenu && (
+          <Transition
+            show={showMobileMenu}
+            as={Fragment}
+            enter="transition duration-200 ease-out"
+            enterFrom="-translate-y-2 scale-[0.98] opacity-0"
+            enterTo="translate-y-0 scale-100 opacity-100"
+            leave="transition duration-150 ease-in"
+            leaveFrom="translate-y-0 scale-100 opacity-100"
+            leaveTo="-translate-y-2 scale-[0.98] opacity-0"
+          >
             <div
               id="mobile-main-menu"
-              className="absolute top-full left-0 z-[13000] w-full rounded-b-md bg-white text-right shadow-lg ring-1 ring-black ring-opacity-5"
+              className="absolute left-0 top-full z-[13000] mt-2 w-full origin-top overflow-hidden rounded-[1.75rem] border border-primary-100/80 bg-white p-2 text-right text-gray-800 shadow-2xl shadow-primary-900/15 ring-1 ring-black/5 dark:border-white/10 dark:bg-slate-950 dark:text-slate-100 dark:shadow-black/40 dark:ring-white/10"
             >
               {/* nav links */}
-              {navLinks.map(({ path, label }) => (
-                <Link
-                  key={path}
-                  to={path}
-                  onClick={() => setShowMobileMenu(false)}
-                  className="w-full block px-4 py-2 hover:bg-gray-100"
-                  aria-current={location.pathname === path ? "page" : undefined}
-                >
-                  {label}
-                </Link>
-              ))}
+              <div className="flex flex-col gap-1">
+                {navLinks.map(({ path, label }) => {
+                  const Icon = mobileNavIcons[path] || InformationCircleIcon;
+                  const isActive = location.pathname === path;
 
-              <div className="px-4 py-3">
-                <ThemeToggle className="border-primary-100 bg-primary-50 text-primary-800 hover:bg-primary-100" />
+                  return (
+                    <Link
+                      key={path}
+                      to={path}
+                      onClick={closeMobileMenu}
+                      className={`flex min-w-0 items-center justify-between rounded-2xl px-3 py-2.5 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 ${
+                        isActive
+                          ? "bg-primary-action text-white shadow-sm shadow-primary-200/60"
+                          : "text-gray-700 hover:bg-primary-50 hover:text-primary-800 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:text-white"
+                      }`}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      <span className="min-w-0 truncate">{label}</span>
+                      <span
+                        className={`mr-3 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                          isActive
+                            ? "bg-white/15 text-white"
+                            : "bg-primary-50 text-primary-700 dark:bg-white/10 dark:text-sky-100"
+                        }`}
+                      >
+                        <Icon className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              <div className="my-2 h-px bg-primary-100/80 dark:bg-white/10" />
+
+              <div className="flex items-center justify-between rounded-2xl bg-primary-50/70 px-3 py-2 dark:bg-white/5">
+                <span className="text-sm font-semibold text-gray-700 dark:text-slate-100">
+                  تم سایت
+                </span>
+                <ThemeToggle className="border-primary-100 bg-white text-primary-800 shadow-none hover:bg-primary-50 dark:border-white/10 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" />
               </div>
 
               <button
+                type="button"
                 onClick={handleUserPanelClick}
-                className="w-full px-4 py-2 flex items-center hover:bg-gray-100"
+                className="mt-1 flex w-full min-w-0 items-center justify-between rounded-2xl px-3 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-primary-50 hover:text-primary-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:text-white"
               >
-                <UserIcon className="w-5 h-5" /> {buttonText}
+                <span className="min-w-0 truncate">{buttonText}</span>
+                <span className="mr-3 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-700 dark:bg-white/10 dark:text-sky-100">
+                  <UserIcon className="h-4 w-4" aria-hidden="true" />
+                </span>
               </button>
 
               {userData && (
                 <button
+                  type="button"
                   onClick={handleLogout}
                   disabled={isLoggingOut}
-                  className="w-full px-4 py-2 pb-4 flex items-center hover:bg-gray-100"
+                  className="mt-1 flex w-full min-w-0 items-center justify-between rounded-2xl px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-not-allowed disabled:opacity-60 dark:text-red-200 dark:hover:bg-red-950/30"
                 >
-                  <ArrowLeftOnRectangleIcon className="w-5 h-5" />
                   {isLoggingOut ? (
-                    <span className="flex items-center">
+                    <span className="flex min-w-0 items-center">
                       <span className="ml-2">در حال خروج ...</span>
                       <Loading size={20} />
                     </span>
                   ) : (
-                    "خروج از حساب کاربری"
+                    <span className="min-w-0 truncate">خروج از حساب کاربری</span>
                   )}
+                  <span className="mr-3 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-200">
+                    <ArrowLeftOnRectangleIcon className="h-4 w-4" aria-hidden="true" />
+                  </span>
                 </button>
               )}
             </div>
-          )}
+          </Transition>
         </div>
       </nav>
     </div>

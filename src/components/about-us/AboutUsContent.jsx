@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ArrowLeftIcon,
   CheckCircleIcon,
@@ -121,7 +123,7 @@ export default function AboutUsContent() {
           <div className="min-w-0 space-y-5 sm:space-y-6">
             <SectionHeader
               title="درباره جات اینجاست"
-              subtitle="یک نمونه محصول کامل برای رزرو اقامتگاه، مدیریت میزبان، پرداخت آزمایشی و پشتیبانی رزرو."
+              subtitle="مسیر کامل رزرو اقامتگاه، مدیریت میزبان، پرداخت آزمایشی و پشتیبانی رزرو در جات اینجاست."
               className="border-none pb-0"
             />
             <p className="max-w-3xl text-sm leading-8 text-gray-600 dark:text-sky-100/75 md:text-base">

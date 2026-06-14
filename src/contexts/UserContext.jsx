@@ -8,14 +8,11 @@ const UserContext = createContext();
 export const useUserContext = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
-  // Determine if an auth token exists (adjust based on your auth logic)
-  const tokenExists =
-    typeof document !== "undefined" && document.cookie.includes("authToken=");
-
   const {
     data: userData,
     isLoading: isUserDataLoading,
     isError: isUserError,
+    error: userError,
     refetch,
   } = useQuery({
     queryKey: ["get-user"],
@@ -23,9 +20,6 @@ export const UserProvider = ({ children }) => {
     retry: false,
     staleTime: 600000, // 10 minutes
     cacheTime: 600000, // 10 minutes
-    // When no token exists, assume no user data and avoid a loading state
-    initialData: tokenExists ? undefined : null,
-    enabled: tokenExists,
   });
 
   return (
@@ -34,6 +28,7 @@ export const UserProvider = ({ children }) => {
         userData,
         isUserDataLoading,
         isUserError,
+        userError,
         refetch,
         // Expose more fields if needed
       }}

@@ -18,7 +18,7 @@ export default function AdminEditPanel({
       dir="rtl"
       className="modal-rtl fixed inset-0 z-50 flex items-end justify-center bg-white/15 p-3 text-right backdrop-blur-md dark:bg-white/5 md:items-center"
     >
-      <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white p-4 text-right shadow-xl dark:border dark:border-slate-700 dark:bg-slate-900 dark:shadow-black/30">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-4 text-right shadow-xl dark:border dark:border-slate-700 dark:bg-slate-900 dark:shadow-black/30">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-bold text-gray-800 dark:text-sky-50">
             {isCreate ? `افزودن ${config.title}` : `ویرایش ${config.title}`}

@@ -16,6 +16,7 @@ import HouseCard from "./HouseCard";
 import useFetchHouses from "./useFetchHouses";
 import useFetchHouseTypes from "./useFetchHouseTypes";
 import Loading from "../../ui/Loading";
+import EmptyState from "../../ui/EmptyState";
 import { createHouse, deleteHouse } from "../../services/houseService";
 import CustomInfoIcon from "./../../ui/CustomInfoIcon";
 
@@ -123,17 +124,21 @@ const Houses = () => {
     );
 
   return (
-    <div className="w-full h-full p-2 sm:p-3">
-      {/* header */}
-      <div className="w-full flex justify-between items-center mb-2 lg:mb-4">
+    <div className="h-full w-full min-w-0 p-2 sm:p-3">
+      <div className="mb-2 flex w-full flex-col gap-3 lg:mb-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-xl">اقامتگاه ها :</h2>
-        <div className="flex items-center">
-          <CustomInfoIcon
-            className="w-6 h-6 text-gray-500 cursor-pointer ml-2"
-            onClick={() => setIsInfoModalOpen(true)}
-          />
+        <div className="flex w-full min-w-0 items-center gap-2 sm:w-auto">
           <button
-            className="btn bg-primary-600 hover:opacity-100"
+            type="button"
+            onClick={() => setIsInfoModalOpen(true)}
+            aria-label={'\u0631\u0627\u0647\u0646\u0645\u0627\u06cc \u062b\u0628\u062a \u0627\u0642\u0627\u0645\u062a\u06af\u0627\u0647'}
+            className="ml-2 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-500 transition hover:bg-primary-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 dark:hover:bg-slate-800"
+          >
+            <CustomInfoIcon className="h-6 w-6" />
+          </button>
+          <button
+            type="button"
+            className="btn min-h-10 flex-1 bg-primary-600 px-4 hover:opacity-100 sm:flex-none"
             onClick={() => setIsAddDialogOpen(true)}
           >
             اضافه کردن اقامتگاه
@@ -141,19 +146,21 @@ const Houses = () => {
         </div>
       </div>
 
-      {/* cards */}
-      <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
-        {houses.map((h) => (
-          <HouseCard
-            key={h.uuid}
-            house={h}
-            onDelete={() => handleDeleteHouse(h.uuid)}
-            isDeleting={h.uuid === houseToDelete && deleteHouseMutation.isLoading}
-          />
-        ))}
-      </div>
+      {houses.length === 0 ? (
+        <EmptyState title={'\u0627\u0642\u0627\u0645\u062a\u06af\u0627\u0647\u06cc \u062b\u0628\u062a \u0646\u0634\u062f\u0647 \u0627\u0633\u062a.'} />
+      ) : (
+        <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
+          {houses.map((h) => (
+            <HouseCard
+              key={h.uuid}
+              house={h}
+              onDelete={() => handleDeleteHouse(h.uuid)}
+              isDeleting={h.uuid === houseToDelete && deleteHouseMutation.isLoading}
+            />
+          ))}
+        </div>
+      )}
 
-      {/* Add House Modal */}
       <Dialog
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
@@ -167,7 +174,7 @@ const Houses = () => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <Dialog.Panel
             dir="rtl"
-            className="w-full max-w-xl space-y-4 rounded-3xl border border-primary-100 bg-white p-5 text-right shadow-xl shadow-primary-100/40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:shadow-black/20 sm:p-6"
+            className="w-full max-w-lg space-y-4 rounded-3xl border border-primary-100 bg-white p-5 text-right shadow-xl shadow-primary-100/40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:shadow-black/20 sm:p-6"
           >
             <Dialog.Title className="text-lg font-bold text-gray-900 dark:text-slate-100 sm:text-xl">
               افزودن اقامتگاه
@@ -225,6 +232,7 @@ const Houses = () => {
             )}
             <div className="mt-4 flex flex-wrap justify-end gap-2">
               <button
+                type="button"
                 className="btn-secondary btn-press px-5"
                 onClick={() => setIsAddDialogOpen(false)}
                 disabled={createHouseMutation.isLoading}
@@ -232,6 +240,7 @@ const Houses = () => {
                 لغو
               </button>
               <button
+                type="button"
                 className="btn-primary btn-press px-5"
                 onClick={handleAddHouse}
                 disabled={createHouseMutation.isLoading}
@@ -245,7 +254,6 @@ const Houses = () => {
         </div>
       </Dialog>
 
-      {/* Delete Confirmation Modal */}
       <Dialog
         open={isDeleteConfirmDialogOpen}
         onClose={() => setIsDeleteConfirmDialogOpen(false)}
@@ -257,12 +265,13 @@ const Houses = () => {
           aria-hidden="true"
         />
         <div className="fixed inset-0 flex items-center justify-center p-4 text-right">
-          <Dialog.Panel className="w-full max-w-lg space-y-4 rounded-3xl border bg-white p-6 text-right dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-            <Dialog.Title className="font-bold text-xl">
+          <Dialog.Panel className="w-full max-w-md space-y-4 rounded-3xl border bg-white p-6 text-right dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            <Dialog.Title className="text-lg font-bold">
               آیا از حذف کردن این اقامتگاه مطمئن هستید؟
             </Dialog.Title>
-            <div className="flex gap-4 mt-4">
+            <div className="mt-4 flex flex-wrap gap-3">
               <button
+                type="button"
                 className="btn bg-gray-300 text-gray-800"
                 onClick={() => setIsDeleteConfirmDialogOpen(false)}
                 disabled={deleteHouseMutation.isLoading}
@@ -270,6 +279,7 @@ const Houses = () => {
                 لغو
               </button>
               <button
+                type="button"
                 className="btn bg-red-600 text-white"
                 onClick={confirmDeleteHouse}
                 disabled={deleteHouseMutation.isLoading}
@@ -281,7 +291,6 @@ const Houses = () => {
         </div>
       </Dialog>
 
-      {/* Info Modal */}
       <Dialog
         open={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
@@ -293,8 +302,8 @@ const Houses = () => {
           aria-hidden="true"
         />
         <div className="fixed inset-0 flex items-center justify-center p-4 text-right">
-          <Dialog.Panel className="w-full max-w-lg rounded-3xl border bg-white p-6 text-right dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-            <Dialog.Title className="font-bold text-xl">
+          <Dialog.Panel className="w-full max-w-md rounded-3xl border bg-white p-6 text-right dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            <Dialog.Title className="text-lg font-bold">
               میزبان گرامی
             </Dialog.Title>
             <p className="mt-4 text-justify leading-7">
@@ -307,6 +316,7 @@ const Houses = () => {
             </p>
             <div className="flex justify-end mt-6">
               <button
+                type="button"
                 className="btn bg-primary-600 text-white"
                 onClick={() => setIsInfoModalOpen(false)}
               >

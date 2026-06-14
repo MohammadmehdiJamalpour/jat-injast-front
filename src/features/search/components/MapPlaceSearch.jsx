@@ -12,24 +12,28 @@ export default function MapPlaceSearch({
   return (
     <form
       onSubmit={onSubmit}
-      className="absolute right-3 top-3 z-[900] w-[70%] max-w-sm sm:w-[calc(100%-1.5rem)] md:left-24 md:right-16 md:w-auto md:max-w-none lg:left-28 lg:right-20"
+      className="absolute left-[6.75rem] right-3 top-2 z-[900] max-w-none md:left-24 md:right-16 md:w-auto lg:left-28 lg:right-20"
     >
-      <div className="rounded-2xl bg-white/95 p-2 shadow-lg backdrop-blur dark:bg-slate-900/95 md:pl-4">
-        <div className="flex items-center gap-2">
-          <input
-            data-testid="map-place-input"
-            value={placeQuery}
-            onChange={(event) => onQueryChange(event.target.value)}
-            placeholder={fa.search.place.placeholder}
-            className="min-w-0 flex-1 rounded-xl border border-primary-100 bg-white px-3 py-2 text-sm text-primary-900 outline-none transition focus:border-primary-500 dark:border-primary-400/30 dark:bg-slate-950 dark:text-sky-50"
-          />
-          <button
-            data-testid="map-place-submit"
-            type="submit"
-            className="shrink-0 rounded-xl bg-primary-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-primary-700"
-          >
-            {fa.common.actions.search}
-          </button>
+      <div>
+        <div className="overflow-hidden rounded-full bg-white/95 p-[5px] shadow-lg backdrop-blur dark:bg-slate-900/95">
+          <div className="flex min-w-0 items-center gap-1">
+            <input
+              data-testid="map-place-input"
+              value={placeQuery}
+              onChange={(event) => onQueryChange(event.target.value)}
+              placeholder={fa.search.place.placeholder}
+              aria-label={fa.search.place.placeholder}
+              className="h-10 min-w-0 flex-1 rounded-full border border-primary-100 bg-white px-4 py-0 text-sm text-primary-900 outline-none transition placeholder:truncate focus:border-primary-500 focus:ring-1 focus:ring-primary-300 dark:border-primary-400/30 dark:bg-slate-950 dark:text-sky-50"
+            />
+            <button
+              data-testid="map-place-submit"
+              type="submit"
+              className="h-10 shrink-0 rounded-full bg-primary-600 px-3 text-sm font-medium text-white transition hover:bg-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 disabled:opacity-60"
+              disabled={placeLoading}
+            >
+              {fa.common.actions.search}
+            </button>
+          </div>
         </div>
 
         {(placeLoading || placeError || placeResults.length > 0) && (

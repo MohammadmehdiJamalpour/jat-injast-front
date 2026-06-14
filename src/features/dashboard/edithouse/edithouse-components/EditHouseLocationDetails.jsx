@@ -10,6 +10,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { toast } from "react-hot-toast";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import Loading from "../../../../ui/Loading";
 import TextField from "../../../../ui/TextField";
 import useFetchCities from "../../useFetchCities";

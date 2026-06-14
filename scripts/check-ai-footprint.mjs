@@ -42,6 +42,11 @@ const bannedPatterns = [
     ),
   },
   {
+    name: "sample product copy",
+    pattern:
+      /(?:نمونه\s+(?:پروژه|محصول|رابط کاربری)|sample\s+(?:project|product|interface|app)|demo\s+(?:project|product|interface|app))/i,
+  },
+  {
     name: "instruction comment marker",
     pattern: new RegExp(
       `\\b${anyLiteral(
@@ -56,7 +61,8 @@ const bannedPatterns = [
   },
   {
     name: "source path header",
-    pattern: /^\s*\/\/\s*(?:src\/|components\/|utils\/|[\w.-]+\.(?:jsx?|tsx?))\s*$/i,
+    pattern:
+      /^\s*\/\/\s*(?:(?:src|components|utils)\/[\w./-]+|[\w./-]+\.(?:jsx?|tsx?))\s*$/i,
   },
   {
     name: "decorative section comment",

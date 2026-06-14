@@ -1,6 +1,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { createMapIrTileLayer } from "../../../lib/mapIr";
 
 const MAP_ACCENT_COLOR = "#006f8c";
@@ -110,6 +111,8 @@ function HouseLocation({ cords }) {
 
   return (
     <div
+      role="img"
+      aria-label={'\u0646\u0642\u0634\u0647 \u0645\u062d\u062f\u0648\u062f\u0647 \u0627\u0642\u0627\u0645\u062a\u06af\u0627\u0647'}
       style={{
         width: "100%",
         height: `${MAP_HEIGHT}px`,

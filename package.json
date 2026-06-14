@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1",
-    "build": "next build",
+    "build": "next build && node scripts/check-route-rendering.mjs",
     "lint": "eslint .",
     "start": "next start --hostname 127.0.0.1",
     "ai-audit": "node scripts/check-ai-footprint.mjs",
@@ -18,7 +18,12 @@
     "e2e": "playwright test",
     "test:a11y": "playwright test e2e/accessibility-smoke.spec.js e2e/accessibility-workflows.spec.js",
     "test:responsive": "playwright test e2e/responsive-overflow.spec.js",
-    "quality": "npm run ai-audit && npm run hygiene && npm run typecheck:services && npm run lint -- --max-warnings=0 && npm run test && npm run build"
+    "test:performance": "playwright test e2e/public-performance-smoke.spec.js",
+    "e2e:quality": "playwright test e2e/accessibility-smoke.spec.js e2e/accessibility-workflows.spec.js e2e/responsive-overflow.spec.js e2e/public-performance-smoke.spec.js",
+    "seo:html": "node scripts/check-public-html.mjs",
+    "analyze:bundles": "next experimental-analyze --output",
+    "performance:budget": "node scripts/check-performance-budget.mjs",
+    "quality": "npm run ai-audit && npm run hygiene && npm run typecheck && npm run typecheck:services && npm run lint -- --max-warnings=0 && npm run test && npm run e2e:quality && npm run build && npm run seo:html && npm run performance:budget"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -45,12 +50,10 @@
     "react-modern-calendar-datepicker": "^3.1.6",
     "react-range": "^1.10.0",
     "react-range-slider-input": "^3.2.1",
-    "react-slick": "^0.30.2",
     "react-spinners": "^0.14.1",
     "react-time-picker": "^7.0.0",
     "react-virtualized-auto-sizer": "^1.0.26",
     "react-window": "^1.8.11",
-    "slick-carousel": "^1.8.1",
     "swiper": "^11.1.15"
   },
   "devDependencies": {

@@ -1,4 +1,8 @@
-import jalaali from "jalaali-js";
+import {
+  getBirthdayInitialMonth,
+  getTodayJalali,
+  gregorianIsoToJalaliDate,
+} from "../../../ui/date-picker/jalaliDateUtils";
 
 export const DEFAULT_GENDER = "Male";
 
@@ -17,45 +21,28 @@ const genderLookup = {
   دیگر: "Other",
 };
 
-export const birthDateFields = [
-  { name: "birthDay", label: "روز", maxLength: 2 },
-  { name: "birthMonth", label: "ماه", maxLength: 2 },
-  { name: "birthYear", label: "سال", maxLength: 4 },
-];
-
 export const profileFieldCopy = {
   birthDateTitle: "تاریخ تولد",
-  birthDateHelper: "تاریخ را به تقویم شمسی وارد کنید.",
+  birthDateHelper: "تاریخ را از تقویم شمسی انتخاب کنید.",
+  birthDatePlaceholder: "انتخاب تاریخ تولد",
   avatarTitle: "عکس پروفایل",
   avatarHelper: "تصویر مربع و واضح نتیجه بهتری دارد.",
   avatarAction: "انتخاب تصویر جدید",
 };
 
-export function gregorianToPersian(gregorianDate) {
-  if (!gregorianDate) return { year: "", month: "", day: "" };
-
-  const dateWithoutTime = gregorianDate.split("T")[0];
-  const [year, month, day] = dateWithoutTime.split("-").map(Number);
-  if (!year || !month || !day) return { year: "", month: "", day: "" };
-
-  const persianDate = jalaali.toJalaali(year, month, day);
-  return {
-    year: String(persianDate.jy),
-    month: String(persianDate.jm).padStart(2, "0"),
-    day: String(persianDate.jd).padStart(2, "0"),
-  };
+export function gregorianToJalaliDate(gregorianDate) {
+  return gregorianIsoToJalaliDate(gregorianDate);
 }
 
-export function persianToGregorian(year, month, day) {
-  if (!year || !month || !day) return "";
+export function getBirthdayPickerConfig() {
+  const today = getTodayJalali();
 
-  const gregorianDate = jalaali.toGregorian(
-    Number(year),
-    Number(month),
-    Number(day),
-  );
-
-  return `${gregorianDate.gy}-${String(gregorianDate.gm).padStart(2, "0")}-${String(gregorianDate.gd).padStart(2, "0")}`;
+  return {
+    minDate: "1300-01-01",
+    maxDate: today.iso,
+    initialMonth: getBirthdayInitialMonth(),
+    yearRange: { start: 1300, end: today.jy },
+  };
 }
 
 function normalizeGender(sex) {
@@ -71,9 +58,7 @@ export function makeInitialFormData(user, birthDate) {
     email: user?.email || "",
     province: user?.city?.province?.id || "",
     city: user?.city?.id || "",
-    birthDay: birthDate.day,
-    birthMonth: birthDate.month,
-    birthYear: birthDate.year,
+    birthDate: birthDate || null,
     gender: normalizeGender(user?.sex),
     secondPhone: user?.second_phone || "",
     bio: user?.bio || "",

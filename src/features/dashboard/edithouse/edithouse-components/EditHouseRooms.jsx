@@ -236,7 +236,7 @@ const EditHouseRooms = ({ houseData, houseId, refetchHouseData }) => {
         open={isModalOpen}
         onClose={closeDeleteModal}
         title={roomCopy.deleteTitle}
-        size="sm"
+        size="confirm"
       >
         <div className="flex justify-end gap-2">
           <Button variant="secondary" onClick={closeDeleteModal}>

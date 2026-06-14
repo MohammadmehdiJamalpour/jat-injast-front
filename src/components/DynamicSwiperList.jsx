@@ -1,9 +1,5 @@
 import { useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import "swiper/css";
-import "swiper/css/navigation";
 
 function DynamicSwiperList({
   title,
@@ -12,9 +8,26 @@ function DynamicSwiperList({
   spaceBetween = 16,
   slideClassName = "!w-4/5 sm:!w-2/3 md:!w-2/5 lg:!w-4/12 xl:!w-3/12",
   className = "",
+  scrollerOuterClassName = "overflow-visible sm:-mx-5",
+  leftFadeClassName = "w-16 sm:w-20",
+  showLeftFade = true,
 }) {
+  const scrollerRef = useRef(null);
   const leftArrowRef = useRef(null);
   const rightArrowRef = useRef(null);
+  const scrollSlides = (direction) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    const distance = Math.max(scroller.clientWidth * 0.82, 240);
+    const isRtl = getComputedStyle(scroller).direction === "rtl";
+    const delta = direction === "next" ? distance : -distance;
+
+    scroller.scrollBy({
+      left: isRtl ? -delta : delta,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <div
@@ -26,7 +39,8 @@ function DynamicSwiperList({
         <button
           ref={leftArrowRef}
           aria-label="Next"
-          className="absolute -left-6 top-1/2 z-30 ml-1 hidden -translate-y-1/2 rounded-full bg-primary-50/80 p-2 opacity-0 shadow-lg backdrop-blur-lg transition-opacity duration-300 hover:scale-105 active:scale-95 group-hover:opacity-100 sm:-left-10 md:-left-12 md:flex"
+          className="absolute -left-6 top-1/2 z-40 ml-1 hidden -translate-y-1/2 rounded-full bg-primary-50/80 p-2 opacity-0 shadow-lg backdrop-blur-lg transition-opacity duration-300 hover:scale-105 active:scale-95 group-hover:opacity-100 sm:-left-10 md:-left-12 md:flex"
+          onClick={() => scrollSlides("next")}
         >
           <ChevronLeftIcon className="h-6 w-6" />
         </button>
@@ -34,31 +48,35 @@ function DynamicSwiperList({
         <button
           ref={rightArrowRef}
           aria-label="Previous"
-          className="absolute -right-6 top-1/2 z-30 mr-1 hidden -translate-y-1/2 rounded-full bg-primary-50/80 p-2 opacity-0 shadow-lg backdrop-blur-lg transition-opacity duration-300 hover:scale-105 active:scale-95 group-hover:opacity-100 sm:-right-10 md:-right-12 md:flex"
+          className="absolute -right-6 top-1/2 z-40 mr-1 hidden -translate-y-1/2 rounded-full bg-primary-50/80 p-2 opacity-0 shadow-lg backdrop-blur-lg transition-opacity duration-300 hover:scale-105 active:scale-95 group-hover:opacity-100 sm:-right-10 md:-right-12 md:flex"
+          onClick={() => scrollSlides("previous")}
         >
           <ChevronRightIcon className="h-6 w-6" />
         </button>
 
-        <Swiper
-          modules={[Navigation]}
-          navigation={{ prevEl: rightArrowRef.current, nextEl: leftArrowRef.current }}
-          onBeforeInit={(swiper) => {
-            swiper.params.navigation.prevEl = rightArrowRef.current;
-            swiper.params.navigation.nextEl = leftArrowRef.current;
-          }}
-          slidesPerView="auto"
-          spaceBetween={spaceBetween}
-          centeredSlides={false}
-          centerInsufficientSlides={false}
-        >
-          {items.map((item) => (
-            <SwiperSlide key={item.id} className={slideClassName}>
-              {renderItem(item)}
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className={`relative isolate ${scrollerOuterClassName}`}>
+          <div
+            ref={scrollerRef}
+            className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto scroll-smooth scroll-px-5 px-5 py-5"
+            style={{ gap: `${spaceBetween}px` }}
+          >
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className={`relative z-0 shrink-0 snap-start transition-[z-index] duration-300 hover:z-20 focus-within:z-20 ${slideClassName}`}
+              >
+                {renderItem(item)}
+              </div>
+            ))}
+          </div>
 
-        <div className="pointer-events-none absolute top-0 -left-1 z-10 h-full w-12 bg-gradient-to-r from-secondary-50 to-transparent" />
+          {showLeftFade && (
+            <div
+              aria-hidden="true"
+              className={`swiper-glass-fade-left pointer-events-none absolute inset-y-0 left-0 z-30 ${leftFadeClassName}`}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

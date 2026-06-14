@@ -1,9 +1,7 @@
-// components/WithdrawSection.jsx
 import { useState } from "react";
 import toast from "react-hot-toast";
 import BeatLoader from "react-spinners/BeatLoader";
 
-/** Hooks & utils **/
 import {
   useCardsList,
   useWithdrawsList,
@@ -11,15 +9,14 @@ import {
 } from "./useWallet";
 import toPersianNumber from "../../../utils/toPersianNumber";
 
-/** UI **/
 import Loading from "../../../ui/Loading";
 import Modal from "../../../ui/Modal";
 import FormSelect from "../../../ui/FormSelect";
 import { ResponsiveDataTable, WalletDataSection } from "./WalletDataSection";
+import { WALLET_MODAL_SIZE } from "./walletModalLayout";
 
 const MIN_PRICE = 100_000; // ۱۰۰,۰۰۰ تومان
 
-/* Helper – returns English digits with commas */
 const fmt = (n) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 const money = (value) => `${toPersianNumber(Number(value || 0).toLocaleString())} تومان`;
 
@@ -121,11 +118,9 @@ function WithdrawSection({
 
   const priceNumeric = parseInt(withdraw.price || "0", 10);
 
-  // true → amount exists AND is below MIN_PRICE
   const priceTooLow =
     withdraw.price !== "" && priceNumeric < MIN_PRICE;
 
-  // central flag for the button’s disabled state
   const isSubmitDisabled =
     addWithdrawMutation.isLoading ||
     !withdraw.card_id ||
@@ -188,10 +183,10 @@ function WithdrawSection({
         isOpen={showWithdrawModal}
         onClose={() => setShowWithdrawModal(false)}
         title="درخواست برداشت"
-        maxWidth="max-w-3xl"
+        size={WALLET_MODAL_SIZE}
+        testId="wallet-withdraw-modal"
       >
         <div className="p-4 flex flex-col space-y-3 max-w-md mx-auto">
-          {/* card selector */}
           <FormSelect
             label="انتخاب کارت"
             name="card_id"
@@ -207,13 +202,13 @@ function WithdrawSection({
             </p>
           )}
 
-          {/* price input */}
           <div>
             <input
               className={`field-surface ${
                 priceTooLow ? "border-red-400" : ""
               }`}
               placeholder={`حداقل برداشت ${fmt(MIN_PRICE)} تومان`}
+              aria-label={'\u0645\u0628\u0644\u063a \u0628\u0631\u062f\u0627\u0634\u062a'}
               value={withdraw.price ? fmt(withdraw.price) : ""}
               onChange={handlePriceChange}
             />
@@ -224,13 +219,12 @@ function WithdrawSection({
             )}
           </div>
 
-          {/* limits info */}
           <p className="text-sm text-gray-600">
             حداکثر قابل برداشت: {toPersianNumber(maxBalance)} تومان
           </p>
 
-          {/* submit */}
           <button
+            type="button"
             onClick={handleAddWithdraw}
             disabled={isSubmitDisabled}
             className="btn-primary btn-press min-h-11 rounded-full text-sm font-medium"

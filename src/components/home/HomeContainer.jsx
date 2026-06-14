@@ -2,8 +2,8 @@ import { useState } from "react";
 import HomeBody from "./HomeBody";
 import Footer from "../Footer";
 
-function HomeContainer() {
-  const [zones, setZones] = useState([]);
+function HomeContainer({ initialContent, initialZones = [], initialFooterContent }) {
+  const [zones, setZones] = useState(initialZones);
 
   return (
     <div className="relative flex w-full flex-col">
@@ -48,8 +48,16 @@ function HomeContainer() {
         <div className="home-wave-content-bg" aria-hidden="true" />
 
         <div className="relative z-10 flex w-full flex-col items-center">
-          <HomeBody onZonesLoaded={setZones} />
-          <Footer zones={zones} />
+          <HomeBody
+            initialContent={initialContent}
+            initialZones={initialZones}
+            onZonesLoaded={setZones}
+          />
+          <Footer
+            zones={zones}
+            initialInfo={initialFooterContent}
+            mode="home"
+          />
         </div>
       </div>
     </div>

@@ -33,6 +33,11 @@ export type MediaAsset = {
   is_main?: boolean;
 };
 
+export type HouseVote = {
+  total_vote: number;
+  count: number;
+};
+
 export type HouseSummary = {
   id?: ApiId;
   uuid: string;
@@ -45,6 +50,7 @@ export type HouseSummary = {
   main_image?: MediaAsset;
   status?: string | LabelValue;
   structure?: string | LabelValue;
+  vote?: HouseVote | number | null;
   is_favorite?: boolean;
 };
 
@@ -284,7 +290,7 @@ export type HouseSearchPayload = Record<string, unknown>;
 
 export type HouseSearchApiItem = Omit<HouseSummary, "price"> & {
   galleries?: MediaAsset[];
-  vote?: number | { total_vote?: number };
+  vote?: HouseVote | number | null;
   price?: number | { initial?: number; final?: number };
   is_special?: boolean;
   address?: {

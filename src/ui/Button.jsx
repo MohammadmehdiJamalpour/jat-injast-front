@@ -42,9 +42,10 @@ const Button = forwardRef(
         ref={ref}
         type={isButton ? type || "button" : undefined}
         disabled={isButton ? disabled || loading : undefined}
+        aria-busy={loading || undefined}
         aria-disabled={!isButton && (disabled || loading) ? true : undefined}
         className={clsx(
-          "btn-press inline-flex items-center justify-center gap-2 rounded-full font-bold transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-primary-200 dark:focus-visible:ring-offset-slate-950",
+          "btn-press inline-flex min-w-0 items-center justify-center gap-2 rounded-full text-center font-bold leading-tight transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-primary-200 dark:focus-visible:ring-offset-slate-950",
           variants[variant] || variants.primary,
           sizes[size] || sizes.md,
           className,

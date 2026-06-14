@@ -1,4 +1,5 @@
- 
+"use client";
+
 import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 
@@ -19,11 +20,13 @@ const samandehi = "/samandehi.webp";
 
 const fallbackTrustBadges = [samandehi, enamad, kasbokar];
 
-export default function Footer({ zones = [], mode = "overlay" }) {
-  const [info, setInfo] = useState(null);
-  const [status, setStatus] = useState("loading");
+export default function Footer({ zones = [], initialInfo = null, mode = "overlay" }) {
+  const [info, setInfo] = useState(initialInfo);
+  const [status, setStatus] = useState(initialInfo ? "success" : "loading");
 
   useEffect(() => {
+    if (initialInfo) return undefined;
+
     getFooterContent()
       .then((data) => {
         setInfo(data);
@@ -33,7 +36,7 @@ export default function Footer({ zones = [], mode = "overlay" }) {
         reportClientError("Footer content", err);
         setStatus("error");
       });
-  }, []);
+  }, [initialInfo]);
 
   const footerLocations = info?.locations?.length ? info.locations : zones;
   const citiesByZone = useMemo(
@@ -45,6 +48,8 @@ export default function Footer({ zones = [], mode = "overlay" }) {
   const shellClass =
     mode === "static"
       ? "relative z-10 mt-10 flex justify-center px-0 pb-0 pt-8"
+      : mode === "home"
+        ? "relative z-10 flex w-full justify-center px-0 pb-0 pt-0"
       : "absolute inset-x-0 -bottom-3 z-50 flex justify-center px-0 pb-0 pt-8";
 
   if (status === "error") {
@@ -87,7 +92,7 @@ export default function Footer({ zones = [], mode = "overlay" }) {
           </div>
 
           <div className="mt-5 border-t border-primary-100/70 pt-3 text-center text-xs text-primary-700 dark:border-slate-800 dark:text-slate-400">
-            © ۱۴۰۵ جات اینجاست - نمونه رابط کاربری رزرو اقامتگاه
+            © ۱۴۰۵ جات اینجاست - رزرو اقامتگاه و مدیریت میزبانی
           </div>
         </div>
       </div>

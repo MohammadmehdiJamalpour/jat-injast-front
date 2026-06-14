@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useNavigate } from "@/lib/router-compat";
 import CitySearchInput from "../../ui/CitySearchInput";
 import { getHomeContent } from "../../services/homeService";
 import { reportClientError } from "../../utils/reportClientError";
+import HomeHeroCopy from "./HomeHeroCopy";
 
 const DEFAULT_HERO_BANNERS = [
   "/assets/hero-banner-coast.png",
@@ -10,14 +12,20 @@ const DEFAULT_HERO_BANNERS = [
   "/assets/hero-banner-forest.png",
 ];
 
-function HeroOnlyOnHome() {
+function HeroOnlyOnHome({ initialContent }) {
   const navigate = useNavigate();
-  const [slides, setSlides] = useState(DEFAULT_HERO_BANNERS);
+  const initialSlides =
+    Array.isArray(initialContent?.sliders) && initialContent.sliders.length
+      ? initialContent.sliders
+      : DEFAULT_HERO_BANNERS;
+  const [slides, setSlides] = useState(initialSlides);
   const [index, setIndex] = useState(0);
   const [imgLoaded, setImgLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
+
+    if (initialContent) return undefined;
 
     getHomeContent()
       .then((content) => {
@@ -30,7 +38,7 @@ function HeroOnlyOnHome() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [initialContent]);
 
   useEffect(() => {
     if (slides.length < 2) return undefined;
@@ -57,22 +65,34 @@ function HeroOnlyOnHome() {
       )}
 
       {slides.length > 0 && (
-        <img
+        <Image
           src={slides[index]}
           alt=""
           aria-hidden="true"
-          className={`h-full w-full object-cover transition-opacity duration-500 ${
+          fill
+          priority={index === 0}
+          sizes="100vw"
+          className={`object-cover transition-opacity duration-500 ${
             imgLoaded ? "opacity-100" : "opacity-0"
           }`}
           onLoad={() => setImgLoaded(true)}
         />
       )}
 
-      <div className="pointer-events-none absolute inset-0 z-[80] flex -translate-y-[6vh] items-center justify-center md:translate-y-[3vh] lg:translate-y-[4vh]">
-        <div className="pointer-events-auto relative z-[90] w-80 xs:w-96 md:w-128">
-          <CitySearchInput onSearch={handleNavigate} />
+      {imgLoaded && (
+        <div className="pointer-events-none absolute inset-0 z-[90] flex -translate-y-[5vh] items-center justify-center px-4 md:translate-y-[2vh] lg:translate-y-[3vh]">
+          <div
+            data-testid="home-hero-unified-panel"
+            className="pointer-events-auto relative w-[min(22rem,calc(100vw-2rem))] overflow-visible rounded-[2rem] border border-white/50 bg-white/35 p-2 text-[var(--color-primary-900)] shadow-[0_22px_60px_rgba(3,78,92,0.2)] ring-1 ring-white/35 backdrop-blur-md sm:w-[min(36rem,calc(100vw-3rem))] sm:rounded-[2.75rem] sm:p-3 md:w-[42rem] dark:border-white/10 dark:bg-slate-950/35 dark:shadow-black/25 dark:ring-white/10"
+          >
+            <div className="px-3 pb-3 pt-4 text-center drop-shadow-[0_2px_12px_rgba(255,255,255,0.7)] sm:px-5 sm:pb-4 sm:pt-5 md:px-7 md:pt-6">
+              <HomeHeroCopy embedded />
+            </div>
+
+            <CitySearchInput onSearch={handleNavigate} variant="hero-panel" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

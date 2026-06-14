@@ -14,6 +14,7 @@ TicketIcon ,
 } from "@heroicons/react/24/solid";
 import Loading from "../../ui/Loading";
 import { logOutUser } from "../../services/userService";
+import { clearClientAuthState } from "../../services/httpService";
 import { useQueryClient } from "@tanstack/react-query";
 import { reportClientError } from "../../utils/reportClientError";
 
@@ -37,8 +38,7 @@ function DashboardSidebar({ setSelectedTab, user }) {
     setIsLoggingOut(true);
     try {
       await logOutUser();
-      document.cookie =
-        "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      clearClientAuthState();
       queryClient.setQueryData(["get-user"], null);
       queryClient.invalidateQueries(["get-user"]);
     } catch (error) {
@@ -58,7 +58,7 @@ function DashboardSidebar({ setSelectedTab, user }) {
           <img
             className={profileAvatarClassName}
             src={profileAvatar}
-            alt="Profile"
+            alt={'\u0622\u0648\u0627\u062a\u0627\u0631 \u06a9\u0627\u0631\u0628\u0631'}
           />
 
           <div className="min-w-0 flex-1 text-right">
@@ -73,9 +73,11 @@ function DashboardSidebar({ setSelectedTab, user }) {
 
             <div className="mt-2 flex flex-wrap gap-2">
               <button
+                type="button"
                 onClick={handleLogout}
-                className="min-h-8 flex-1 rounded-full border border-gray-200 px-4 text-xs text-gray-700 transition hover:border-red-100 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:text-white dark:hover:border-red-500/50 dark:hover:bg-red-500/10 dark:hover:text-red-200"
+                className="min-h-8 flex-1 rounded-full border border-gray-200 px-4 text-xs text-gray-700 transition hover:border-red-100 hover:bg-red-50 hover:text-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:text-white dark:hover:border-red-500/50 dark:hover:bg-red-500/10 dark:hover:text-red-200"
                 disabled={isLoggingOut}
+                aria-busy={isLoggingOut}
               >
                 {isLoggingOut ? <Loading size={18} /> : "خروج"}
               </button>

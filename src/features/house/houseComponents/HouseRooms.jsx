@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
 import { FaBed } from "react-icons/fa";
 import toPersianNumber from "../../../utils/toPersianNumber";
 import ExpandableContent from "../../../ui/ExpandableContent";
@@ -55,12 +53,12 @@ function HouseRooms({ houseData }) {
         </div>
       </h3>
 
-      <Swiper spaceBetween={10} slidesPerView="auto" className="my-4 z-0">
+      <div className="no-scrollbar my-4 flex snap-x snap-mandatory gap-2.5 overflow-x-auto scroll-smooth">
         {rooms.map((room, index) => (
-          <SwiperSlide
+          <button
+            type="button"
             key={room.uuid || index}
-            style={{ width: "auto" }}
-            className={`flex max-h-16 flex-shrink-0 cursor-pointer flex-col items-center rounded-2xl border p-4 ${
+            className={`flex max-h-16 shrink-0 snap-start cursor-pointer flex-col items-center rounded-2xl border p-4 ${
               activeRoomIndex === index ? "bg-primary-50" : "bg-white"
             }`}
             onClick={() => setActiveRoomIndex(index)}
@@ -69,9 +67,9 @@ function HouseRooms({ houseData }) {
               <FaBed className="text-3xl text-primary-600" />
               <p className="font-semibold">{room.name}</p>
             </div>
-          </SwiperSlide>
+          </button>
         ))}
-      </Swiper>
+      </div>
 
       {activeRoom && (
         <div className="mt-4 rounded-xl bg-gray-50 p-3">

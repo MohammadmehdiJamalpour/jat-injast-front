@@ -66,7 +66,11 @@ const DashboardContent = ({ selectedTab, initialUser, onUpdateUser }) => {
     }
   };
 
-  return <div>{renderContent()}</div>;
+  return (
+    <div dir="rtl" className="min-w-0">
+      {renderContent()}
+    </div>
+  );
 };
 
 export default DashboardContent;

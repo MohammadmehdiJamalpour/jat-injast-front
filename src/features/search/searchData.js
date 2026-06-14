@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { SEARCH_FALLBACK_HOUSES } from "../../fixtures/searchFallbackHouses";
 import { fa } from "../../i18n/fa";
 import { searchHouses } from "../../services/houseSearchService";
+import { getHouseRatingValue } from "../../utils/houseCardData";
 import { reportClientError } from "../../utils/reportClientError";
 
 export const toNumber = (value) => {
@@ -46,7 +47,7 @@ const mapApiHouseToUI = (item) => {
     price: final ?? initial ?? 0,
     originalPrice: initial && final && initial !== final ? initial : null,
     rooms: item?.rooms ?? null,
-    score: toNumber(item?.vote?.total_vote) ?? toNumber(item?.vote) ?? null,
+    score: getHouseRatingValue(item),
     featured: Boolean(item?.is_special),
     lat,
     lng,
@@ -141,16 +142,38 @@ export function buildSelectedPlace(destination) {
   };
 }
 
-export function useDefaultSearchData(filters = {}) {
+export function useDefaultSearchData(filters = {}, initialSearchData = null) {
   const filtersKey = useMemo(() => JSON.stringify(filters), [filters]);
+  const initialMatches = initialSearchData?.filtersKey === filtersKey;
+  const initialMappedItems = useMemo(
+    () => (initialMatches ? mapApiList(initialSearchData.rawItems) : []),
+    [initialMatches, initialSearchData],
+  );
+  const initialItems = useMemo(
+    () =>
+      initialMappedItems.length
+        ? initialMappedItems
+        : filterFallbackHouses(SEARCH_FALLBACK_HOUSES, filters),
+    [filters, initialMappedItems],
+  );
   const [data, setData] = useState({
-    items: SEARCH_FALLBACK_HOUSES,
-    loading: true,
+    items: initialMatches ? initialItems : SEARCH_FALLBACK_HOUSES,
+    loading: !initialMatches,
     error: null,
-    usingFallback: true,
+    usingFallback: !initialMatches || initialMappedItems.length === 0,
   });
 
   useEffect(() => {
+    if (initialMatches) {
+      setData({
+        items: initialItems,
+        loading: false,
+        error: null,
+        usingFallback: initialMappedItems.length === 0,
+      });
+      return undefined;
+    }
+
     const controller = new AbortController();
     const activeFilters = JSON.parse(filtersKey || "{}");
     const fallbackItems = filterFallbackHouses(
@@ -192,7 +215,7 @@ export function useDefaultSearchData(filters = {}) {
     })();
 
     return () => controller.abort();
-  }, [filtersKey]);
+  }, [filtersKey, initialMatches, initialItems, initialMappedItems.length]);
 
   return data;
 }

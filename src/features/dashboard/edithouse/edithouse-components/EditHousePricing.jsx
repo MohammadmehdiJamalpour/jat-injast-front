@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { toast, Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import Spinner from "../../../../ui/Loading";
 import {
   updateHousePrice,
@@ -113,7 +113,6 @@ const EditHousePricing = ({
 
   return (
     <div className="relative p-2">
-      <Toaster />
       <div className="overflow-auto scrollbar-thin pt-2 px-2 lg:px-4 w-full">
         <h2 className="text-right font-bold lg:text-lg mb-4">قیمت‌گذاری :</h2>
 

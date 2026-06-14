@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { useNavigate } from "@/lib/router-compat";
 import { createMapIrTileLayer } from "../../../lib/mapIr";
 import { autocompleteMapIr, searchMapIr } from "../../../services/mapIrSearchService";

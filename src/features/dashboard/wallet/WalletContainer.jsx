@@ -1,6 +1,4 @@
-// components/WalletContainer.jsx
 import { useState } from "react";
-import { Toaster } from "react-hot-toast";
 
 import WalletBalances      from "./WalletBalances";
 import CardsSection        from "./CardsSection";
@@ -20,9 +18,7 @@ function WalletContainer({ user }) {
   ];
 
   return (
-    <div className="relative space-y-5 p-3 sm:p-5">
-      <Toaster position="top-right" />
-
+    <div className="relative min-w-0 space-y-5 p-3 sm:p-5">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h2 className="text-xl font-bold text-gray-900">کیف پول</h2>
@@ -34,6 +30,7 @@ function WalletContainer({ user }) {
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 lg:flex lg:flex-wrap">
           {actions.map((action) => (
             <button
+              type="button"
               key={action.label}
               onClick={action.onClick}
               className={
@@ -48,10 +45,8 @@ function WalletContainer({ user }) {
         </div>
       </div>
 
-      {/* Wallet numbers */}
       <WalletBalances user={user} />
 
-      {/* Sections */}
       <CardsSection
         showAddCardModal={showAddCardModal}
         setShowAddCardModal={setShowAddCardModal}

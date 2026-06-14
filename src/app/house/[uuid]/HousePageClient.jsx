@@ -7,13 +7,18 @@ import NotFound from "@/components/NotFound";
 import { OutletContextProvider } from "@/lib/router-compat";
 import Footer from "@/components/Footer";
 
-export default function HousePageClient({ uuid }) {
+export default function HousePageClient({
+  uuid,
+  initialHouseData,
+  initialSimilarHouses,
+  initialFooterContent,
+}) {
   const {
     data: houseData,
     isLoading,
     isError,
     refetch,
-  } = useShowHouse(uuid);
+  } = useShowHouse(uuid, { initialData: initialHouseData });
 
   if (isLoading) {
     return (
@@ -36,12 +41,14 @@ export default function HousePageClient({ uuid }) {
 
   return (
     <>
-      <div className="house-page-container md:container pt-12 md:pt-8 xl:max-w-8xl">
-        <OutletContextProvider value={{ houseData, uuid }}>
+      <div className="house-page-container w-full px-3 pt-12 md:container md:px-0 md:pt-8 xl:max-w-8xl">
+        <OutletContextProvider
+          value={{ houseData, uuid, initialSimilarHouses }}
+        >
           <HouseContainer />
         </OutletContextProvider>
       </div>
-      <Footer mode="static" />
+      <Footer mode="static" initialInfo={initialFooterContent} />
     </>
   );
 }

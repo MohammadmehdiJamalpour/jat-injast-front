@@ -14,60 +14,64 @@ import EmptyState from "../../../../ui/EmptyState";
 import Loading from "../../../../ui/Loading";
 import { fa } from "../../../../i18n/fa";
 import { reportClientError } from "../../../../utils/reportClientError";
+import { htmlToPlainText } from "../../../../utils/htmlText";
 
 const copy = fa.dashboard.editHouse.cancellationRuleForm;
 
-const RuleCard = ({ rule, selected, onSelect }) => (
-  <Card
-    role="radio"
-    aria-checked={selected}
-    tabIndex={0}
-    variant="interactive"
-    padding="p-4"
-    className={clsx(
-      "w-full cursor-pointer text-right transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 dark:focus-visible:ring-primary-200",
-      selected && "border-primary-400 bg-primary-50/80 dark:border-primary-300 dark:bg-primary-500/15",
-    )}
-    onClick={() => onSelect(rule.id)}
-    onKeyDown={(event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        onSelect(rule.id);
-      }
-    }}
-  >
-    <div className="flex items-start justify-between gap-3">
-      <div className="min-w-0">
-        <h3 className="text-base font-black text-gray-950 dark:text-white">
-          {rule.title}
-        </h3>
-        {rule.description && (
-          <div
-            className="mt-3 text-sm leading-7 text-gray-600 dark:text-sky-100/75"
-            dangerouslySetInnerHTML={{ __html: rule.description }}
-          />
-        )}
+const RuleCard = ({ rule, selected, onSelect }) => {
+  const description = htmlToPlainText(rule.description);
+
+  return (
+    <Card
+      role="radio"
+      aria-checked={selected}
+      tabIndex={0}
+      variant="interactive"
+      padding="p-4"
+      className={clsx(
+        "w-full cursor-pointer text-right transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 dark:focus-visible:ring-primary-200",
+        selected && "border-primary-400 bg-primary-50/80 dark:border-primary-300 dark:bg-primary-500/15",
+      )}
+      onClick={() => onSelect(rule.id)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onSelect(rule.id);
+        }
+      }}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="text-base font-black text-gray-950 dark:text-white">
+            {rule.title}
+          </h3>
+          {description && (
+            <p className="mt-3 whitespace-pre-line text-sm leading-7 text-gray-600 dark:text-sky-100/75">
+              {description}
+            </p>
+          )}
+        </div>
+
+        <span
+          className={clsx(
+            "mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition",
+            selected
+              ? "border-primary-action bg-primary-action text-white"
+              : "border-primary-200 bg-white dark:border-primary-400/30 dark:bg-slate-950",
+          )}
+        >
+          {selected && <CheckCircleIcon className="h-5 w-5" />}
+        </span>
       </div>
 
-      <span
-        className={clsx(
-          "mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition",
-          selected
-            ? "border-primary-action bg-primary-action text-white"
-            : "border-primary-200 bg-white dark:border-primary-400/30 dark:bg-slate-950",
-        )}
-      >
-        {selected && <CheckCircleIcon className="h-5 w-5" />}
-      </span>
-    </div>
-
-    {selected && (
-      <Badge tone="primary" className="mt-4">
-        {copy.selected}
-      </Badge>
-    )}
-  </Card>
-);
+      {selected && (
+        <Badge tone="primary" className="mt-4">
+          {copy.selected}
+        </Badge>
+      )}
+    </Card>
+  );
+};
 
 const EditHouseCancellationRules = forwardRef(
   ({ houseData, handleEditHouse, loadingHouse }, ref) => {

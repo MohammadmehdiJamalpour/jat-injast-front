@@ -1,4 +1,3 @@
-
 const legendSwatchClass =
   "relative h-5 w-5 overflow-hidden rounded-md border border-gray-300 bg-white dark:border-slate-700 dark:bg-slate-950";
 
@@ -9,7 +8,7 @@ export default function CalendarLegend() {
       render: (
         <div className={legendSwatchClass}>
           <div
-            className="absolute left-0 top-0 h-full w-full opacity-90"
+            className="absolute left-0 top-0 h-full w-full opacity-70"
             style={{
               clipPath: "polygon(0 0, 100% 0, 0 100%)",
               backgroundColor: "var(--color-primary-400)",
@@ -28,7 +27,9 @@ export default function CalendarLegend() {
     },
     {
       label: "امروز",
-      render: <div className="h-5 w-5 rounded-md border-2 border-primary-600 bg-white dark:bg-slate-950" />,
+      render: (
+        <div className="h-5 w-5 rounded-md border-2 border-primary-600 bg-white dark:bg-slate-950" />
+      ),
     },
     {
       label: "رزرو خارج از سایت",
@@ -53,7 +54,10 @@ export default function CalendarLegend() {
   ];
 
   return (
-    <div dir="rtl" className="mt-1.5 border-t border-primary-100 pt-2 dark:border-slate-700">
+    <div
+      dir="rtl"
+      className="mt-1.5 border-t border-primary-100 pt-2 dark:border-slate-700"
+    >
       <h3 className="mb-1.5 text-xs font-bold text-gray-800 dark:text-slate-100">
         راهنمای تقویم
       </h3>

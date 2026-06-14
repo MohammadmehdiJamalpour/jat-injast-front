@@ -35,13 +35,16 @@ export default function AboutUsContainer() {
   }, []);
 
   return (
-    <main className="mx-auto grid w-full max-w-7xl gap-4 px-3 py-4 sm:px-4 sm:py-6 md:grid-cols-[16rem_minmax(0,1fr)] lg:grid-cols-[18rem_minmax(0,1fr)] lg:px-6">
-      <aside className="hidden md:block md:self-start">
+    <main
+      data-public-static-shell
+      className="mx-auto grid w-full max-w-7xl gap-4 px-3 py-4 sm:px-4 sm:py-6 md:grid-cols-[16rem_minmax(0,1fr)] lg:grid-cols-[18rem_minmax(0,1fr)] lg:px-6"
+    >
+      <aside className="hidden md:block md:self-stretch">
         <Card
           variant="glass"
           padding="p-2"
           radius="rounded-2xl"
-          className="overflow-hidden md:fixed md:top-24 md:z-30 md:max-h-[calc(100vh-7rem)] md:w-[16rem] lg:w-[18rem]"
+          className="overflow-hidden md:sticky md:top-24 md:z-10 md:max-h-[calc(100vh-7rem)] md:w-[16rem] lg:w-[18rem]"
         >
           <ScrollablePanel maxHeight="calc(100vh - 8rem)" className="rounded-2xl">
             <AboutUsSidebar

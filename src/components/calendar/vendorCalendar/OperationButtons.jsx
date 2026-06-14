@@ -2,11 +2,8 @@ import { useEffect, useRef } from "react";
 import classNames from "classnames";
 
 function OperationButtons({ handleReset, openOperationFlow, operationGroup }) {
-  // Ref to the “مشاهده” button
   const viewButtonRef = useRef(null);
 
-  // Focus “مشاهده” on first mount if no active operation
-  // Re-focus “مشاهده” if operationGroup becomes falsy (canceled)
   useEffect(() => {
     if (!operationGroup && viewButtonRef.current) {
       viewButtonRef.current.focus();
@@ -14,109 +11,91 @@ function OperationButtons({ handleReset, openOperationFlow, operationGroup }) {
   }, [operationGroup]);
 
   return (
-    <div dir="rtl" className="flex w-full flex-col items-center justify-center gap-2 lg:w-3/4">
-      {/* Container for all 5 buttons */}
+    <div
+      dir="rtl"
+      className="flex h-full w-full flex-col items-stretch gap-2 transition duration-300 ease-out motion-safe:[@starting-style]:blur-sm"
+    >
       <div
+        key={operationGroup || "view"}
         className={classNames(
-          // 2×2 grid on small screens
-          "grid w-full max-w-3xl grid-cols-2 gap-1.5",
-          // Becomes a flex row on md+
-          "md:flex md:flex-row md:flex-wrap md:items-stretch md:justify-center"
+          "grid w-full max-w-full grid-cols-2 gap-1.5 sm:gap-2 md:grid-cols-2 lg:h-full lg:grid-rows-2",
+          "transition-all duration-300 ease-out motion-safe:animate-[vendorToolbarBlurIn_220ms_ease-out]",
         )}
       >
-        {/* 1) مشاهده */}
         <button
           ref={viewButtonRef}
           onClick={handleReset}
           className={classNames(
-            "inline-flex h-8 w-full items-center justify-center md:w-auto",
-            "rounded-xl border border-primary-600 bg-primary-600",
-            "px-2 text-[11px] font-medium text-white sm:text-xs",
-            "transition-all duration-300 hover:bg-primary-600 hover:text-white",
-            "outline-none active:bg-primary-700",
-            // Show focus ring if no operation is active
+            "inline-flex h-8 w-full min-w-0 items-center justify-center truncate lg:h-full lg:min-h-8 xl:h-11 xl:max-h-11 xl:max-w-48 xl:justify-self-center",
+            operationGroup
+              ? "rounded-2xl border border-red-600 bg-transparent text-red-700 lg:rounded-3xl dark:text-red-300"
+              : "rounded-2xl border border-primary-600 bg-primary-600 lg:rounded-3xl",
+            "truncate px-2 text-[11px] font-medium sm:text-xs md:text-[10px] lg:text-xs",
+            operationGroup
+              ? "transition-all duration-300 hover:bg-red-600 hover:text-white dark:hover:bg-red-500 dark:hover:text-white"
+              : "text-white transition-all duration-300 hover:bg-primary-600 hover:text-white",
+            "outline-none",
+            operationGroup ? "active:bg-red-700" : "active:bg-primary-700",
             !operationGroup
               ? "focus:ring-2 focus:ring-primary-600 focus:ring-offset-2"
-              : "focus:ring-0 focus:ring-transparent"
+              : "z-30 focus:ring-2 focus:ring-red-600 focus:ring-offset-2",
           )}
         >
-          مشاهده
+          {operationGroup ? "لغو تغییرات" : "مشاهده"}
         </button>
 
-        {/* 2) تغییر ایام پیک */}
         <button
           onClick={() => openOperationFlow("peak")}
           className={classNames(
-            "inline-flex h-8 w-full items-center justify-center md:w-auto",
-            "rounded-xl px-2 text-[11px] font-medium sm:text-xs",
+            "inline-flex h-8 w-full min-w-0 items-center justify-center truncate lg:h-full lg:min-h-8 xl:h-11 xl:max-h-11 xl:max-w-48 xl:justify-self-center",
+            "rounded-2xl px-2 text-[11px] font-medium sm:text-xs md:text-[10px] lg:rounded-3xl lg:text-xs",
             "transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2",
             "border border-transparent bg-primary-500 text-white",
             "hover:bg-primary-600 focus:ring-primary-600 active:bg-primary-700",
             operationGroup && operationGroup !== "peak"
               ? "opacity-50 cursor-not-allowed"
               : "",
-            operationGroup === "peak" ? "z-20 relative" : ""
+            operationGroup === "peak" ? "z-20 relative" : "",
           )}
           disabled={operationGroup && operationGroup !== "peak"}
         >
           تغییر ایام پیک
         </button>
 
-        {/* 3) رزرو خارج از سایت */}
         <button
           onClick={() => openOperationFlow("offsite")}
           className={classNames(
-            "inline-flex h-8 w-full items-center justify-center truncate md:w-auto",
-            "rounded-xl px-2 text-[11px] font-medium sm:text-xs",
+            "inline-flex h-8 w-full min-w-0 items-center justify-center truncate lg:h-full lg:min-h-8 xl:h-11 xl:max-h-11 xl:max-w-48 xl:justify-self-center",
+            "rounded-2xl px-2 text-[11px] font-medium sm:text-xs md:text-[10px] lg:rounded-3xl lg:text-xs",
             "transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2",
             "border border-transparent bg-primary-600 text-white",
             "hover:bg-primary-700 focus:ring-primary-700 active:bg-primary-800",
             operationGroup && operationGroup !== "offsite"
               ? "opacity-50 cursor-not-allowed"
               : "",
-            operationGroup === "offsite" ? "z-20 relative" : ""
+            operationGroup === "offsite" ? "z-20 relative" : "",
           )}
           disabled={operationGroup && operationGroup !== "offsite"}
         >
           رزرو خارج از سایت
         </button>
 
-        {/* 4) تغییر قیمت ویژه */}
         <button
           onClick={() => openOperationFlow("price")}
           className={classNames(
-            "inline-flex h-8 w-full items-center justify-center truncate md:w-auto",
-            "rounded-xl px-2 text-[11px] font-medium sm:text-xs",
+            "inline-flex h-8 w-full min-w-0 items-center justify-center truncate lg:h-full lg:min-h-8 xl:h-11 xl:max-h-11 xl:max-w-48 xl:justify-self-center",
+            "rounded-2xl px-2 text-[11px] font-medium sm:text-xs md:text-[10px] lg:rounded-3xl lg:text-xs",
             "transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2",
             "border border-transparent bg-primary-700 text-white",
             "hover:bg-primary-800 focus:ring-primary-800 active:bg-primary-900",
             operationGroup && operationGroup !== "price"
               ? "opacity-50 cursor-not-allowed"
               : "",
-            operationGroup === "price" ? "z-20 relative" : ""
+            operationGroup === "price" ? "z-20 relative" : "",
           )}
           disabled={operationGroup && operationGroup !== "price"}
         >
           تغییر قیمت ویژه
-        </button>
-
-        {/* 5) لغو تغییرات */}
-        <button
-          onClick={handleReset}
-          className={classNames(
-            // Match the size of other buttons on all breakpoints:
-            "inline-flex h-8 w-full items-center justify-center md:w-auto",
-            "rounded-xl px-2 text-[11px] font-medium sm:text-xs",
-            "transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2",
-            "border border-red-600 bg-red-600 text-white",
-            "hover:bg-white hover:text-red-600 focus:ring-red-600 active:bg-red-700 dark:hover:bg-red-500/10 dark:hover:text-red-300",
-            // Show/hide logic
-            operationGroup
-              ? "max-h-12 opacity-100 z-30" // Visible if operation is active
-              : "max-h-0 opacity-0 pointer-events-none" // Hidden if none
-          )}
-        >
-          لغو تغییرات
         </button>
       </div>
     </div>

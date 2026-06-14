@@ -1,6 +1,37 @@
 import "../index.css";
+import localFont from "next/font/local";
 import Script from "next/script";
 import Providers from "./providers";
+import { getSiteUrl } from "./seo";
+import WebVitalsReporter from "./_components/WebVitalsReporter";
+
+const iransans = localFont({
+  src: [
+    {
+      path: "../../public/fonts/IRANSansX-Light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/IRANSansX-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/IRANSansX-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/IRANSansX-Black.woff2",
+      weight: "900",
+      style: "normal",
+    },
+  ],
+  display: "swap",
+  variable: "--font-iransans",
+  fallback: ["Arial", "sans-serif"],
+});
 
 const themeScript = `
 (() => {
@@ -19,12 +50,24 @@ const themeScript = `
 `;
 
 export const metadata = {
+  metadataBase: new URL(getSiteUrl()),
   manifest: "/manifest.webmanifest",
   title: {
     default: "جات اینجاست",
     template: "%s | جات اینجاست",
   },
   description: "پلتفرم رزرو اقامتگاه و مدیریت سفر در ایران.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    siteName: "جات اینجاست",
+    locale: "fa_IR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
   icons: {
     icon: [
       {
@@ -60,13 +103,14 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fa" dir="rtl" suppressHydrationWarning>
-      <body>
+    <html lang="fa" dir="rtl" className={iransans.variable} suppressHydrationWarning>
+      <body className="font-sans">
         <Script
           id="jat-injast-theme-init"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: themeScript }}
         />
+        <WebVitalsReporter />
         <Providers>{children}</Providers>
       </body>
     </html>

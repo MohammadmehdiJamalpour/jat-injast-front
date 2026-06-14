@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -6,15 +7,26 @@ import {
 } from "@heroicons/react/24/outline";
 import { useSearchParams } from "@/lib/router-compat";
 import { fa } from "@/i18n/fa";
+import ViewportLazyBoundary from "@/ui/ViewportLazyBoundary";
 import NavBar from "./components/NavBar";
 import ListingsSection from "./components/ListingSection";
-import MapSection from "./components/MapSection";
 import {
   buildSearchFilters,
   buildSelectedPlace,
   parseDestination,
   useDefaultSearchData,
 } from "./searchData";
+
+function MapLoading() {
+  return (
+    <div className="h-full w-full animate-pulse rounded-3xl bg-gradient-to-b from-gray-100 to-gray-200 dark:from-slate-900 dark:to-slate-800" />
+  );
+}
+
+const MapSection = dynamic(() => import("./components/MapSection"), {
+  ssr: false,
+  loading: () => <MapLoading />,
+});
 
 function useDesktopViewport() {
   const [isDesktop, setIsDesktop] = useState(true);
@@ -55,6 +67,7 @@ function MapToggleButton({ mapExpanded, onToggle, desktop = false }) {
     return (
       <button
         onClick={onToggle}
+        data-testid="desktop-map-toggle"
         className="absolute right-0 top-0 z-[1600] hidden h-full w-12 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl bg-primary-action text-primary-contrast transition-all duration-300 md:flex"
         aria-label={mapExpanded ? fa.search.map.close : fa.search.map.open}
       >
@@ -77,15 +90,16 @@ function MapToggleButton({ mapExpanded, onToggle, desktop = false }) {
     );
   }
 
-  const barBg = mapExpanded ? "bg-primary-75" : "bg-primary-action";
+  const barBg = mapExpanded ? "bg-primary-action/95" : "bg-primary-action";
   const barText = mapExpanded
-    ? "text-primary-800 -bottom-6"
+    ? "bottom-0 text-primary-contrast"
     : "text-primary-contrast bottom-0 rounded-3xl";
 
   return (
     <button
       onClick={onToggle}
-      className={`absolute left-0 z-[1600] flex w-full items-center justify-center gap-2 rounded-b-3xl py-3 shadow-centered backdrop-blur-sm transition-all duration-500 md:hidden ${barBg} ${barText}`}
+      data-testid="mobile-map-toggle"
+      className={`absolute left-0 z-[1600] flex w-full items-center justify-center gap-2 rounded-b-3xl py-2.5 shadow-centered backdrop-blur-sm transition-all duration-500 md:hidden ${barBg} ${barText}`}
       aria-label={mapExpanded ? fa.search.map.close : fa.search.map.show}
     >
       <ChevronDownIcon
@@ -100,7 +114,7 @@ function MapToggleButton({ mapExpanded, onToggle, desktop = false }) {
   );
 }
 
-function SearchContainer() {
+function SearchContainer({ initialSearchData }) {
   const [searchParams] = useSearchParams();
   const searchParamsKey = searchParams?.toString() || "";
   const destination = useMemo(
@@ -115,7 +129,10 @@ function SearchContainer() {
     () => buildSelectedPlace(destination),
     [destination],
   );
-  const { items: houses, loading } = useDefaultSearchData(searchFilters);
+  const { items: houses, loading } = useDefaultSearchData(
+    searchFilters,
+    initialSearchData,
+  );
   const [mapExpanded, setMapExpanded] = useState(true);
   const isDesktop = useDesktopViewport();
 
@@ -127,22 +144,30 @@ function SearchContainer() {
 
   return (
     <div
+      id="search-page"
       data-testid="search-page"
-      className="flex h-screen flex-col justify-center pt-32 md:mt-20 md:overflow-hidden md:pt-0"
+      className="flex min-h-screen flex-col pt-14 md:mt-20 md:h-screen md:overflow-hidden md:pt-0"
     >
-      <div className="relative flex min-h-screen flex-col md:w-[90vw] md:max-w-3xl 850:max-w-4xl lg:max-w-5xl xl:max-w-7xl 2xl:max-w-8xl 3xl:max-w-9xl">
+      <div className="relative flex w-full min-w-0 flex-col md:h-full md:w-[90vw] md:max-w-3xl 850:max-w-4xl lg:max-w-5xl xl:max-w-7xl 2xl:max-w-8xl 3xl:max-w-9xl">
         <NavBar />
 
-        <div className="flex flex-1 flex-col justify-center px-1.5 md:flex-row-reverse md:pl-2.5 md:pr-1.5">
+        <div className="relative z-0 flex min-w-0 flex-1 flex-col px-1.5 md:flex-row-reverse md:pl-2.5 md:pr-1.5">
           <div
-            className={`relative mt-3 flex w-full items-center justify-center rounded-3xl bg-gray-200 shadow-centered shadow-primary-100 transition-all duration-500 ease-in-out md:mt-1 md:h-auto md:max-h-[85vh] md:overflow-hidden ${mapW} ${wrapperH}`}
+            data-testid="search-map-pane"
+            className={`relative z-0 mt-2 flex w-full min-w-0 items-center justify-center overflow-hidden rounded-3xl bg-gray-200 shadow-centered shadow-primary-100 transition-all duration-500 ease-in-out dark:bg-slate-900 dark:shadow-black/25 md:mt-1 md:h-auto md:max-h-[85vh] ${mapW} ${wrapperH}`}
           >
             {(mapExpanded || isDesktop) && (
-              <MapSection
-                houses={houses}
-                loading={loading}
-                selectedPlace={selectedPlace}
-              />
+              <ViewportLazyBoundary
+                className="h-full w-full"
+                fallback={<MapLoading />}
+                rootMargin="300px"
+              >
+                <MapSection
+                  houses={houses}
+                  loading={loading}
+                  selectedPlace={selectedPlace}
+                />
+              </ViewportLazyBoundary>
             )}
 
             <MapToggleButton mapExpanded={mapExpanded} onToggle={toggleMap} />

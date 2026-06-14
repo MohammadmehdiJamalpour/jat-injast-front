@@ -93,6 +93,13 @@ async function stubPublicApi(page) {
       body: JSON.stringify({ value: [] }),
     }),
   );
+
+  await page.route("**/client/profile", (route) =>
+    route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({ success: false, data: null }),
+    }),
+  );
 }
 
 async function unnamedInteractiveElements(page) {

@@ -3,10 +3,8 @@ import { Disclosure } from "@headlessui/react";
 import { HomeIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
 function EditHouseSidebar({ setSelectedTab, selectedTab, tabSections }) {
-  // Which parent disclosure is open
   const [openSection, setOpenSection] = useState("آدرس و موقعیت مکانی");
 
-  // Whenever selectedTab changes, figure out which parent owns it, so we can style it
   useEffect(() => {
     const relevantSection = tabSections.find((section) =>
       section.keys.some((keyObj) => keyObj.key === selectedTab),
@@ -16,21 +14,18 @@ function EditHouseSidebar({ setSelectedTab, selectedTab, tabSections }) {
     }
   }, [selectedTab, tabSections]);
 
-  // If the user clicks a child tab
   const handleChildClick = (childKey, parentLabel) => {
     setSelectedTab(childKey);
-    setOpenSection(parentLabel); // ensures the parent's disclosure is open
+    setOpenSection(parentLabel);
   };
 
   return (
     <div className="w-full overflow-auto rounded-3xl p-2 flex flex-col justify-start items-center gap-y-3">
       {tabSections.map((section) => {
-        // The parent's label
         const parentLabel = section.label;
 
         const isSectionOpen = openSection === parentLabel;
 
-        // This helps us highlight the parent tab if any of its child tabs is selected
         const isSectionActive = section.keys.some(
           (keyObj) => keyObj.key === selectedTab
         );
@@ -40,16 +35,12 @@ function EditHouseSidebar({ setSelectedTab, selectedTab, tabSections }) {
             key={parentLabel}
             as="div"
             className="w-full"
-            // **Controlled** open/close:
             open={isSectionOpen}
             onChange={(isOpening) => {
-              // If the user is opening this parent, set it in openSection
-              // and pick the first child as selectedTab (or keep the existing child if you prefer).
               if (isOpening) {
                 setOpenSection(parentLabel);
                 setSelectedTab(section.keys[0].key);
               } else {
-                // Closing this parent => no parent open
                 setOpenSection("");
               }
             }}

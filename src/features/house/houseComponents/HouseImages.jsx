@@ -1,11 +1,16 @@
-import { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import GalleryLightbox from "../../../ui/GalleryLightbox";
+import { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/solid";
 import { expandableButtonClassName } from "../../../ui/ExpandableContent";
+
+const GalleryLightbox = dynamic(() => import("../../../ui/GalleryLightbox"), {
+  ssr: false,
+  loading: () => null,
+});
 
 const FALLBACK_IMAGES = [
   { media: "/assets/favorite-1.jpg", title: "تصویر اقامتگاه" },
@@ -21,6 +26,7 @@ function ImageWithSkeleton({
   wrapperClassName = "",
   imgClassName = "",
   onClick,
+  sizes = "100vw",
 }) {
   const [status, setStatus] = useState("loading");
   const imageSrc = src || "/assets/favorite-1.jpg";
@@ -46,11 +52,12 @@ function ImageWithSkeleton({
         </div>
       )}
 
-      <img
+      <Image
         src={imageSrc}
         alt={alt}
         title={title}
-        loading="lazy"
+        fill
+        sizes={sizes}
         className={`${imgClassName} transition-opacity duration-300 ${
           status === "loaded" ? "opacity-100" : "opacity-0"
         }`}
@@ -82,36 +89,126 @@ export default function HouseImages({ houseData }) {
 
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(0);
+  const [activeMobileIndex, setActiveMobileIndex] = useState(0);
+  const mobileScrollerRef = useRef(null);
+  const scrollFrameRef = useRef(null);
+  const hasMultipleImages = displayImages.length > 1;
 
   const open = (index) => {
     setSelected(index);
     setIsOpen(true);
   };
 
+  const updateActiveMobileIndex = useCallback(() => {
+    const scroller = mobileScrollerRef.current;
+    if (!scroller) return;
+
+    const scrollerRect = scroller.getBoundingClientRect();
+    const scrollerCenter = scrollerRect.left + scrollerRect.width / 2;
+    let closestIndex = 0;
+    let closestDistance = Number.POSITIVE_INFINITY;
+
+    Array.from(scroller.children).forEach((slide, index) => {
+      const slideRect = slide.getBoundingClientRect();
+      const slideCenter = slideRect.left + slideRect.width / 2;
+      const distance = Math.abs(slideCenter - scrollerCenter);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    setActiveMobileIndex(closestIndex);
+  }, []);
+
+  const handleMobileScroll = useCallback(() => {
+    if (scrollFrameRef.current) {
+      cancelAnimationFrame(scrollFrameRef.current);
+    }
+
+    scrollFrameRef.current = requestAnimationFrame(updateActiveMobileIndex);
+  }, [updateActiveMobileIndex]);
+
+  const scrollToMobileImage = useCallback(
+    (index) => {
+      const nextIndex = Math.min(Math.max(index, 0), displayImages.length - 1);
+      const slide = mobileScrollerRef.current?.children[nextIndex];
+
+      setActiveMobileIndex(nextIndex);
+      slide?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    },
+    [displayImages.length],
+  );
+
+  useEffect(() => {
+    setActiveMobileIndex((currentIndex) =>
+      Math.min(currentIndex, displayImages.length - 1),
+    );
+  }, [displayImages.length]);
+
+  useEffect(
+    () => () => {
+      if (scrollFrameRef.current) {
+        cancelAnimationFrame(scrollFrameRef.current);
+      }
+    },
+    [],
+  );
+
   return (
     <div className="mx-auto w-full lg:mb-0" dir="rtl">
-      <div className="block bg-gray-100 lg:hidden">
-        <Swiper
-          modules={[Navigation, Pagination]}
-          navigation
-          pagination={{ clickable: true }}
-          spaceBetween={20}
-          slidesPerView={1}
-          dir="rtl"
+      <div className="relative block overflow-hidden bg-gray-100 lg:hidden">
+        <div
+          ref={mobileScrollerRef}
+          className="no-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain scroll-smooth"
+          onScroll={handleMobileScroll}
         >
           {displayImages.map((image, index) => (
-            <SwiperSlide key={`${image.media}-${index}`}>
+            <div
+              key={`${image.media}-${index}`}
+              className="w-full shrink-0 snap-center"
+            >
               <ImageWithSkeleton
                 src={image.media}
                 alt={image.title}
                 title={image.title}
                 wrapperClassName="h-64 w-full sm:h-80"
                 imgClassName="h-full w-full rounded-3xl object-cover md:rounded-xl"
+                sizes="100vw"
                 onClick={() => open(index)}
               />
-            </SwiperSlide>
+            </div>
           ))}
-        </Swiper>
+        </div>
+
+        {hasMultipleImages && (
+          <>
+            <button
+              type="button"
+              aria-label="تصویر بعدی"
+              disabled={activeMobileIndex === displayImages.length - 1}
+              className="btn-press absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-slate-950/45 text-white shadow-lg ring-1 ring-white/35 backdrop-blur-md transition-opacity duration-200 hover:bg-slate-950/60 disabled:cursor-not-allowed disabled:opacity-35 dark:bg-white/15 dark:text-white dark:ring-white/25 dark:hover:bg-white/25"
+              onClick={() => scrollToMobileImage(activeMobileIndex + 1)}
+            >
+              <ChevronLeftIcon className="h-6 w-6" aria-hidden="true" />
+            </button>
+
+            <button
+              type="button"
+              aria-label="تصویر قبلی"
+              disabled={activeMobileIndex === 0}
+              className="btn-press absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-slate-950/45 text-white shadow-lg ring-1 ring-white/35 backdrop-blur-md transition-opacity duration-200 hover:bg-slate-950/60 disabled:cursor-not-allowed disabled:opacity-35 dark:bg-white/15 dark:text-white dark:ring-white/25 dark:hover:bg-white/25"
+              onClick={() => scrollToMobileImage(activeMobileIndex - 1)}
+            >
+              <ChevronRightIcon className="h-6 w-6" aria-hidden="true" />
+            </button>
+          </>
+        )}
       </div>
 
       <div className="hidden w-full lg:block">
@@ -125,6 +222,7 @@ export default function HouseImages({ houseData }) {
                 title={image.title}
                 wrapperClassName="h-60 w-full"
                 imgClassName="h-full w-full rounded-xl object-cover"
+                sizes="25vw"
                 onClick={() => open(index)}
               />
             ))}
@@ -138,6 +236,7 @@ export default function HouseImages({ houseData }) {
                 title={displayImages[0].title}
                 wrapperClassName="h-128 w-full"
                 imgClassName="h-full w-full rounded-xl object-cover"
+                sizes="50vw"
                 onClick={() => open(0)}
               />
             )}
@@ -154,6 +253,7 @@ export default function HouseImages({ houseData }) {
                     title={image.title}
                     wrapperClassName="h-60 w-full"
                     imgClassName="h-full w-full rounded-xl object-cover"
+                    sizes="25vw"
                     onClick={() => open(imageIndex)}
                   />
                   {index === 1 && displayImages.length > 4 && (
@@ -172,13 +272,15 @@ export default function HouseImages({ houseData }) {
         </div>
       </div>
 
-      <GalleryLightbox
-        images={displayImages}
-        open={isOpen}
-        initialIndex={selected}
-        onClose={() => setIsOpen(false)}
-        dir="rtl"
-      />
+      {isOpen && (
+        <GalleryLightbox
+          images={displayImages}
+          open={isOpen}
+          initialIndex={selected}
+          onClose={() => setIsOpen(false)}
+          dir="rtl"
+        />
+      )}
     </div>
   );
 }

@@ -35,7 +35,7 @@ function LightboxImage({ src, alt, title }) {
           alt={alt}
           title={title}
           loading="lazy"
-          className={`max-h-full max-w-full rounded-[1.5rem] object-contain transition-opacity duration-300 ${
+          className={`h-auto max-h-full w-[95vw] max-w-full rounded-[1.5rem] object-contain transition-opacity duration-300 sm:w-[92vw] lg:w-auto ${
             status === "loaded" ? "opacity-100" : "opacity-0"
           }`}
           onLoad={() => setStatus("loaded")}
@@ -117,7 +117,7 @@ function GalleryLightbox({
           />
         </Transition.Child>
 
-        <div className="fixed inset-0 flex items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
+        <div className="fixed inset-0 flex items-center justify-center px-2 py-4 sm:px-6 lg:px-8">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -136,13 +136,13 @@ function GalleryLightbox({
                   type="button"
                   onClick={onClose}
                   aria-label="بستن"
-                  className="btn-press pointer-events-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-slate-950 shadow-xl ring-1 ring-black/10 transition-colors duration-200 hover:bg-primary-action hover:text-primary-contrast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300"
+                  className="btn-press pointer-events-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-white shadow-xl ring-1 ring-white/20 backdrop-blur-md transition-colors duration-200 hover:bg-white/20 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
                 >
                   <XMarkIcon className="h-6 w-6" />
                 </button>
               </div>
 
-              <div className="relative min-h-0 flex-1 px-12 sm:px-16 lg:px-20">
+              <div className="relative min-h-0 flex-1 px-0 sm:px-16 lg:px-20">
                 <Swiper
                   dir={dir}
                   slidesPerView={1}
@@ -178,7 +178,7 @@ function GalleryLightbox({
                       onClick={goNext}
                       disabled={activeIndex === count - 1}
                       aria-label="تصویر بعدی"
-                      className="btn-press absolute left-0 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary-action text-primary-contrast shadow-lg disabled:bg-white/20 disabled:text-white/50 sm:h-11 sm:w-11 lg:left-2"
+                      className="btn-press absolute left-1 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary-action text-primary-contrast opacity-50 shadow-lg transition-opacity duration-200 hover:opacity-80 focus-visible:opacity-90 disabled:bg-white/20 disabled:text-white/50 disabled:opacity-25 sm:h-11 sm:w-11 lg:left-2"
                     >
                       <ChevronLeftIcon className="h-6 w-6" />
                     </button>
@@ -188,7 +188,7 @@ function GalleryLightbox({
                       onClick={goPrevious}
                       disabled={activeIndex === 0}
                       aria-label="تصویر قبلی"
-                      className="btn-press absolute right-0 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary-action text-primary-contrast shadow-lg disabled:bg-white/20 disabled:text-white/50 sm:h-11 sm:w-11 lg:right-2"
+                      className="btn-press absolute right-1 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary-action text-primary-contrast opacity-50 shadow-lg transition-opacity duration-200 hover:opacity-80 focus-visible:opacity-90 disabled:bg-white/20 disabled:text-white/50 disabled:opacity-25 sm:h-11 sm:w-11 lg:right-2"
                     >
                       <ChevronRightIcon className="h-6 w-6" />
                     </button>

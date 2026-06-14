@@ -1,5 +1,10 @@
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { VendorHouseCalendarByRoom } from "../../services/houseCalendarOwnerService";
+import {
+  preloadVendorCalendarMonths,
+  VENDOR_CALENDAR_PRELOAD_MONTH_COUNT,
+} from "./vendorCalendarMonthData";
 
 export function useVendorRoomCalendarData({
   uuid,
@@ -7,8 +12,12 @@ export function useVendorRoomCalendarData({
   selectedRoomUuid,
 }) {
   const queryClient = useQueryClient();
-
-  const queryKey = ["vendor-room-calendar", uuid, selectedRoomUuid];
+  const queryKey = useMemo(
+    () => ["vendor-room-calendar", uuid, selectedRoomUuid],
+    [uuid, selectedRoomUuid]
+  );
+  const preloadingRef = useRef(false);
+  const failedLinksRef = useRef(new Set());
 
   const {
     data,
@@ -19,21 +28,8 @@ export function useVendorRoomCalendarData({
   } = useQuery(
     queryKey,
     async () => {
-      const allMonths = [];
       const first = await VendorHouseCalendarByRoom(uuid, selectedRoomUuid);
-      allMonths.push(first);
-
-      if (first.next_month?.link) {
-        const second = await VendorHouseCalendarByRoom(
-          null,
-          null,
-          null,
-          first.next_month.link
-        );
-        allMonths.push(second);
-      }
-
-      return allMonths;
+      return [first];
     },
     {
       enabled: enabled && !!uuid && !!selectedRoomUuid,
@@ -42,21 +38,66 @@ export function useVendorRoomCalendarData({
     }
   );
 
-  async function fetchNextMonth() {
-    if (!data || data.length === 0) return;
-    const lastMonth = data[data.length - 1];
-    if (lastMonth.next_month?.link) {
-      const nextData = await VendorHouseCalendarByRoom(
-        null,
-        null,
-        null,
-        lastMonth.next_month.link
-      );
-      queryClient.setQueryData(queryKey, (oldArray) => {
-        if (!oldArray) return [nextData];
-        return [...oldArray, nextData];
-      });
+  const fetchMonthByLink = useCallback(async (link) => {
+    if (failedLinksRef.current.has(link)) {
+      throw new Error("Calendar month link already failed.");
     }
+
+    try {
+      return await VendorHouseCalendarByRoom(null, null, null, link);
+    } catch (error) {
+      failedLinksRef.current.add(link);
+      throw error;
+    }
+  }, []);
+
+  const loadMonths = useCallback(
+    (months, minimumMonths) =>
+      preloadVendorCalendarMonths({
+        months,
+        fetchMonthByLink,
+        minimumMonths,
+      }),
+    [fetchMonthByLink]
+  );
+
+  useEffect(() => {
+    failedLinksRef.current = new Set();
+  }, [uuid, selectedRoomUuid]);
+
+  useEffect(() => {
+    if (
+      !enabled ||
+      !data?.length ||
+      data.length >= VENDOR_CALENDAR_PRELOAD_MONTH_COUNT ||
+      preloadingRef.current
+    ) {
+      return;
+    }
+
+    let isCancelled = false;
+    preloadingRef.current = true;
+
+    loadMonths(data, VENDOR_CALENDAR_PRELOAD_MONTH_COUNT)
+      .then((months) => {
+        if (!isCancelled) queryClient.setQueryData(queryKey, months);
+      })
+      .finally(() => {
+        preloadingRef.current = false;
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [data, enabled, loadMonths, queryClient, queryKey]);
+
+  async function fetchNextMonth() {
+    const currentMonths = queryClient.getQueryData(queryKey) || data || [];
+    if (!currentMonths.length) return 0;
+
+    const months = await loadMonths(currentMonths, currentMonths.length + 1);
+    queryClient.setQueryData(queryKey, months);
+    return months.length;
   }
 
   return {

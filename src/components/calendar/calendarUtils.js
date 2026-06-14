@@ -41,6 +41,15 @@ export function getTodayMidnight() {
   return today;
 }
 
+export function canUseHoverPreview(
+  event,
+  targetWindow = typeof window !== "undefined" ? window : undefined,
+) {
+  if (event?.pointerType !== "mouse") return false;
+  if (typeof targetWindow?.matchMedia !== "function") return true;
+  return targetWindow.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
+
 function stripVisualStateClasses(classes) {
   return classes.filter(
     (className) =>
@@ -54,14 +63,20 @@ function stripVisualStateClasses(classes) {
   );
 }
 
-export function canSelectCalendarDay(day) {
+export function canSelectCalendarDay(
+  day,
+  { allowOffsiteBooking = false } = {},
+) {
   if (!day) return false;
-  if (day.isLock && day.isDisable) return false;
   if (day.isBlank || day.isCurrentMonth) return false;
 
   const dayDateObj = parseDayString(getDayDateValue(day));
   if (!dayDateObj) return false;
   if (dayDateObj < getTodayMidnight()) return false;
+
+  if (allowOffsiteBooking && day.isBookingOffSite) return true;
+  if (day.isLock && day.isDisable) return false;
+
   return !(day.isLock || day.isDisable);
 }
 
@@ -91,18 +106,29 @@ export function getVendorDayStyles({
     return "bg-gray-200 text-gray-400 cursor-not-allowed border border-gray-300";
   }
 
-  let base = ["bg-white", "text-gray-800", "border", "dark:bg-slate-950", "dark:text-slate-100"];
-  let borderColor = "border-gray-300";
+  let base = [
+    "bg-white",
+    "text-gray-800",
+    "border",
+    "dark:bg-slate-950",
+    "dark:text-slate-100",
+  ];
+  let borderClasses = ["border-gray-300"];
 
-  if (day.isHoliday) borderColor = "border-red-500";
-  if (day.isToday) borderColor = "border-primary-600";
-  base.push(borderColor);
+  if (day.isHoliday) borderClasses = ["border-red-700", "dark:border-red-500"];
+  if (day.isToday) borderClasses = ["border-primary-600"];
+  base.push(...borderClasses);
 
   if (day.isLock || day.isDisable) {
-    base.push("bg-gray-200", "text-gray-400", "cursor-not-allowed", "diagonal-stripes");
+    base.push(
+      "bg-gray-200",
+      "text-gray-400",
+      "cursor-not-allowed",
+      "diagonal-stripes",
+    );
   }
 
-  if (day.isHoliday) base.push("text-red-500");
+  if (day.isHoliday) base.push("text-red-700", "dark:text-red-400");
 
   let fromDateObj = reserveDateFrom ? new Date(reserveDateFrom.date) : null;
   let toDateObj = reserveDateTo ? new Date(reserveDateTo.date) : null;
@@ -127,8 +153,15 @@ export function getVendorDayStyles({
 
     if (isInRange) {
       base = stripVisualStateClasses(base);
-      if (isSameDate(dayDateObj, fromDateObj) || isSameDate(dayDateObj, toDateObj)) {
-        base.push("bg-primary-action", "border-primary-600", "text-primary-contrast");
+      if (
+        isSameDate(dayDateObj, fromDateObj) ||
+        isSameDate(dayDateObj, toDateObj)
+      ) {
+        base.push(
+          "bg-primary-action",
+          "border-primary-600",
+          "text-primary-contrast",
+        );
       } else {
         base.push("bg-primary-200", "border-primary-200", "text-white");
       }

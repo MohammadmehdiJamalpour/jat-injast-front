@@ -6,12 +6,17 @@ import { reportClientError } from "../../utils/reportClientError";
 import { buildDestinationHref } from "./destinationLinks";
 import { fa } from "../../i18n/fa";
 
-function ZonesSwiperList({ skeletonCount = 4, onLoaded }) {
-  const [zones, setZones] = useState([]);
-  const [loading, setLoading] = useState(true);
+function ZonesSwiperList({ initialZones = [], skeletonCount = 4, onLoaded }) {
+  const [zones, setZones] = useState(initialZones);
+  const [loading, setLoading] = useState(!initialZones.length);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (initialZones.length) {
+      onLoaded?.(initialZones);
+      return undefined;
+    }
+
     listZones()
       .then((data) => {
         setZones(data);
@@ -23,7 +28,7 @@ function ZonesSwiperList({ skeletonCount = 4, onLoaded }) {
         setError(err);
         setLoading(false);
       });
-  }, [onLoaded]);
+  }, [initialZones, onLoaded]);
 
   const renderSkeleton = (count) => (
     <div className="overflow-hidden rounded-b-3xl pb-10">
@@ -66,14 +71,14 @@ function ZonesSwiperList({ skeletonCount = 4, onLoaded }) {
         <Link
           data-testid={`destination-card-${zone.slug || zone.id}`}
           to={buildDestinationHref(zone)}
-          className="relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-3xl transition-all duration-500 hover:scale-[1.03] focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-300/50"
+          className="relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-3xl p-1.5 transition-all duration-500 hover:scale-[1.03] focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-300/50"
           aria-label={fa.home.searchDestination(zone.name)}
         >
           {zone.avatar && (
             <img
               src={zone.avatar}
               alt={zone.name}
-              className="m-1.5 aspect-video h-36 rounded-3xl border border-primary-500 object-cover shadow-centered shadow-primary-50 transition-shadow duration-300 hover:shadow-primary-200 xs:h-40 sm:max-h-36 md:h-44"
+              className="aspect-video h-36 rounded-3xl border border-primary-500 object-cover shadow-centered shadow-primary-50 transition-shadow duration-300 hover:shadow-primary-200 xs:h-40 sm:max-h-36 md:h-44"
             />
           )}
           <h3 className="destination-label -translate-y-7">{zone.name}</h3>

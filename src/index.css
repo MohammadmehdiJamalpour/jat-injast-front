@@ -1,7 +1,3 @@
-@import "leaflet/dist/leaflet.css";
-@import "react-modern-calendar-datepicker/lib/DatePicker.css";
-@import "slick-carousel/slick/slick.css";
-@import "slick-carousel/slick/slick-theme.css";
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -17,7 +13,7 @@
 }
 
 @theme {
-  --font-sans: "iransans", Arial, sans-serif;
+  --font-sans: var(--font-iransans, "iransans"), Arial, sans-serif;
 
   --color-primary: #006f8c;
   --color-primary-900: #003444;
@@ -149,7 +145,7 @@
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
-    font-family: "iransans", Arial, sans-serif;
+    font-family: var(--font-iransans, "iransans"), Arial, sans-serif;
   }
 
   *,
@@ -219,30 +215,6 @@
     max-width: 100%;
   }
 
-  @font-face {
-    font-family: "iransans";
-    font-style: normal;
-    font-weight: 300;
-    font-display: swap;
-    src: url("/fonts/IRANSansX-Light.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "iransans";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url("/fonts/IRANSansX-Regular.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "iransans";
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-    src: url("/fonts/IRANSansX-Bold.woff2") format("woff2");
-  }
-
   body {
     @apply bg-white font-sans text-gray-900 antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100;
     background-color: var(--app-bg);
@@ -264,7 +236,11 @@
   .panel-muted {
     @apply rounded-3xl border border-border-soft bg-primary-50/30 p-4 shadow-centered shadow-primary-50/50 dark:border-slate-700 dark:bg-slate-900/70 dark:shadow-black/20;
     border-color: var(--app-border);
-    background-color: color-mix(in srgb, var(--app-surface-muted) 78%, transparent);
+    background-color: color-mix(
+      in srgb,
+      var(--app-surface-muted) 78%,
+      transparent
+    );
   }
 
   .panel-toolbar {
@@ -307,19 +283,19 @@
   }
 
   .btn {
-    @apply inline-flex items-center justify-center rounded-2xl px-2 py-0.5 text-primary-contrast shadow-sm transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-60 lg:px-4 lg:py-1.5;
+    @apply inline-flex min-w-0 items-center justify-center rounded-2xl px-2 py-0.5 text-center leading-tight text-primary-contrast shadow-sm transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-60 lg:px-4 lg:py-1.5;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-2xl bg-primary-action px-2 py-0.5 text-primary-contrast shadow-sm transition-all duration-300 hover:bg-primary-action-hover disabled:cursor-not-allowed disabled:opacity-60 lg:px-4 lg:py-1.5;
+    @apply inline-flex min-w-0 items-center justify-center rounded-2xl bg-primary-action px-2 py-0.5 text-center leading-tight text-primary-contrast shadow-sm transition-all duration-300 hover:bg-primary-action-hover disabled:cursor-not-allowed disabled:opacity-60 lg:px-4 lg:py-1.5;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-2xl bg-primary-50 px-2 py-0.5 text-primary-800 shadow-sm transition-all duration-300 hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-60 lg:px-4 lg:py-1.5 dark:bg-primary-700/70 dark:text-white dark:hover:bg-primary-600 dark:hover:text-white dark:disabled:bg-slate-800 dark:disabled:text-white/70;
+    @apply inline-flex min-w-0 items-center justify-center rounded-2xl bg-primary-50 px-2 py-0.5 text-center leading-tight text-primary-800 shadow-sm transition-all duration-300 hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-60 lg:px-4 lg:py-1.5 dark:bg-primary-700/70 dark:text-white dark:hover:bg-primary-600 dark:hover:text-white dark:disabled:bg-slate-800 dark:disabled:text-white/70;
   }
 
   .btn-danger {
-    @apply inline-flex items-center justify-center rounded-2xl bg-red-600 px-2 py-0.5 text-white shadow-sm transition-all duration-300 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60 lg:px-4 lg:py-1.5;
+    @apply inline-flex min-w-0 items-center justify-center rounded-2xl bg-red-600 px-2 py-0.5 text-center leading-tight text-white shadow-sm transition-all duration-300 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60 lg:px-4 lg:py-1.5;
   }
 
   .btn-press {
@@ -331,7 +307,7 @@
   }
 
   .tab {
-    @apply flex w-full flex-row-reverse items-center justify-end rounded-xl py-1.5 pr-2 text-xs text-gray-700 opacity-100 outline-none transition md:text-sm lg:py-3 lg:pr-4 dark:text-slate-200;
+    @apply flex w-full cursor-pointer flex-row-reverse items-center justify-end rounded-xl py-1.5 pr-2 text-xs text-gray-700 opacity-100 outline-none transition focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2 focus-visible:ring-offset-white md:text-sm lg:py-3 lg:pr-4 dark:text-slate-200 dark:focus-visible:ring-primary-200 dark:focus-visible:ring-offset-slate-950;
   }
 
   .tab-hover {
@@ -397,8 +373,9 @@
 
   .dashboard-shell {
     --dashboard-gutter: clamp(1.25rem, 5vw, 8rem);
-    width: calc(100vw - (var(--dashboard-gutter) * 2));
+    width: min(calc(100% - (var(--dashboard-gutter) * 2)), 108rem);
     max-width: 108rem;
+    min-width: 0;
     margin-inline: auto;
   }
 
@@ -420,7 +397,9 @@
       height: 100dvh;
       min-height: 100dvh;
       overflow: hidden;
-      padding-top: calc(var(--header-offset, 4.5rem) + var(--dashboard-desktop-gap));
+      padding-top: calc(
+        var(--header-offset, 4.5rem) + var(--dashboard-desktop-gap)
+      );
       padding-bottom: var(--dashboard-desktop-gap);
     }
 
@@ -428,15 +407,21 @@
       position: relative;
       top: auto;
       align-self: start;
-      height: calc(100dvh - var(--header-offset, 4.5rem) - (var(--dashboard-desktop-gap) * 2));
-      max-height: calc(100dvh - var(--header-offset, 4.5rem) - (var(--dashboard-desktop-gap) * 2));
+      height: calc(
+        100dvh - var(--header-offset, 4.5rem) -
+          (var(--dashboard-desktop-gap) * 2)
+      );
+      max-height: calc(
+        100dvh - var(--header-offset, 4.5rem) -
+          (var(--dashboard-desktop-gap) * 2)
+      );
       overflow: hidden;
     }
   }
 
   .home-wave-divider {
     position: absolute;
-    inset-inline: -6vw;
+    inset-inline: 0;
     top: -0.35rem;
     height: 5.5rem;
     z-index: 1;
@@ -556,13 +541,20 @@
   }
 }
 
+body:has([data-public-static-shell]) {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
 @keyframes home-wave-surface {
   0% {
-    transform: translate3d(-1.4%, var(--wave-surface-start-y), 0) scaleX(1.02) scaleY(1);
+    transform: translate3d(-1.4%, var(--wave-surface-start-y), 0) scaleX(1.02)
+      scaleY(1);
   }
 
   100% {
-    transform: translate3d(1.8%, var(--wave-surface-end-y), 0) scaleX(1.04) scaleY(var(--wave-surface-end-scale-y));
+    transform: translate3d(1.8%, var(--wave-surface-end-y), 0) scaleX(1.04)
+      scaleY(var(--wave-surface-end-scale-y));
   }
 }
 
@@ -603,12 +595,14 @@
   text-align: right;
 }
 
-:where([role="dialog"], [aria-modal="true"], .modal-rtl) :where(input, textarea, select) {
+:where([role="dialog"], [aria-modal="true"], .modal-rtl)
+  :where(input, textarea, select) {
   direction: rtl;
   text-align: right;
 }
 
-:where([role="dialog"], [aria-modal="true"], .modal-rtl) :where([dir="ltr"], .ltr) {
+:where([role="dialog"], [aria-modal="true"], .modal-rtl)
+  :where([dir="ltr"], .ltr) {
   direction: ltr;
   text-align: left;
 }
@@ -642,7 +636,11 @@
   .dark [class~="bg-gray-50/80"],
   .dark [class~="bg-gray-100/80"],
   .dark [class~="bg-gray-200/70"] {
-    background-color: color-mix(in srgb, var(--app-surface-muted) 86%, transparent);
+    background-color: color-mix(
+      in srgb,
+      var(--app-surface-muted) 86%,
+      transparent
+    );
   }
 
   .dark .text-gray-950,
@@ -680,30 +678,19 @@
     color: rgb(239 249 255) !important;
   }
 
-  .dark :where(
-    .bg-primary-900,
-    .bg-primary-800,
-    .bg-primary-700,
-    .bg-primary-600,
-    .bg-primary-500,
-    .bg-primary-action,
-    .bg-primary-action-hover,
-    .bg-secondary-900,
-    .bg-secondary-800
-  ) :where(
-    span,
-    p,
-    a,
-    button,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    label,
-    svg
-  ) {
+  .dark
+    :where(
+      .bg-primary-900,
+      .bg-primary-800,
+      .bg-primary-700,
+      .bg-primary-600,
+      .bg-primary-500,
+      .bg-primary-action,
+      .bg-primary-action-hover,
+      .bg-secondary-900,
+      .bg-secondary-800
+    )
+    :where(span, p, a, button, h1, h2, h3, h4, h5, h6, label, svg) {
     color: rgb(239 249 255);
   }
 
@@ -885,23 +872,26 @@
   }
 
   .swiper-glass-fade-left {
+    --swiper-glass-fade-surface: var(--color-secondary-50);
     background: linear-gradient(
       to right,
-      color-mix(in srgb, var(--app-bg) 96%, transparent) 0%,
-      color-mix(in srgb, var(--app-bg) 82%, transparent) 36%,
-      color-mix(in srgb, var(--app-bg) 48%, transparent) 68%,
+      color-mix(in srgb, var(--swiper-glass-fade-surface) 96%, transparent) 0%,
+      color-mix(in srgb, var(--swiper-glass-fade-surface) 78%, transparent) 34%,
+      color-mix(in srgb, var(--swiper-glass-fade-surface) 38%, transparent) 70%,
       transparent 100%
     );
     -webkit-backdrop-filter: blur(10px) saturate(1.12);
     backdrop-filter: blur(10px) saturate(1.12);
-  }
-
-  .dark .swiper-glass-fade-left {
-    background: linear-gradient(
+    -webkit-mask-image: linear-gradient(
       to right,
-      color-mix(in srgb, var(--app-surface) 94%, transparent) 0%,
-      color-mix(in srgb, var(--app-surface) 78%, transparent) 38%,
-      color-mix(in srgb, var(--app-surface) 42%, transparent) 70%,
+      #000 0%,
+      #000 48%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 48%,
       transparent 100%
     );
   }
@@ -976,6 +966,65 @@
   scrollbar-width: thin;
 }
 
+.mobile-filter-scrollbar {
+  scrollbar-color: color-mix(in srgb, var(--color-primary-500) 80%, transparent)
+    color-mix(in srgb, var(--color-primary-100) 60%, transparent);
+}
+
+.mobile-filter-scrollbar::-webkit-scrollbar-track {
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary-100) 60%,
+    transparent
+  );
+  border-radius: 9999px;
+}
+
+.mobile-filter-scrollbar::-webkit-scrollbar-thumb {
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary-500) 80%,
+    transparent
+  );
+}
+
+.mobile-filter-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary-600) 88%,
+    transparent
+  );
+}
+
+.dark .mobile-filter-scrollbar {
+  scrollbar-color: color-mix(in srgb, var(--color-primary-300) 80%, transparent)
+    color-mix(in srgb, var(--color-primary-50) 70%, transparent);
+}
+
+.dark .mobile-filter-scrollbar::-webkit-scrollbar-track {
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary-50) 70%,
+    transparent
+  );
+}
+
+.dark .mobile-filter-scrollbar::-webkit-scrollbar-thumb {
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary-300) 80%,
+    transparent
+  );
+}
+
+.dark .mobile-filter-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary-300) 96%,
+    transparent
+  );
+}
+
 .swiper-button-next,
 .swiper-button-prev {
   color: var(--color-primary-700);
@@ -1042,7 +1091,7 @@
 
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
-  font-family: "iransans", Arial, sans-serif;
+  font-family: var(--font-iransans, "iransans"), Arial, sans-serif;
 }
 
 .destination-map-popup {
@@ -1051,7 +1100,7 @@
   flex-direction: column;
   gap: 0.25rem;
   text-align: right;
-  font-family: "iransans", Arial, sans-serif;
+  font-family: var(--font-iransans, "iransans"), Arial, sans-serif;
   line-height: 1.75;
 }
 
@@ -1079,6 +1128,20 @@
 
 .dark .destination-map-popup span {
   color: #bae6fd;
+}
+
+@keyframes vendorToolbarBlurIn {
+  from {
+    filter: blur(4px);
+    opacity: 0.82;
+    transform: scale(0.985);
+  }
+
+  to {
+    filter: blur(0);
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

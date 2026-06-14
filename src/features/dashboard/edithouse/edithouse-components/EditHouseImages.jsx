@@ -227,7 +227,7 @@ const EditHouseImages = ({ houseId, houseData, refetchHouseData }) => {
         />
       )}
 
-      <Modal open={isOpen} onClose={closeAddModal} title={copy.addTitle} size="md">
+      <Modal open={isOpen} onClose={closeAddModal} title={copy.addTitle} size="form">
         <div className="space-y-5">
           <FileUpload
             label={copy.fileLabel}
@@ -271,7 +271,7 @@ const EditHouseImages = ({ houseId, houseData, refetchHouseData }) => {
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
         title={copy.deleteTitle}
-        size="sm"
+        size="confirm"
       >
         <div className="space-y-5">
           {imageToDelete && (

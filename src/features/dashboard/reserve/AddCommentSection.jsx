@@ -44,7 +44,6 @@ export default function AddCommentSection({ reserveUuid, onCommentSent }) {
   };
 
   return (
-    /* 👇  added h-full flex flex-col for equal-height behaviour */
     <div className="border border-primary-500 p-4 rounded-3xl space-y-3 w-full h-full flex flex-col">
       <h4 className="font-bold">ثبت نظر</h4>
 

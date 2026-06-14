@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { UserProvider } from "@/contexts/UserContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { TOAST_CONTAINER_STYLE } from "@/ui/toastLayer";
 
 export default function Providers({ children }) {
   const [queryClient] = useState(
@@ -14,6 +15,7 @@ export default function Providers({ children }) {
           queries: {
             refetchOnWindowFocus: false,
             retry: false,
+            staleTime: 30 * 1000,
           },
         },
       }),
@@ -24,7 +26,10 @@ export default function Providers({ children }) {
       <ThemeProvider>
         <UserProvider>
           {children}
-          <Toaster position="top-center" />
+          <Toaster
+            position="top-center"
+            containerStyle={TOAST_CONTAINER_STYLE}
+          />
         </UserProvider>
       </ThemeProvider>
     </QueryClientProvider>

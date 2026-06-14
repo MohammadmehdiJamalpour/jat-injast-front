@@ -6,7 +6,6 @@ export default function CommentSection({ comment }) {
   if (!comment) return null;
 
   return (
-    /* 👇  added h-full flex flex-col */
     <div className="border border-primary-500 p-4 rounded-3xl space-y-2 w-full h-full flex flex-col">
       <h4 className="font-bold">کامنت و امتیاز</h4>
 

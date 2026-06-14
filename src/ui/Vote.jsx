@@ -3,7 +3,7 @@ import { StarIcon as OutlineStarIcon } from "@heroicons/react/24/outline";
 import toPersianNumber from "../utils/toPersianNumber";
 
 /**
- * @param {{ vote: number|string, size?: "sm"|"lg", color?: string }}
+ * @param {{ vote: number|string, size?: "sm"|"lg", color?: string, showEmpty?: boolean }}
  *
  * `color` → the base Tailwind colour to use for stars & text, e.g. "primary-600",
  *           "yellow-500", "emerald-400".  Defaults to "primary-600".
@@ -11,8 +11,16 @@ import toPersianNumber from "../utils/toPersianNumber";
  *  <Vote vote={4.2} />                 → primary-600 (default)
  *  <Vote vote={3.5} color="yellow-500" />
  */
-function Vote({ vote, size = "sm", color = "primary-600" }) {
-  const safeVote = Number.isFinite(Number(vote)) ? Number(vote) : 0;
+function Vote({ vote, size = "sm", color = "primary-600", showEmpty = false }) {
+  const hasVote =
+    vote !== null &&
+    vote !== undefined &&
+    vote !== "" &&
+    Number.isFinite(Number(vote));
+
+  if (!hasVote && !showEmpty) return null;
+
+  const safeVote = hasVote ? Number(vote) : 0;
 
   /* Utility helpers to avoid repeating class strings */
   const starClass = `text-${color}`;

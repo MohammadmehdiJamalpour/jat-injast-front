@@ -1,12 +1,9 @@
-// utils/formatTimeAgo.js
-
 import toPersianNumber from './toPersianNumber';
 
 export function formatTimeAgo(dateString) {
-  // dateString might be an ISO string like "2023-10-01T12:34:56Z"
   const date = new Date(dateString);
   const now = new Date();
-  const diffMs = now - date;  // difference in ms
+  const diffMs = now - date;
   const diffSec = Math.floor(diffMs / 1000);
   const diffMin = Math.floor(diffSec / 60);
   const diffHour = Math.floor(diffMin / 60);

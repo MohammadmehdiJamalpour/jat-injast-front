@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { PhotoIcon } from "@heroicons/react/24/outline";
+import JalaliSingleDatePicker from "../../../ui/date-picker/JalaliSingleDatePicker";
 
 export function ProfileInput({
   label,
@@ -106,12 +107,17 @@ export function SelectField({
 }
 
 export function BirthDateFields({
-  formData,
+  value,
   onChange,
   disabled,
   title,
   helper,
-  fields,
+  placeholder,
+  error,
+  minDate,
+  maxDate,
+  initialMonth,
+  yearRange,
 }) {
   return (
     <div className="rounded-3xl border border-gray-100 bg-gray-50/60 p-4 dark:border-slate-800 dark:bg-slate-900/35">
@@ -126,21 +132,21 @@ export function BirthDateFields({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        {fields.map((field) => (
-          <ProfileInput
-            key={field.name}
-            label={field.label}
-            name={field.name}
-            value={formData[field.name]}
-            onChange={(event) => onChange(field.name, event.target.value)}
-            placeholder={field.label}
-            disabled={disabled}
-            inputMode="numeric"
-            maxLength={field.maxLength}
-            dir="ltr"
-          />
-        ))}
+      <div className="max-w-xl">
+        <JalaliSingleDatePicker
+          id="birth-date"
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          placeholder={placeholder}
+          minDate={minDate}
+          maxDate={maxDate}
+          initialMonth={initialMonth}
+          yearRange={yearRange}
+          aria-label={title}
+          aria-invalid={Boolean(error)}
+        />
+        <ErrorList messages={error} />
       </div>
     </div>
   );

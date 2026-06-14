@@ -1,18 +1,15 @@
-// components/TransactionsSection.jsx
 import { useState } from "react";
 import toast from "react-hot-toast";
 import BeatLoader from "react-spinners/BeatLoader";
 
-/** Hooks & utils **/
 import { useDefaultTransactions, useBlockedTransactions, useChargeWallet } from "./useWallet";
 import toPersianNumber from "../../../utils/toPersianNumber";
 
-/** UI **/
 import Loading from "../../../ui/Loading";
 import Modal   from "../../../ui/Modal";
 import { ResponsiveDataTable, WalletDataSection } from "./WalletDataSection";
+import { WALLET_MODAL_SIZE } from "./walletModalLayout";
 
-/* simple formatter (English digits + commas) */
 const fmt = n => n.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 const money = (value) => `${toPersianNumber(Number(value || 0).toLocaleString())} تومان`;
 const txDescription = (tx) => tx.label || tx.description || "—";
@@ -31,7 +28,7 @@ function TransactionsSection({ showChargeModal, setShowChargeModal }) {
 
   const handlePriceChange = (e) => {
     const raw = e.target.value.replace(/,/g, "").replace(/\D/g, "");
-    setChargePrice(raw);            // store un-formatted digits only
+    setChargePrice(raw);
   };
 
   async function handleChargeWallet() {
@@ -121,12 +118,14 @@ function TransactionsSection({ showChargeModal, setShowChargeModal }) {
         isOpen={showChargeModal}
         onClose={() => setShowChargeModal(false)}
         title="شارژ کیف پول"
-        maxWidth="max-w-3xl"
+        size={WALLET_MODAL_SIZE}
+        testId="wallet-charge-modal"
       >
         <div className="p-4 flex flex-col space-y-3 max-w-md mx-auto">
           <input
             className="field-surface"
             placeholder="مبلغ به تومان"
+            aria-label={'\u0645\u0628\u0644\u063a \u0634\u0627\u0631\u0698 \u06a9\u06cc\u0641 \u067e\u0648\u0644'}
             value={chargePrice ? fmt(chargePrice) : ""}
             onChange={handlePriceChange}
           />
@@ -135,6 +134,7 @@ function TransactionsSection({ showChargeModal, setShowChargeModal }) {
           )}
 
           <button
+            type="button"
             onClick={handleChargeWallet}
             disabled={chargeWalletMutation.isLoading || !chargePrice}
             className="btn-primary btn-press min-h-11 rounded-full text-sm font-medium"

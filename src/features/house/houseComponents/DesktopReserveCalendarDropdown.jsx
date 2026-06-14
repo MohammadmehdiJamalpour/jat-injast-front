@@ -10,7 +10,7 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import ReserveCalendarSwiper from "@/components/calendar/ReserveCalendarSwiper";
 
 const arrowBase =
-  "p-1 lg:p-1.5 xl:p-2 rounded-full shadow transition-colors duration-200";
+  "flex h-8 w-8 items-center justify-center rounded-full shadow-sm transition-colors duration-200";
 const activeArrow = "bg-primary-500 text-secondary-50 hover:bg-primary-600";
 const disabledArrow =
   "bg-primary-50 text-primary-600 opacity-80 cursor-not-allowed";
@@ -45,25 +45,27 @@ export default function DesktopReserveCalendarDropdown({
       leaveFrom="opacity-100 translate-y-0"
       leaveTo="opacity-0 translate-y-4"
     >
-      <div className="relative mt-4">
+      <div className="relative mt-3">
         <div
           ref={calRef}
-          className="absolute -left-6 z-[9999] w-110 overflow-visible rounded-3xl border border-primary-600 bg-white p-3 shadow-centered shadow-primary-50 lg:w-[52rem] xl:w-[56rem]"
+          data-testid="desktop-reservation-calendar-popover"
+          className="absolute left-0 top-0 z-[9999] w-[calc(100vw-2rem)] max-w-[46rem] overflow-visible rounded-[1.75rem] border border-primary-100 bg-white p-3 text-gray-800 shadow-2xl shadow-slate-900/15 ring-1 ring-black/5 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:shadow-black/35 dark:ring-white/10 md:w-[42rem] xl:w-[46rem]"
         >
-          <div className="mb-2 flex flex-wrap items-center gap-2">
+          <div className="mb-3 flex items-center gap-2">
             <button
+              type="button"
               onClick={() => {
                 setReserveDateFrom(null);
                 setReserveDateTo(null);
               }}
-              className="flex items-center gap-1 rounded-2xl border border-red-600 px-2 py-1.5 text-sm text-red-600 transition-colors duration-300 hover:bg-red-600 hover:text-white lg:text-md xl:text-lg"
+              className="flex min-h-9 items-center gap-1 rounded-full border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition-colors duration-300 hover:border-red-600 hover:bg-red-600 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-red-300 dark:border-red-400/40 dark:bg-red-950/25 dark:text-red-200 dark:hover:bg-red-500 dark:hover:text-white"
             >
-              <TrashIcon className="h-5 w-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7" />
+              <TrashIcon className="h-4 w-4" />
               پاک کردن
             </button>
 
             {isRentRoom && roomOptions.length > 0 && (
-              <div className="w-48">
+              <div className="w-36 min-w-0">
                 <Listbox
                   value={roomOptions.find((room) => room.uuid === selectedRoomUuid)}
                   onChange={(room) => setSelectedRoomUuid(room.uuid)}
@@ -72,7 +74,7 @@ export default function DesktopReserveCalendarDropdown({
                     <div className="relative overflow-visible">
                       <Listbox.Button
                         static
-                        className="flex w-full items-center justify-between rounded-3xl border border-primary-600 px-3 py-1 text-primary-800"
+                        className="flex h-9 w-full items-center justify-between rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs text-primary-800 dark:border-slate-700 dark:bg-slate-950 dark:text-primary-100"
                       >
                         <span className="truncate">
                           {roomOptions.find(
@@ -87,7 +89,7 @@ export default function DesktopReserveCalendarDropdown({
                       </Listbox.Button>
                       <Listbox.Options
                         modal={false}
-                        className="scrollbar-thin scrollbar-thumb-primary-400/70 scrollbar-track-primary-100/40 scrollbar-no-arrows scrollbar-rounded absolute z-50 mt-1 max-h-60 w-full overflow-hidden overflow-y-auto rounded-3xl border border-primary-500 bg-white shadow-lg hover:scrollbar-thumb-primary-500"
+                        className="scrollbar-thin scrollbar-thumb-primary-400/70 scrollbar-track-primary-100/40 scrollbar-no-arrows scrollbar-rounded absolute z-50 mt-1 max-h-60 w-full overflow-hidden overflow-y-auto rounded-2xl border border-primary-100 bg-white shadow-lg hover:scrollbar-thumb-primary-500 dark:border-slate-700 dark:bg-slate-900"
                       >
                         {roomOptions.map((room) => (
                           <Listbox.Option
@@ -98,7 +100,7 @@ export default function DesktopReserveCalendarDropdown({
                                 "cursor-pointer border-b border-primary-100 px-4 py-2 last:border-b-0",
                                 active
                                   ? "bg-primary-action text-primary-contrast"
-                                  : "text-gray-800",
+                                  : "text-gray-800 dark:text-slate-100",
                               ].join(" ")
                             }
                           >
@@ -112,8 +114,10 @@ export default function DesktopReserveCalendarDropdown({
               </div>
             )}
 
-            <div className="ml-auto flex items-center gap-2 lg:mr-24 2xl:mr-28">
+            <div className="ms-auto flex items-center gap-1.5">
               <button
+                type="button"
+                aria-label={'\u062a\u0642\u0648\u06cc\u0645 \u0642\u0628\u0644\u06cc'}
                 onClick={() => swiperRef.current?.prev()}
                 disabled={calIndex === 0}
                 className={`${arrowBase} ${
@@ -124,6 +128,8 @@ export default function DesktopReserveCalendarDropdown({
               </button>
 
               <button
+                type="button"
+                aria-label={'\u062a\u0642\u0648\u06cc\u0645 \u0628\u0639\u062f\u06cc'}
                 onClick={() => swiperRef.current?.next()}
                 disabled={calIndex === calMaxIndex}
                 className={`${arrowBase} ${
@@ -135,10 +141,12 @@ export default function DesktopReserveCalendarDropdown({
             </div>
 
             <button
+              type="button"
+              aria-label={'\u0628\u0633\u062a\u0646 \u062a\u0642\u0648\u06cc\u0645'}
               onClick={() => setShowCal(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-50 text-primary-700 transition-colors duration-300 hover:bg-primary-600 hover:text-white lg:h-9 lg:w-9 xl:h-10 xl:w-10"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-50 text-primary-700 transition-colors duration-300 hover:bg-primary-600 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-primary-600"
             >
-              <XMarkIcon className="h-5 w-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7" />
+              <XMarkIcon className="h-5 w-5" />
             </button>
           </div>
 
@@ -155,6 +163,7 @@ export default function DesktopReserveCalendarDropdown({
             reserveDateTo={reserveDateTo}
             setReserveDateTo={setReserveDateTo}
             onIndexChange={onIndexChange}
+            monthsPerViewOverride={2}
           />
         </div>
       </div>

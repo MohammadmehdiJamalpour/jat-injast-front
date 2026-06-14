@@ -5,7 +5,6 @@ import {
   sendReserveMessage,
 } from "../../../services/reserveService";
 
-// Child components
 import ReserveDetailsPanel  from "./ReserveDetailsPanel";
 import MessagesPreview      from "./MessagesPreview";
 import InvoiceDetails       from "./InvoiceDetails";
@@ -99,7 +98,6 @@ export default function ReserveInformation({ reserve, onBack, onUpdateSuccess })
 
   return (
     <div className="p-4 space-y-4">
-      {/* Header */}
       <div className="flex justify-between items-center gap-2">
         <div className="flex gap-2 items-center truncate">
           <p className="font-bold">شماره رزرو:</p>
@@ -116,7 +114,6 @@ export default function ReserveInformation({ reserve, onBack, onUpdateSuccess })
         </button>
       </div>
 
-      {/* Status buttons + پرداخت نهایی */}
       <UpdateOptionsButtons
         options={currentReserve.can_update_to}
         reserveUuid={currentReserve.uuid}
@@ -137,7 +134,6 @@ export default function ReserveInformation({ reserve, onBack, onUpdateSuccess })
 
       <ReservationTimeline reservation={currentReserve} />
 
-      {/* Details + message preview */}
       <div className="flex flex-col gap-4 xl:flex-row-reverse xl:items-stretch">
         <section className="-mx-4 flex h-[76dvh] max-h-[76dvh] min-h-0 w-auto sm:mx-0 sm:w-full md:h-[68dvh] md:max-h-[68dvh] xl:h-[66dvh] xl:max-h-[66dvh] xl:w-1/2">
           <MessagesPreview

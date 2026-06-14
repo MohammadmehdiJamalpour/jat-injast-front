@@ -272,7 +272,7 @@ function DashboardComments() {
         open={Boolean(selectedComment)}
         onClose={closeReplyDialog}
         title={selectedComment?.replay ? "ویرایش پاسخ میزبان" : "پاسخ به نظر مهمان"}
-        size="md"
+        size="form"
       >
         <div className="space-y-4">
           {selectedComment && (

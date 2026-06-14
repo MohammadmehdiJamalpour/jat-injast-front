@@ -90,12 +90,12 @@ export default function UpdateOptionsButtons({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-right shadow-xl transition-all">
-                <Dialog.Title className="text-lg font-medium text-gray-900">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl border border-primary-100 bg-white p-6 text-right shadow-xl transition-all dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+                <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-slate-100">
                   تایید تغییر وضعیت
                 </Dialog.Title>
 
-                <div className="mt-2 text-sm text-gray-600">
+                <div className="mt-2 text-sm text-gray-600 dark:text-slate-300">
                   آیا از تغییر وضعیت به{" "}
                   <span className="font-bold">{selectedOption?.label}</span>{" "}
                   مطمئن هستید؟
@@ -104,7 +104,7 @@ export default function UpdateOptionsButtons({
                 <div className="mt-4 flex justify-end gap-2">
                   <button
                     type="button"
-                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded-2xl"
+                    className="rounded-2xl bg-gray-300 px-4 py-2 text-gray-800 dark:bg-slate-800 dark:text-slate-100"
                     onClick={closeConfirmModal}
                     disabled={loading}
                   >

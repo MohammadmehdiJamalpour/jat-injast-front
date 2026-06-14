@@ -9,8 +9,10 @@ import PaymentSimulator from "@/components/payment/PaymentSimulator";
 import { reportClientError } from "../../../utils/reportClientError";
 import { toast } from "react-hot-toast";
 import { useUserContext } from "../../../contexts/UserContext";
-import MobileReservationCalendarSheet from "./MobileReservationCalendarSheet";
+import LazyMobileReservationCalendarSheet from "./LazyMobileReservationCalendarSheet";
 import MobileReservationSummaryBar from "./MobileReservationSummaryBar";
+
+const MOBILE_RESERVATION_SHEET_TRANSITION_MS = 300;
 
 function HouseReservationMenu({
   houseData,
@@ -30,6 +32,7 @@ function HouseReservationMenu({
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const reserveMenuRef = useRef(null);
   const calendarModalRef = useRef(null);
+  const paymentOpenTimer = useRef(null);
 
   const { userData } = useUserContext();
 
@@ -43,6 +46,13 @@ function HouseReservationMenu({
   const [reserveError, setReserveError] = useState(null);
   const [checkoutReservation, setCheckoutReservation] = useState(null);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+
+  const clearPendingPaymentOpen = useCallback(() => {
+    if (paymentOpenTimer.current) {
+      clearTimeout(paymentOpenTimer.current);
+      paymentOpenTimer.current = null;
+    }
+  }, []);
 
   const firstValidPrice = useMemo(() => {
     if (!calendarData || calendarData.length === 0) return null;
@@ -116,6 +126,8 @@ function HouseReservationMenu({
     };
   }, [callPreInvoice, reserveDateFrom, reserveDateTo]);
 
+  useEffect(() => clearPendingPaymentOpen, [clearPendingPaymentOpen]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -159,6 +171,7 @@ function HouseReservationMenu({
 
     setIsReserving(true);
     setReserveError(null);
+    clearPendingPaymentOpen();
 
     try {
       const body = {
@@ -173,7 +186,12 @@ function HouseReservationMenu({
 
       const createdReservation = await reserveHouse(body);
       setCheckoutReservation(createdReservation);
-      setIsPaymentOpen(true);
+      setShowCalendarModal(false);
+      setIsExpanded(false);
+      paymentOpenTimer.current = setTimeout(() => {
+        setIsPaymentOpen(true);
+        paymentOpenTimer.current = null;
+      }, MOBILE_RESERVATION_SHEET_TRANSITION_MS);
       toast.success("رزرو ثبت شد؛ پرداخت آزمایشی را کامل کنید.");
     } catch (err) {
       reportClientError("Create reservation", err);
@@ -194,19 +212,21 @@ function HouseReservationMenu({
     <>
       {showCalendarModal && (
         <div
-          className="fixed inset-0 opacity-50 z-30"
+          className="fixed inset-0 z-30 bg-slate-950/20 dark:bg-slate-950/50"
           onClick={() => setShowCalendarModal(false)}
+          aria-hidden="true"
         />
       )}
 
       {isExpanded && !showCalendarModal && (
         <div
-          className="fixed inset-0 opacity-50 z-30"
+          className="fixed inset-0 z-30 bg-slate-950/20 dark:bg-slate-950/50"
           onClick={() => setIsExpanded(false)}
+          aria-hidden="true"
         />
       )}
 
-      <MobileReservationCalendarSheet
+      <LazyMobileReservationCalendarSheet
         calendarData={calendarData}
         calendarModalRef={calendarModalRef}
         houseData={houseData}
@@ -221,20 +241,22 @@ function HouseReservationMenu({
         setShowCalendarModal={setShowCalendarModal}
         showCalendarModal={showCalendarModal}
       />
-
-      {/* Reservation Menu (Mobile) */}
       <div
         ref={reserveMenuRef}
-        className={`z-30 px-4 pt-1 w-full shadow-centered flex flex-col bg-primary-50 rounded-t-3xl md:hidden fixed bottom-0 transition-all duration-300`}
+        data-testid="mobile-reservation-sheet"
+        data-expanded={isExpanded ? "true" : "false"}
+        className={`fixed inset-x-0 bottom-0 z-30 flex w-full flex-col rounded-t-3xl bg-primary-50 px-4 pt-1 shadow-centered transition-all duration-300 md:hidden`}
         style={{ zIndex: 500, maxHeight: isExpanded ? "80vh" : "6rem" }}
       >
         <div className="flex w-full justify-center items-center px-4">
-          <div
-            className="flex justify-center w-full cursor-pointer"
+          <button
+            type="button"
+            className="flex w-full cursor-pointer justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300"
             onClick={() => setIsExpanded((v) => !v)}
+            aria-expanded={isExpanded}
           >
             <MinusIcon className="w-7 h-7 text-primary-800 mb-1" />
-          </div>
+          </button>
           <div className="w-7 h-7" />
         </div>
 
@@ -242,11 +264,13 @@ function HouseReservationMenu({
           {isExpanded ? (
             <div className="flex-1 overflow-y-auto px-4">
               <p className="text-sm">تاریخ رزرو</p>
-              <div
-                className="h-12 my-1.5 w-full flex items-center justify-between rounded-3xl shadow-sm bg-white px-4 border"
+              <button
+                type="button"
+                data-testid="mobile-reservation-date-trigger"
+                className="my-1.5 flex h-12 w-full min-w-0 items-center justify-between rounded-3xl border bg-white px-4 text-right shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 dark:border-slate-700 dark:bg-slate-950"
                 onClick={() => setShowCalendarModal(true)}
               >
-                <div className="flex-1 flex items-center justify-center w-full h-full text-gray-700 text-sm cursor-pointer">
+                <div className="flex h-full min-w-0 flex-1 items-center justify-center text-sm text-gray-700 dark:text-sky-100">
                   {reserveDateFrom ? (
                     <div className="h-full flex flex-col items-center justify-center w-full">
                       <p>ورود</p>
@@ -265,9 +289,9 @@ function HouseReservationMenu({
                   )}
                 </div>
 
-                <div className="w-px h-6 bg-gray-400 mx-2"></div>
+                <div className="mx-2 h-6 w-px shrink-0 bg-gray-400 dark:bg-slate-700"></div>
 
-                <div className="flex-1 flex items-center justify-center w-full h-full text-gray-700 text-sm cursor-pointer">
+                <div className="flex h-full min-w-0 flex-1 items-center justify-center text-sm text-gray-700 dark:text-sky-100">
                   {reserveDateTo ? (
                     <div className="h-full flex flex-col items-center justify-center w-full">
                       <p>خروج</p>
@@ -285,9 +309,9 @@ function HouseReservationMenu({
                     </div>
                   )}
                 </div>
-              </div>
+              </button>
 
-              <div className="text-sm bg-gray-50 rounded-3xl flex justify-center w-full my-2 mt-4">
+              <div className="my-2 mt-4 flex w-full justify-center rounded-3xl bg-gray-50 text-sm dark:bg-slate-950">
                 <PeopleDropdown
                   selectedPeople={selectedPeople}
                   setSelectedPeople={setSelectedPeople}
@@ -306,9 +330,11 @@ function HouseReservationMenu({
 
               <div className="w-full my-3 mt-6">
                 <button
+                  data-testid="mobile-reservation-submit"
                   className="w-full btn rounded-3xl bg-primary-500 hover:bg-primary-600 transition-all duration-300 px-3 py-1.5 flex items-center justify-center gap-2"
                   onClick={handleReserve}
                   disabled={isReserving}
+                  aria-busy={isReserving}
                 >
                   {isReserving && <Loading type="beat" size={5} color="white" />}
                   رزرو
