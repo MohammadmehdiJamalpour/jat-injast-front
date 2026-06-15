@@ -51,6 +51,12 @@ describe("SEO metadata helpers", () => {
     );
   });
 
+  it("keeps already absolute URLs unchanged", () => {
+    expect(absoluteUrl("https://cdn.jat-injast.local/media/house.webp")).toBe(
+      "https://cdn.jat-injast.local/media/house.webp",
+    );
+  });
+
   it("keeps structured data safe for inline JSON-LD scripts", () => {
     expect(jsonLdScript({ name: "<script>" }).__html).toBe(
       '{"name":"\\u003cscript>"}',
