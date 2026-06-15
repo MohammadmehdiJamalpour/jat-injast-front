@@ -19,10 +19,8 @@ const routeConfigChecks = [
     path: "/house/[uuid]",
     file: "src/app/house/[uuid]/page.jsx",
     checks: [
-      /export const revalidate = 300/,
+      /export const dynamic = "force-dynamic"/,
       /export const dynamicParams = true/,
-      /export function generateStaticParams\(\)/,
-      /return \[\]/,
     ],
   },
   {
@@ -78,9 +76,10 @@ const expectedPrerenderedRoutes = [
   { path: "/sitemap.xml", output: ["sitemap.xml.body"] },
 ];
 
-const expectedDynamicPrerenderRoutes = ["/house/[uuid]"];
+const expectedDynamicPrerenderRoutes = [];
 
 const runtimeOnlyRoutes = [
+  { path: "/house/[uuid]", unexpectedOutput: ["house", "[uuid].html"] },
   { path: "/dashboard", unexpectedOutput: ["dashboard.html"] },
   { path: "/dashboard/edit-house/[uuid]", unexpectedOutput: ["dashboard", "edit-house", "[uuid].html"] },
   { path: "/admin-panel", unexpectedOutput: ["admin-panel.html"] },

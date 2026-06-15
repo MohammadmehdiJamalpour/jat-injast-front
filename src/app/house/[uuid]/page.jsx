@@ -14,11 +14,7 @@ import {
 } from "../../../components/public/publicDataServer";
 
 export const dynamicParams = true;
-export const revalidate = 300;
-
-export function generateStaticParams() {
-  return [];
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { uuid } = await params;

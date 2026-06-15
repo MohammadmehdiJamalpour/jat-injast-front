@@ -7,6 +7,7 @@ const API_REVALIDATE_SECONDS = 300;
 const HOME_REVALIDATE_SECONDS = 600;
 const ASSET_REVALIDATE_SECONDS = 3600;
 const DEFAULT_BACKEND_URL = "http://127.0.0.1:8000";
+const API_FETCH_TIMEOUT_MS = 8000;
 
 const LEGACY_STORAGE_PREFIX = process.env.NEXT_PUBLIC_API_STORAGE_PREFIX;
 const LEGACY_CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
@@ -39,18 +40,24 @@ function resolveApiBaseUrl(value) {
   return null;
 }
 
-function getPublicApiBaseUrl() {
-  const explicit = [
+function getPublicApiBaseUrls() {
+  const candidates = [
     process.env.BACKEND_URL,
     process.env.NEXT_PUBLIC_BACKEND_URL,
     process.env.NEXT_PUBLIC_API_BASE_URL,
+    "/api",
+    DEFAULT_BACKEND_URL,
   ]
     .map(resolveApiBaseUrl)
-    .find(Boolean);
+    .filter(Boolean);
 
-  if (explicit) return explicit;
+  return Array.from(new Set(candidates));
+}
 
-  return DEFAULT_BACKEND_URL;
+function getFetchTimeoutSignal() {
+  return typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function"
+    ? AbortSignal.timeout(API_FETCH_TIMEOUT_MS)
+    : undefined;
 }
 
 function resolveMediaUrl(value) {
@@ -74,24 +81,30 @@ function normalizeResponseUrls(data) {
 }
 
 async function publicApiFetch(path, { method = "GET", body, tags = [], revalidate } = {}) {
-  try {
-    const response = await fetch(`${getPublicApiBaseUrl()}${path}`, {
-      method,
-      headers: body ? { "Content-Type": "application/json" } : undefined,
-      body: body ? JSON.stringify(body) : undefined,
-      next: {
-        revalidate: revalidate ?? API_REVALIDATE_SECONDS,
-        tags,
-      },
-    });
+  for (const baseUrl of getPublicApiBaseUrls()) {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, {
+        method,
+        headers: body ? { "Content-Type": "application/json" } : undefined,
+        body: body ? JSON.stringify(body) : undefined,
+        signal: getFetchTimeoutSignal(),
+        next: {
+          revalidate: revalidate ?? API_REVALIDATE_SECONDS,
+          tags,
+        },
+      });
 
-    if (!response.ok) return null;
+      if (!response.ok) continue;
 
-    const payload = await response.json();
-    return normalizeResponseUrls(payload?.data ?? payload);
-  } catch {
-    return null;
+      const payload = await response.json();
+      return normalizeResponseUrls(payload?.data ?? payload);
+    } catch {
+      // Try the next configured base URL. Production can render via /api if
+      // the internal compose host is temporarily unreachable.
+    }
   }
+
+  return null;
 }
 
 export async function getPublicHomeContent() {
