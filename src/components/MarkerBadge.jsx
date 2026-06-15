@@ -23,10 +23,10 @@ function MarkerBadge({ price, title, rating }) {
     html: `
       <div
         class="flex items-center gap-1  justify-center
-               bg-primary-500 font-sans  rounded-3xl text-primary-50
+               font-sans  rounded-3xl
                min-w-44 px-2.5 py-1 text-[12px] shadow-lg
                transform -translate-x-1/2 -translate-y-1/2"
-        style="white-space:nowrap;"
+        style="white-space:nowrap;background:#0084a6;color:#f2fbfd;"
       >
         <span>${label}</span>
         ${voteHtml}
