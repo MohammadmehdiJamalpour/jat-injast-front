@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import DynamicSwiperList from "../DynamicSwiperList";
 import { listZones } from "../../services/listZoneServices";
@@ -6,29 +6,38 @@ import { reportClientError } from "../../utils/reportClientError";
 import { buildDestinationHref } from "./destinationLinks";
 import { fa } from "../../i18n/fa";
 
-function ZonesSwiperList({ initialZones = [], skeletonCount = 4, onLoaded }) {
-  const [zones, setZones] = useState(initialZones);
-  const [loading, setLoading] = useState(!initialZones.length);
+const EMPTY_ZONES = [];
+
+function ZonesSwiperList({ initialZones, skeletonCount = 4, onLoaded }) {
+  const normalizedInitialZones = useMemo(
+    () => (Array.isArray(initialZones) ? initialZones : EMPTY_ZONES),
+    [initialZones],
+  );
+  const [zones, setZones] = useState(normalizedInitialZones);
+  const [loading, setLoading] = useState(!normalizedInitialZones.length);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (initialZones.length) {
-      onLoaded?.(initialZones);
+    if (normalizedInitialZones.length) {
+      setZones(normalizedInitialZones);
+      setLoading(false);
+      onLoaded?.(normalizedInitialZones);
       return undefined;
     }
 
     listZones()
       .then((data) => {
-        setZones(data);
+        const nextZones = Array.isArray(data) ? data : [];
+        setZones(nextZones);
         setLoading(false);
-        onLoaded?.(data);
+        onLoaded?.(nextZones);
       })
       .catch((err) => {
         reportClientError("Popular destinations fetch", err);
         setError(err);
         setLoading(false);
       });
-  }, [initialZones, onLoaded]);
+  }, [normalizedInitialZones, onLoaded]);
 
   const renderSkeleton = (count) => (
     <div className="overflow-hidden rounded-b-3xl pb-10">

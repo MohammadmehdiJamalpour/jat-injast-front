@@ -1,9 +1,18 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import HomeBody from "./HomeBody";
 import Footer from "../Footer";
 
-function HomeContainer({ initialContent, initialZones = [], initialFooterContent }) {
-  const [zones, setZones] = useState(initialZones);
+const EMPTY_ZONES = [];
+
+function HomeContainer({ initialContent, initialZones, initialFooterContent }) {
+  const normalizedInitialZones = useMemo(
+    () => (Array.isArray(initialZones) ? initialZones : EMPTY_ZONES),
+    [initialZones],
+  );
+  const [zones, setZones] = useState(normalizedInitialZones);
+  const handleZonesLoaded = useCallback((nextZones) => {
+    setZones(Array.isArray(nextZones) ? nextZones : []);
+  }, []);
 
   return (
     <div className="relative flex w-full flex-col">
@@ -50,8 +59,8 @@ function HomeContainer({ initialContent, initialZones = [], initialFooterContent
         <div className="relative z-10 flex w-full flex-col items-center">
           <HomeBody
             initialContent={initialContent}
-            initialZones={initialZones}
-            onZonesLoaded={setZones}
+            initialZones={normalizedInitialZones}
+            onZonesLoaded={handleZonesLoaded}
           />
           <Footer
             zones={zones}
