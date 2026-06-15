@@ -6,6 +6,7 @@ import {
   ChevronRightIcon,
 } from "@heroicons/react/24/solid";
 import { expandableButtonClassName } from "../../../ui/ExpandableContent";
+import { isBackendMediaPath } from "../../../services/mediaUrl";
 
 const GalleryLightbox = dynamic(() => import("../../../ui/GalleryLightbox"), {
   ssr: false,
@@ -30,6 +31,7 @@ function ImageWithSkeleton({
 }) {
   const [status, setStatus] = useState("loading");
   const imageSrc = src || "/assets/favorite-1.jpg";
+  const shouldSkipOptimizer = isBackendMediaPath(imageSrc);
 
   const handleClick = () => {
     if (status === "loaded" && typeof onClick === "function") onClick();
@@ -58,6 +60,7 @@ function ImageWithSkeleton({
         title={title}
         fill
         sizes={sizes}
+        unoptimized={shouldSkipOptimizer}
         className={`${imgClassName} transition-opacity duration-300 ${
           status === "loaded" ? "opacity-100" : "opacity-0"
         }`}
@@ -212,15 +215,15 @@ export default function HouseImages({ houseData }) {
       </div>
 
       <div className="hidden w-full lg:block">
-        <div className="flex justify-center gap-4">
-          <div className="flex w-1/4 flex-col space-y-8">
+        <div className="grid max-h-[min(56vh,34rem)] min-h-[24rem] grid-cols-4 gap-4">
+          <div className="grid min-h-0 grid-rows-2 gap-4">
             {displayImages.slice(0, 2).map((image, index) => (
               <ImageWithSkeleton
                 key={`${image.media}-${index}`}
                 src={image.media}
                 alt={image.title}
                 title={image.title}
-                wrapperClassName="h-60 w-full"
+                wrapperClassName="h-full min-h-0 w-full"
                 imgClassName="h-full w-full rounded-xl object-cover"
                 sizes="25vw"
                 onClick={() => open(index)}
@@ -228,13 +231,13 @@ export default function HouseImages({ houseData }) {
             ))}
           </div>
 
-          <div className="w-2/4">
+          <div className="col-span-2 min-h-0">
             {displayImages[0] && (
               <ImageWithSkeleton
                 src={displayImages[0].media}
                 alt={displayImages[0].title}
                 title={displayImages[0].title}
-                wrapperClassName="h-128 w-full"
+                wrapperClassName="h-full min-h-0 w-full"
                 imgClassName="h-full w-full rounded-xl object-cover"
                 sizes="50vw"
                 onClick={() => open(0)}
@@ -242,16 +245,16 @@ export default function HouseImages({ houseData }) {
             )}
           </div>
 
-          <div className="flex w-1/4 flex-col space-y-8">
+          <div className="grid min-h-0 grid-rows-2 gap-4">
             {displayImages.slice(2, 4).map((image, index) => {
               const imageIndex = index + 2;
               return (
-                <div key={`${image.media}-${imageIndex}`} className="relative">
+                <div key={`${image.media}-${imageIndex}`} className="relative min-h-0">
                   <ImageWithSkeleton
                     src={image.media}
                     alt={image.title}
                     title={image.title}
-                    wrapperClassName="h-60 w-full"
+                    wrapperClassName="h-full min-h-0 w-full"
                     imgClassName="h-full w-full rounded-xl object-cover"
                     sizes="25vw"
                     onClick={() => open(imageIndex)}

@@ -1,24 +1,15 @@
 import "server-only";
 
 import { buildHouseSearchPayload } from "./houseSearchPayload";
+import { resolveBrowserMediaUrl, trimTrailingSlash, withProtocol } from "./mediaUrl";
 
 const API_REVALIDATE_SECONDS = 300;
 const HOME_REVALIDATE_SECONDS = 600;
 const ASSET_REVALIDATE_SECONDS = 3600;
 const DEFAULT_BACKEND_URL = "http://127.0.0.1:8000";
 
-const MEDIA_BASE_URL =
-  process.env.NEXT_PUBLIC_MEDIA_BASE_URL ||
-  process.env.NEXT_PUBLIC_BACKEND_URL ||
-  process.env.BACKEND_URL ||
-  DEFAULT_BACKEND_URL;
 const LEGACY_STORAGE_PREFIX = process.env.NEXT_PUBLIC_API_STORAGE_PREFIX;
 const LEGACY_CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-
-const trimTrailingSlash = (value = "") => value.replace(/\/+$/, "");
-const trimLeadingSlash = (value = "") => value.replace(/^\/+/, "");
-const withProtocol = (value = "") =>
-  !value || /^https?:\/\//i.test(value) ? value : `https://${value}`;
 
 function getPublicSiteUrl() {
   const value =
@@ -65,19 +56,11 @@ function getPublicApiBaseUrl() {
 function resolveMediaUrl(value) {
   if (typeof value !== "string") return value;
 
-  if (value.startsWith("/media/") && MEDIA_BASE_URL) {
-    return `${trimTrailingSlash(MEDIA_BASE_URL)}${value}`;
-  }
-
-  if (value.startsWith("media/") && MEDIA_BASE_URL) {
-    return `${trimTrailingSlash(MEDIA_BASE_URL)}/${trimLeadingSlash(value)}`;
-  }
-
   if (LEGACY_STORAGE_PREFIX && LEGACY_CDN_URL && value.includes(LEGACY_STORAGE_PREFIX)) {
     return value.replace(LEGACY_STORAGE_PREFIX, `${withProtocol(LEGACY_CDN_URL)}/storage`);
   }
 
-  return value;
+  return resolveBrowserMediaUrl(value);
 }
 
 function normalizeResponseUrls(data) {

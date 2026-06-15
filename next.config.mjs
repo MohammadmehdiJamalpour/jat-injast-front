@@ -2,16 +2,22 @@ const backendUrl =
   process.env.BACKEND_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
   "http://127.0.0.1:8000";
+const mediaBackendUrl =
+  process.env.MEDIA_BACKEND_URL ||
+  backendUrl;
 
 const withProtocol = (value = "") =>
   !value || /^https?:\/\//i.test(value) ? value : `https://${value}`;
 
 const imageRemoteSourceValues = [
-  process.env.BACKEND_URL,
-  process.env.NEXT_PUBLIC_BACKEND_URL,
   process.env.NEXT_PUBLIC_API_BASE_URL,
   process.env.NEXT_PUBLIC_MEDIA_BASE_URL,
   process.env.NEXT_PUBLIC_CDN_URL,
+  process.env.NEXT_PUBLIC_SITE_URL,
+  process.env.SITE_URL,
+  process.env.NEXT_PUBLIC_APP_URL,
+  process.env.VERCEL_PROJECT_PRODUCTION_URL,
+  "https://jatinjast.site",
   "http://127.0.0.1:8000",
   "http://localhost:8000",
 ];
@@ -159,6 +165,10 @@ const nextConfig = {
   },
   async rewrites() {
     return [
+      {
+        source: "/media/:path*",
+        destination: `${mediaBackendUrl}/media/:path*`,
+      },
       {
         source: "/api/:path*",
         destination: `${backendUrl}/:path*`,

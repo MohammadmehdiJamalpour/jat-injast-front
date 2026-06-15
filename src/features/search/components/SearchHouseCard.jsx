@@ -11,6 +11,7 @@ import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { Link } from "@/lib/router-compat";
 import toPersianNumber from "./../../../utils/toPersianNumber";
 import Vote from "./../../../ui/Vote";
+import { isBackendMediaPath } from "../../../services/mediaUrl";
 
 const cleanNumber = (val) => Number(val?.toString().replace(/[^0-9]/g, ""));
 const CARD_IMAGE_SIZES =
@@ -231,6 +232,7 @@ function SearchHouseCard({ house, size = "default" }) {
                 alt={house.name || "House image"}
                 fill
                 sizes={CARD_IMAGE_SIZES}
+                unoptimized={isBackendMediaPath(src)}
                 draggable={false}
                 className="pointer-events-none object-cover"
               />

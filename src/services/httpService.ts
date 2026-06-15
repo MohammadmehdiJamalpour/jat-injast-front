@@ -1,22 +1,10 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
+import { resolveBrowserMediaUrl, withProtocol } from "./mediaUrl";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api";
-const DEFAULT_BACKEND_URL = "http://127.0.0.1:8000";
-const MEDIA_BASE_URL =
-  process.env.NEXT_PUBLIC_MEDIA_BASE_URL ||
-  process.env.NEXT_PUBLIC_BACKEND_URL ||
-  DEFAULT_BACKEND_URL;
 const LEGACY_STORAGE_PREFIX = process.env.NEXT_PUBLIC_API_STORAGE_PREFIX;
 const LEGACY_CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const LEGACY_AUTH_COOKIE_NAME = "authToken";
-
-const trimTrailingSlash = (value = ""): string => value.replace(/\/+$/, "");
-const trimLeadingSlash = (value = ""): string => value.replace(/^\/+/, "");
-
-const withProtocol = (value?: string): string => {
-  if (!value) return "";
-  return /^https?:\/\//i.test(value) ? value : `https://${value}`;
-};
 
 const getCookie = (name: string): string | null => {
   if (typeof document === "undefined") return null;
@@ -60,19 +48,11 @@ export const clearClientAuthState = deleteAuthTokenCookie;
 const resolveMediaUrl = (value: unknown): unknown => {
   if (typeof value !== "string") return value;
 
-  if (value.startsWith("/media/") && MEDIA_BASE_URL) {
-    return `${trimTrailingSlash(MEDIA_BASE_URL)}${value}`;
-  }
-
-  if (value.startsWith("media/") && MEDIA_BASE_URL) {
-    return `${trimTrailingSlash(MEDIA_BASE_URL)}/${trimLeadingSlash(value)}`;
-  }
-
   if (LEGACY_STORAGE_PREFIX && LEGACY_CDN_URL && value.includes(LEGACY_STORAGE_PREFIX)) {
     return value.replace(LEGACY_STORAGE_PREFIX, `${withProtocol(LEGACY_CDN_URL)}/storage`);
   }
 
-  return value;
+  return resolveBrowserMediaUrl(value);
 };
 
 const normalizeResponseUrls = (data: unknown): unknown => {
