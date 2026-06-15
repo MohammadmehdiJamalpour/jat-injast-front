@@ -20,15 +20,44 @@ const trimLeadingSlash = (value = "") => value.replace(/^\/+/, "");
 const withProtocol = (value = "") =>
   !value || /^https?:\/\//i.test(value) ? value : `https://${value}`;
 
-function getPublicApiBaseUrl() {
-  const explicit =
-    process.env.BACKEND_URL ||
-    process.env.NEXT_PUBLIC_BACKEND_URL ||
-    process.env.NEXT_PUBLIC_API_BASE_URL;
+function getPublicSiteUrl() {
+  const value =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.SITE_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.NEXT_PUBLIC_APP_ORIGIN ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL;
 
-  if (explicit && /^https?:\/\//i.test(explicit)) {
-    return trimTrailingSlash(explicit);
+  if (!value) return null;
+
+  return trimTrailingSlash(withProtocol(value));
+}
+
+function resolveApiBaseUrl(value) {
+  if (!value) return null;
+
+  if (/^https?:\/\//i.test(value)) {
+    return trimTrailingSlash(value);
   }
+
+  if (value.startsWith("/")) {
+    const siteUrl = getPublicSiteUrl();
+    return siteUrl ? `${siteUrl}${trimTrailingSlash(value)}` : null;
+  }
+
+  return null;
+}
+
+function getPublicApiBaseUrl() {
+  const explicit = [
+    process.env.BACKEND_URL,
+    process.env.NEXT_PUBLIC_BACKEND_URL,
+    process.env.NEXT_PUBLIC_API_BASE_URL,
+  ]
+    .map(resolveApiBaseUrl)
+    .find(Boolean);
+
+  if (explicit) return explicit;
 
   return DEFAULT_BACKEND_URL;
 }

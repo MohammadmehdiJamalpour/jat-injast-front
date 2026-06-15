@@ -2,6 +2,8 @@ import { absoluteUrl, siteName } from "../../seo";
 import { getPublicHouseData } from "../../../components/public/publicDataServer";
 import { getHouseRatingCount, getHouseRatingValue } from "../../../utils/houseCardData";
 
+export const HOUSE_TITLE_FALLBACK = "اقامتگاه";
+
 export async function getHouseData(uuid) {
   return getPublicHouseData(uuid);
 }
@@ -10,6 +12,26 @@ export function textValue(value, fallback = "") {
   if (!value) return fallback;
   if (typeof value === "string" || typeof value === "number") return String(value);
   return value.label || value.name || value.title || value.value || fallback;
+}
+
+function firstTextValue(...values) {
+  return values
+    .map((value) => textValue(value).trim())
+    .find(Boolean);
+}
+
+export function getHouseTitle(house, fallback = HOUSE_TITLE_FALLBACK) {
+  return (
+    firstTextValue(
+      house?.name,
+      house?.title,
+      house?.display_name,
+      house?.headline,
+      house?.seo_title,
+      house?.meta?.title,
+      house?.metadata?.title,
+    ) || fallback
+  );
 }
 
 export function getHouseLocation(house) {
@@ -93,7 +115,7 @@ export function getHouseRules(house) {
 }
 
 export function getHouseMetadataFields(house, uuid) {
-  const title = house?.name || house?.title || "اقامتگاه";
+  const title = getHouseTitle(house);
   const location = getHouseLocation(house);
   const description =
     house?.description ||

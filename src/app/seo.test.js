@@ -42,6 +42,15 @@ describe("SEO metadata helpers", () => {
     expect(metadata.twitter.card).toBe("summary_large_image");
   });
 
+  it("accepts the public app origin env for absolute URLs", () => {
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+    process.env.NEXT_PUBLIC_APP_ORIGIN = "https://origin.jat-injast.local";
+
+    expect(absoluteUrl("/house/HVV8V")).toBe(
+      "https://origin.jat-injast.local/house/HVV8V",
+    );
+  });
+
   it("keeps structured data safe for inline JSON-LD scripts", () => {
     expect(jsonLdScript({ name: "<script>" }).__html).toBe(
       '{"name":"\\u003cscript>"}',

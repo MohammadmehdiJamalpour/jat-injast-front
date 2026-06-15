@@ -3,6 +3,7 @@ import HouseRoute from "./HouseRoute";
 import { routeModes } from "../../route-modes";
 import { createPageMetadata, jsonLdScript } from "../../seo";
 import {
+  HOUSE_TITLE_FALLBACK,
   createHouseJsonLd,
   getHouseData,
   getHouseMetadataFields,
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }) {
 
   return createPageMetadata({
     path: fields.path,
-    title: fields.title || "اقامتگاه",
+    title: fields.title || HOUSE_TITLE_FALLBACK,
     description: fields.description || routeModes.house.reason,
     image: fields.images[0]?.url,
     type: "article",
