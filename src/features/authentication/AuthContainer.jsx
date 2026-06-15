@@ -173,7 +173,7 @@ function AuthContainer() {
           )}
 
           <button
-            className="btn w-full !rounded-full bg-primary-600 hover:bg-primary-700"
+            className="btn h-12 w-full !rounded-full bg-primary-600 hover:bg-primary-700"
             type="submit"
             disabled={loginMutation.isLoading}
             aria-busy={loginMutation.isLoading}

@@ -86,7 +86,7 @@ export default function MobileFilters({
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="flex h-screen w-5/6 flex-col overflow-hidden rounded-l-3xl border border-primary-600 bg-white text-right shadow-centered shadow-primary-200/80 xs:w-4/5 550:w-6/8">
+                <Dialog.Panel className="flex h-[85dvh] max-h-[85dvh] w-5/6 flex-col overflow-hidden rounded-l-3xl border border-primary-600 bg-white text-right shadow-centered shadow-primary-200/80 xs:w-4/5 550:w-6/8">
                   <header className="flex items-center rounded-3xl border-primary-600 shadow-centered shadow-primary-100/70 bg-primary-50/60 justify-between px-4 py-3 border-b flex-none">
                     <h2 className="text-lg font-semibold text-primary-800">فیلترها</h2>
                     <button
