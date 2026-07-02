@@ -298,15 +298,48 @@ test.describe("responsive overflow", () => {
         const dropdownElement = document.querySelector(
           '[data-testid="home-hero-city-dropdown"]',
         );
+        const waveElement = document.querySelector(".home-wave-divider");
         const inputElement = searchElement.querySelector("input");
         const buttonElement = searchElement.querySelector("button");
         const panelRect = panelElement.getBoundingClientRect();
         const copyRect = copyElement.getBoundingClientRect();
         const searchRect = searchElement.getBoundingClientRect();
         const dropdownRect = dropdownElement.getBoundingClientRect();
+        const waveRect = waveElement?.getBoundingClientRect();
         const inputRect = inputElement.getBoundingClientRect();
         const buttonRect = buttonElement.getBoundingClientRect();
         const panelStyle = window.getComputedStyle(panelElement);
+        const parseZ = (element) => {
+          if (!element) return null;
+          const parsed = Number.parseInt(
+            window.getComputedStyle(element).zIndex,
+            10,
+          );
+          return Number.isFinite(parsed) ? parsed : 0;
+        };
+        const overlapTop = waveRect
+          ? Math.max(dropdownRect.top, waveRect.top)
+          : null;
+        const overlapBottom = waveRect
+          ? Math.min(dropdownRect.bottom, waveRect.bottom)
+          : null;
+        const hasWaveOverlap =
+          overlapTop !== null && overlapBottom !== null && overlapBottom > overlapTop;
+        const overlapProbe = hasWaveOverlap
+          ? {
+              x: Math.min(
+                Math.max(dropdownRect.left + dropdownRect.width / 2, 1),
+                window.innerWidth - 1,
+              ),
+              y: Math.min(
+                Math.max(overlapTop + Math.min(24, (overlapBottom - overlapTop) / 2), 1),
+                window.innerHeight - 1,
+              ),
+            }
+          : null;
+        const overlapTopElement = overlapProbe
+          ? document.elementFromPoint(overlapProbe.x, overlapProbe.y)
+          : null;
 
         return {
           buttonLeft: buttonRect.left,
@@ -315,13 +348,23 @@ test.describe("responsive overflow", () => {
           ),
           copyBottom: copyRect.bottom,
           dropdownBottom: dropdownRect.bottom,
+          dropdownContainsOverlapTop: overlapTopElement
+            ? dropdownElement.contains(overlapTopElement)
+            : null,
+          dropdownTop: dropdownRect.top,
+          dropdownZ: parseZ(dropdownElement),
+          hasWaveOverlap,
           inputLeft: inputRect.left,
           innerWidth: window.innerWidth,
           panelBottom: panelRect.bottom,
           panelOverflow: panelStyle.overflow,
           scrollWidth: document.documentElement.scrollWidth,
+          searchBottom: searchRect.bottom,
           searchBottomGap: panelRect.bottom - searchRect.bottom,
           searchTop: searchRect.top,
+          waveBottom: waveRect?.bottom ?? null,
+          waveTop: waveRect?.top ?? null,
+          waveZ: parseZ(waveElement),
         };
       });
 
@@ -329,7 +372,11 @@ test.describe("responsive overflow", () => {
       expect(metrics.searchTop).toBeGreaterThan(metrics.copyBottom);
       expect(metrics.searchBottomGap).toBeLessThanOrEqual(14);
       expect(metrics.buttonLeft).toBeLessThan(metrics.inputLeft);
-      expect(metrics.dropdownBottom).toBeGreaterThan(metrics.panelBottom);
+      expect(metrics.dropdownTop).toBeGreaterThan(metrics.searchBottom);
+      if (metrics.hasWaveOverlap) {
+        expect(metrics.dropdownZ).toBeGreaterThan(metrics.waveZ);
+        expect(metrics.dropdownContainsOverlapTop).toBe(true);
+      }
       expect(metrics.panelOverflow).toBe("visible");
       expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.innerWidth);
     }

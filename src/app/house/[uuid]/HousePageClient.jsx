@@ -20,35 +20,41 @@ export default function HousePageClient({
     refetch,
   } = useShowHouse(uuid, { initialData: initialHouseData });
 
+  let content;
+
   if (isLoading) {
-    return (
-      <div className="flex h-[50vh] items-center justify-center">
+    content = (
+      <div className="flex flex-1 items-center justify-center pt-[calc(var(--header-height,4.5rem)+0.75rem)]">
         <Loading />
       </div>
     );
-  }
-
-  if (isError || !houseData) {
-    return (
-      <NotFound
-        title="اقامتگاه پیدا نشد"
-        message="اقامتگاه مورد نظر پیدا نشد یا امکان بارگذاری آن وجود ندارد."
-        showRetry
-        onRetry={refetch}
-      />
+  } else if (isError || !houseData) {
+    content = (
+      <div className="flex flex-1 items-center justify-center pt-[calc(var(--header-height,4.5rem)+0.75rem)]">
+        <NotFound
+          title="اقامتگاه پیدا نشد"
+          message="اقامتگاه مورد نظر پیدا نشد یا امکان بارگذاری آن وجود ندارد."
+          showRetry
+          onRetry={refetch}
+        />
+      </div>
     );
-  }
-
-  return (
-    <>
-      <div className="house-page-container w-full px-3 pt-12 md:container md:px-0 md:pt-8 xl:max-w-8xl">
+  } else {
+    content = (
+      <div className="house-page-container mx-3 w-auto flex-1 pt-[calc(var(--header-height,4.5rem)+0.75rem)] md:container md:mx-auto md:w-full md:px-0 md:pt-[calc(var(--header-height,4.5rem)+2rem)] xl:max-w-8xl">
         <OutletContextProvider
           value={{ houseData, uuid, initialSimilarHouses }}
         >
           <HouseContainer />
         </OutletContextProvider>
       </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen flex-col">
+      {content}
       <Footer mode="static" initialInfo={initialFooterContent} />
-    </>
+    </div>
   );
 }

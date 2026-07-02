@@ -35,7 +35,7 @@ function HouseCalendar({
         <h3 className="me-auto text-lg font-bold text-gray-800 dark:text-slate-100">تقویم اقامتگاه</h3>
 
         {isRentRoom && selectedRoom && (
-          <span className="rounded-2xl border border-primary-100 bg-white px-3 py-1.5 text-sm text-primary-800 dark:border-slate-700 dark:bg-slate-950 dark:text-primary-200">
+          <span className="rounded-2xl border border-primary-100 bg-white px-3 py-1.5 text-sm font-semibold text-primary-800 shadow-sm dark:border-sky-300/80 dark:bg-sky-300 dark:text-slate-950 dark:shadow-sky-950/30 dark:ring-2 dark:ring-sky-200/50">
             {selectedRoom.name}
           </span>
         )}

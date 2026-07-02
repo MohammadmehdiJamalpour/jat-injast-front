@@ -66,12 +66,19 @@ function CalendarContainer({
             >
               {({ open }) => (
                 <div className="relative rounded-xl bg-white dark:bg-slate-950">
-                  <Listbox.Button className="listbox__button rounded-xl border-primary-600 text-right text-gray-700 dark:text-slate-100">
+                  <Listbox.Button
+                    className={[
+                      "flex w-full items-center justify-between rounded-xl border px-4 py-2 text-right text-xs shadow-centered outline-none transition-all duration-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 lg:text-sm",
+                      selectedRoom
+                        ? "border-primary-200 bg-primary-50 text-primary-900 dark:border-sky-300/80 dark:bg-sky-300 dark:text-slate-950 dark:shadow-sky-950/30 dark:ring-2 dark:ring-sky-200/50"
+                        : "border-primary-50 bg-white text-gray-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100",
+                    ].join(" ")}
+                  >
                     <span>{selectedRoom ? selectedRoom.name : "انتخاب اتاق"}</span>
                     <ChevronDownIcon
-                      className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
+                      className={`h-5 w-5 transition-transform duration-200 ${
                         open ? "rotate-180" : "rotate-0"
-                      }`}
+                      } ${selectedRoom ? "text-primary-700 dark:text-slate-950" : "text-gray-400 dark:text-slate-300"}`}
                       aria-hidden="true"
                     />
                   </Listbox.Button>
@@ -89,12 +96,15 @@ function CalendarContainer({
                         <Listbox.Option
                           key={room.uuid}
                           value={room}
-                          className={({ active }) =>
-                            `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
-                              active
-                                ? "bg-primary-action text-primary-contrast dark:bg-primary-600 dark:text-white"
-                                : "text-gray-900 dark:text-slate-200"
-                            }`
+                          className={({ active, selected }) =>
+                            [
+                              "relative cursor-pointer select-none py-2 pl-10 pr-4 transition-colors",
+                              selected
+                                ? "bg-primary-action font-semibold text-primary-contrast dark:bg-sky-300 dark:text-slate-950"
+                                : active
+                                  ? "bg-primary-50 text-primary-900 dark:bg-slate-800 dark:text-sky-100"
+                                  : "text-gray-900 dark:text-slate-200",
+                            ].join(" ")
                           }
                         >
                           <span className="block truncate font-normal">{room.name}</span>

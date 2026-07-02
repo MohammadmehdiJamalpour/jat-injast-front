@@ -34,6 +34,9 @@ export default function DesktopReserveCalendarDropdown({
   showCal,
   swiperRef,
 }) {
+  const selectedRoom =
+    roomOptions.find((room) => room.uuid === selectedRoomUuid) || null;
+
   return (
     <Transition
       show={showCal}
@@ -67,24 +70,27 @@ export default function DesktopReserveCalendarDropdown({
             {isRentRoom && roomOptions.length > 0 && (
               <div className="w-36 min-w-0">
                 <Listbox
-                  value={roomOptions.find((room) => room.uuid === selectedRoomUuid)}
+                  value={selectedRoom}
                   onChange={(room) => setSelectedRoomUuid(room.uuid)}
                 >
                   {({ open }) => (
                     <div className="relative overflow-visible">
                       <Listbox.Button
                         static
-                        className="flex h-9 w-full items-center justify-between rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs text-primary-800 dark:border-slate-700 dark:bg-slate-950 dark:text-primary-100"
+                        className={[
+                          "flex h-9 w-full items-center justify-between rounded-full border px-3 py-1 text-xs shadow-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300",
+                          selectedRoom
+                            ? "border-primary-200 bg-primary-50 text-primary-800 dark:border-sky-300/80 dark:bg-sky-300 dark:text-slate-950 dark:shadow-sky-950/30 dark:ring-2 dark:ring-sky-200/50"
+                            : "border-primary-100 bg-primary-50 text-primary-800 dark:border-slate-700 dark:bg-slate-950 dark:text-primary-100",
+                        ].join(" ")}
                       >
                         <span className="truncate">
-                          {roomOptions.find(
-                            (room) => room.uuid === selectedRoomUuid
-                          )?.name || "انتخاب اتاق"}
+                          {selectedRoom?.name || "انتخاب اتاق"}
                         </span>
                         <ChevronDownIcon
-                          className={`h-5 w-5 text-primary-600 transition ${
+                          className={`h-5 w-5 transition ${
                             open ? "rotate-180" : ""
-                          }`}
+                          } ${selectedRoom ? "text-primary-700 dark:text-slate-950" : "text-primary-600 dark:text-primary-100"}`}
                         />
                       </Listbox.Button>
                       <Listbox.Options
@@ -95,11 +101,13 @@ export default function DesktopReserveCalendarDropdown({
                           <Listbox.Option
                             key={room.uuid}
                             value={room}
-                            className={({ active }) =>
+                            className={({ active, selected }) =>
                               [
-                                "cursor-pointer border-b border-primary-100 px-4 py-2 last:border-b-0",
-                                active
-                                  ? "bg-primary-action text-primary-contrast"
+                                "cursor-pointer border-b border-primary-100 px-4 py-2 transition-colors last:border-b-0 dark:border-slate-700",
+                                selected
+                                  ? "bg-primary-action font-semibold text-primary-contrast dark:bg-sky-300 dark:text-slate-950"
+                                  : active
+                                    ? "bg-primary-50 text-primary-900 dark:bg-slate-800 dark:text-sky-100"
                                   : "text-gray-800 dark:text-slate-100",
                               ].join(" ")
                             }
